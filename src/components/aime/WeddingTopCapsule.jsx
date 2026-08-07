@@ -1,212 +1,129 @@
-import React from "react";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
-import {
-  Download,
-  Megaphone,
-  PlayCircle,
-  Printer,
-  Settings2,
-} from "lucide-react";
-import { readWeddingState } from "@/lib/aimeWeddingCore";
+import React, { useMemo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 
-function getInitials(value = "AIME") {
-  return value
-    .split(/\s|&/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((item) => item[0]?.toUpperCase())
-    .join("");
-}
-
-function CapsuleIconLink({ to, icon: Icon, label }) {
-  return (
-    <Link
-      to={to}
-      aria-label={label}
-      title={label}
-      className="rounded-full border border-black/8 bg-white p-2.5 text-black hover:bg-black/[0.03] transition-colors"
-    >
-      <Icon className="w-4 h-4" />
-    </Link>
-  );
-}
-
-function CapsuleIconButton({ onClick, icon: Icon, label }) {
-  return (
-    <button
-      onClick={onClick}
-      aria-label={label}
-      title={label}
-      className="rounded-full border border-black/8 bg-white p-2.5 text-black hover:bg-black/[0.03] transition-colors"
-    >
-      <Icon className="w-4 h-4" />
-    </button>
-  );
-}
-
-const ROLE_OPTIONS = [
-  { id: "couple", label: "Couple" },
-  { id: "planner", label: "Planner" },
-  { id: "vendors", label: "Prestataires" },
+const UNIVERSE_ITEMS = [
+  { id: "zeus", label: "Zeus", subtitle: "Point Zéro", to: "/point-zero", gradient: "linear-gradient(135deg, #7C6CFF 0%, #4A56C6 100%)" },
+  { id: "poseidon", label: "Poséidon", subtitle: "Ambiance sonore", to: "/prestataires", gradient: "linear-gradient(135deg, #4FCBFF 0%, #3F7FD2 100%)" },
+  { id: "athena", label: "Athéna", subtitle: "Planning", to: "/notifications", gradient: "linear-gradient(135deg, #D6DBFF 0%, #8D94CC 100%)" },
+  { id: "aphrodite", label: "Aphrodite", subtitle: "Esthétique", to: "/documents", gradient: "linear-gradient(135deg, #F4B6C8 0%, #B989B7 100%)" },
+  { id: "apollon", label: "Apollon", subtitle: "Souvenirs", to: "/espace-invites", gradient: "linear-gradient(135deg, #F7C39A 0%, #C98663 100%)" },
+  { id: "hermes", label: "Hermès", subtitle: "Communication", to: "/communication", gradient: "linear-gradient(135deg, #55E6D5 0%, #4A9FB0 100%)" },
+  { id: "ares", label: "Arès", subtitle: "Jour J", to: "/jour-j", gradient: "linear-gradient(135deg, #9FA9C9 0%, #586487 100%)" },
+  { id: "demeter", label: "Déméter", subtitle: "Budget", to: "/budget", gradient: "linear-gradient(135deg, #7AE3C2 0%, #63AB95 100%)" },
+  { id: "artemis", label: "Artémis", subtitle: "Registre", to: "/prestataires", gradient: "linear-gradient(135deg, #6C5AE8 0%, #41339E 100%)" },
+  { id: "hephaistos", label: "Héphaïstos", subtitle: "Supports", to: "/exports", gradient: "linear-gradient(135deg, #F29B5C 0%, #C4664A 100%)" },
+  { id: "dionysos", label: "Dionysos", subtitle: "Soirée", to: "/jour-j", gradient: "linear-gradient(135deg, #D85AE5 0%, #8B439C 100%)" },
+  { id: "hestia", label: "Hestia", subtitle: "Invités", to: "/invites", gradient: "linear-gradient(135deg, #E9C0BA 0%, #C9939E 100%)" },
 ];
 
-const ROLE_ROUTES = new Set([
-  "/point-zero",
-  "/documents",
-  "/jour-j",
-  "/notifications",
-  "/communication",
-  "/invites",
-]);
+const ACCESS_ITEMS = [
+  { id: "couple", label: "Créer mon mariage", to: "/setup" },
+  { id: "vendor", label: "Rejoindre le registre", to: "/prestataires" },
+  { id: "guest", label: "Accéder à un mariage", to: "/espace-invites" },
+  { id: "planner", label: "Accès planner", to: "/point-zero?role=planner" },
+];
 
-function getContextActions(pathname = "/") {
-  if (pathname.startsWith("/point-zero")) {
-    return [
-      { type: "link", to: "/communication", icon: Megaphone, label: "Diffusion" },
-      { type: "link", to: "/exports?view=planner", icon: Download, label: "Exports planner" },
-    ];
-  }
-
-  if (pathname.startsWith("/couple")) {
-    return [
-      { type: "link", to: "/exports?view=couple", icon: Download, label: "Export couple" },
-    ];
-  }
-
-  if (pathname.startsWith("/prestataires")) {
-    return [
-      { type: "link", to: "/exports?view=vendors", icon: Download, label: "Export prestataires" },
-    ];
-  }
-
-  if (pathname.startsWith("/invites")) {
-    return [
-      { type: "link", to: "/exports?view=planner", icon: Download, label: "Export invités" },
-    ];
-  }
-
-  if (pathname.startsWith("/documents")) {
-    return [
-      { type: "link", to: "/exports?view=planner", icon: Download, label: "Export docs" },
-    ];
-  }
-
-  if (pathname.startsWith("/jour-j")) {
-    return [
-      { type: "link", to: "/exports?view=dayj", icon: Download, label: "Export Jour J" },
-    ];
-  }
-
-  if (pathname.startsWith("/notifications")) {
-    return [
-      { type: "link", to: "/communication", icon: Megaphone, label: "Diffusion" },
-    ];
-  }
-
-  if (pathname.startsWith("/exports")) {
-    return [
-      { type: "button", onClick: () => window.print(), icon: Printer, label: "Imprimer / PDF" },
-    ];
-  }
-
-  return [];
+function getCurrentUniverse(pathname = "/") {
+  if (pathname === "/" || pathname === "/design-system") return null;
+  if (pathname.startsWith("/point-zero")) return "zeus";
+  if (pathname.startsWith("/notifications")) return "athena";
+  if (pathname.startsWith("/communication")) return "hermes";
+  if (pathname.startsWith("/jour-j")) return "ares";
+  if (pathname.startsWith("/budget")) return "demeter";
+  if (pathname.startsWith("/documents") || pathname.startsWith("/exports")) return "hephaistos";
+  if (pathname.startsWith("/prestataires")) return "artemis";
+  if (pathname.startsWith("/invites") || pathname.startsWith("/espace-invites") || pathname.startsWith("/couple") || pathname.startsWith("/setup")) return "hestia";
+  return null;
 }
 
 export default function WeddingTopCapsule() {
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const wedding = readWeddingState();
-  const profileName = wedding.meta?.couple || "Profil mariage";
-  const initials = getInitials(profileName);
-  const onLanding = location.pathname === "/";
-  const onSetup = location.pathname === "/setup";
-  const supportsRoleSwitch = ROLE_ROUTES.has(location.pathname);
-  const activeRole = ROLE_OPTIONS.some((item) => item.id === searchParams.get("role"))
-    ? searchParams.get("role")
-    : "planner";
-  const contextActions = getContextActions(location.pathname);
+  const [openUniverse, setOpenUniverse] = useState(false);
+  const [openAccess, setOpenAccess] = useState(false);
+  const currentUniverseId = getCurrentUniverse(location.pathname);
+  const currentUniverse = useMemo(
+    () => UNIVERSE_ITEMS.find((item) => item.id === currentUniverseId) || null,
+    [currentUniverseId],
+  );
+  const accessLabel = location.pathname === "/" ? "Créer mon mariage" : "Accès";
 
-  const setRole = (nextRole) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("role", nextRole);
-    setSearchParams(next, { replace: true });
-  };
+  const centerGradient = currentUniverse
+    ? currentUniverse.gradient
+    : "linear-gradient(135deg, #7C6CFF 0%, #4FCBFF 35%, #F4B6C8 70%, #F29B5C 100%)";
 
   return (
-    <div className="fixed top-3 left-1/2 z-[60] -translate-x-1/2 w-[min(1120px,calc(100%-20px))] print:hidden">
-      <div className="rounded-full border border-black/8 bg-[rgba(248,248,246,0.88)] backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.10)] px-2.5 md:px-3 py-1.5">
-        <div className="flex items-center justify-between gap-2 md:gap-3 min-w-0">
-          <Link to="/" className="min-w-0 rounded-full px-3 py-2 hover:bg-black/[0.03] transition-colors">
+    <div className="fixed top-3 left-1/2 z-[60] -translate-x-1/2 w-[min(1440px,calc(100%-20px))] print:hidden">
+      <div className="rounded-full border border-black/8 bg-[rgba(248,248,246,0.94)] shadow-[0_16px_40px_rgba(0,0,0,0.10)] px-2.5 md:px-3 py-1.5">
+        <div className="flex items-center justify-between gap-3 min-w-0">
+          <Link to="/" className="shrink-0 rounded-full px-4 py-2.5 hover:bg-black/[0.03] transition-colors">
             <div className="font-display text-[18px] md:text-[22px] leading-[1] text-zinc-950 truncate">AIME Wedding</div>
           </Link>
 
-          {onLanding ? (
-            <>
-              <nav className="hidden lg:flex items-center gap-1.5">
-                <a href="#registre" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                  Registre
-                </a>
-                <a href="#pillars" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                  12 univers
-                </a>
-                <Link to="/espace-invites" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                  Invités
-                </Link>
-                <Link to="/setup" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                  Couple
-                </Link>
-                <Link to="/point-zero?role=planner" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                  Planner
-                </Link>
-              </nav>
+          <div className="flex-1 flex justify-center min-w-0">
+            <div className="relative max-w-full">
+              <button
+                type="button"
+                onClick={() => {
+                  setOpenUniverse((value) => !value);
+                  setOpenAccess(false);
+                }}
+                className="max-w-[220px] md:max-w-none rounded-full px-4 md:px-5 py-2.5 text-sm md:text-[15px] font-semibold text-white inline-flex items-center gap-2 shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+                style={{ background: centerGradient }}
+              >
+                <span className="truncate">{currentUniverse ? currentUniverse.label : "12 univers"}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${openUniverse ? "rotate-180" : ""}`} />
+              </button>
 
-              <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
-                <Link to="/setup" className="inline-flex rounded-full bg-black px-4 py-2.5 text-sm text-white hover:bg-zinc-800 transition-colors">
-                  Créer mon mariage
-                </Link>
-              </div>
-            </>
-          ) : onSetup ? (
-            <div className="shrink-0" />
-          ) : (
-            <>
-              {supportsRoleSwitch && (
-                <div className="hidden md:flex items-center gap-1 rounded-full border border-black/8 bg-white p-1">
-                  {ROLE_OPTIONS.map((role) => (
-                    <button
-                      key={role.id}
-                      onClick={() => setRole(role.id)}
-                      className={`rounded-full px-3 py-1.5 text-xs transition-colors ${activeRole === role.id ? "bg-black text-white" : "text-zinc-700 hover:bg-black/[0.03]"}`}
-                    >
-                      {role.label}
-                    </button>
-                  ))}
+              {openUniverse && (
+                <div className="absolute left-1/2 top-full mt-3 -translate-x-1/2 w-[min(960px,calc(100vw-28px))] rounded-[28px] border border-black/8 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.14)]">
+                  <div className="grid gap-2 md:grid-cols-3 xl:grid-cols-4">
+                    {UNIVERSE_ITEMS.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={item.to}
+                        onClick={() => setOpenUniverse(false)}
+                        className="rounded-[22px] p-4 text-white min-h-[112px] flex flex-col justify-between"
+                        style={{ background: item.gradient }}
+                      >
+                        <div className="text-lg font-semibold italic">{item.label}</div>
+                        <div className="text-xs uppercase tracking-[0.16em] text-white/78">{item.subtitle}</div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               )}
+            </div>
+          </div>
 
-              <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
-                {contextActions.map((item) =>
-                  item.type === "button" ? (
-                    <CapsuleIconButton key={item.label} onClick={item.onClick} icon={item.icon} label={item.label} />
-                  ) : (
-                    <CapsuleIconLink key={item.label} to={item.to} icon={item.icon} label={item.label} />
-                  ),
-                )}
-                <Link
-                  to="/couple"
-                  aria-label="Profil"
-                  title={profileName}
-                  className="rounded-full p-2.5 text-black/82 hover:text-black hover:bg-black/[0.04] transition-colors inline-flex items-center justify-center"
-                >
-                  <span className="w-4 h-4 inline-flex items-center justify-center text-[10px] font-semibold leading-none">
-                    {initials}
-                  </span>
-                </Link>
-                <CapsuleIconLink to="/setup" icon={Settings2} label="Setup mariage" />
-                <CapsuleIconLink to="/point-zero" icon={PlayCircle} label="Point Zéro" />
+          <div className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setOpenAccess((value) => !value);
+                setOpenUniverse(false);
+              }}
+              className="rounded-full bg-black px-4 md:px-5 py-2.5 text-sm text-white hover:bg-zinc-800 transition-colors inline-flex items-center gap-2"
+            >
+              {accessLabel}
+              <ChevronDown className={`w-4 h-4 transition-transform ${openAccess ? "rotate-180" : ""}`} />
+            </button>
+
+            {openAccess && (
+              <div className="absolute right-0 top-full mt-3 w-[min(320px,calc(100vw-28px))] rounded-[24px] border border-black/8 bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.14)]">
+                {ACCESS_ITEMS.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={item.to}
+                    onClick={() => setOpenAccess(false)}
+                    className="block rounded-[18px] px-4 py-3 text-sm text-zinc-800 hover:bg-black/[0.03]"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </div>
-            </>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
