@@ -161,6 +161,25 @@ export const VENDOR_PAYMENT_STATUS = {
   scheduled: { label: "Planifié" },
 };
 
+export const VENDOR_BOOKING_STAGES = {
+  quote: { label: "Devis reçu" },
+  validation: { label: "À valider" },
+  signed: { label: "Contrat signé" },
+  deposit: { label: "Acompte payé" },
+  locked: { label: "Verrouillé" },
+};
+
+export const VENDOR_COMMITMENT_STATUS = {
+  missing: { label: "Manquant" },
+  received: { label: "Reçu" },
+  approved: { label: "Validé" },
+  sent: { label: "Envoyé" },
+  signed: { label: "Signé" },
+  due: { label: "À payer" },
+  scheduled: { label: "Planifié" },
+  paid: { label: "Payé" },
+};
+
 export const WEDDING_SIGNALS = [
   {
     id: "guests_plus_12",
@@ -974,6 +993,7 @@ function createVendorMarketplace(now) {
       contactStage: "booked",
       shortlisted: true,
       paymentStatus: "acompte reçu",
+      bookingStage: "deposit",
       bookedAt: addHours(now, -168),
       nextTouchpointAt: addHours(now, 48),
       summary: "Coordination complète, arbitrages, docs partagés et pilotage du Jour J.",
@@ -989,7 +1009,12 @@ function createVendorMarketplace(now) {
       priceFrom: 6200,
       responseTime: "4h",
       status: "confirmé",
+      contactStage: "booked",
+      shortlisted: true,
       paymentStatus: "solde à venir",
+      bookingStage: "signed",
+      bookedAt: addHours(now, -192),
+      nextTouchpointAt: addHours(now, 72),
       summary: "Lieu de réception avec verrière, parking, accès PMR et plan B intégré.",
       tags: ["Plan B", "PMR", "Parking"],
     },
@@ -1003,7 +1028,12 @@ function createVendorMarketplace(now) {
       priceFrom: 3200,
       responseTime: "3h",
       status: "confirmé",
+      contactStage: "booked",
+      shortlisted: true,
       paymentStatus: "option drone en attente",
+      bookingStage: "signed",
+      bookedAt: addHours(now, -144),
+      nextTouchpointAt: addHours(now, 24),
       summary: "Photo et vidéo avec fenêtre lumière optimisée et suivi serré du timing.",
       tags: ["Photo", "Vidéo", "Drone"],
     },
@@ -1017,7 +1047,12 @@ function createVendorMarketplace(now) {
       priceFrom: 9800,
       responseTime: "2h",
       status: "confirmé",
+      contactStage: "booked",
+      shortlisted: true,
       paymentStatus: "solde à sécuriser",
+      bookingStage: "deposit",
+      bookedAt: addHours(now, -132),
+      nextTouchpointAt: addHours(now, 48),
       summary: "Cocktail, dîner, régimes spéciaux et cadence service très maîtrisés.",
       tags: ["Cocktail", "Dîner", "Allergies"],
     },
@@ -1031,7 +1066,10 @@ function createVendorMarketplace(now) {
       priceFrom: 1800,
       responseTime: "5h",
       status: "confirmé",
+      contactStage: "booked",
+      shortlisted: false,
       paymentStatus: "solde à venir",
+      bookingStage: "signed",
       bookedAt: addHours(now, -84),
       nextTouchpointAt: addHours(now, 96),
       summary: "DJ, micros, ouverture de bal et transitions soirée jusqu’à l’after.",
@@ -1047,9 +1085,10 @@ function createVendorMarketplace(now) {
       priceFrom: 2100,
       responseTime: "6h",
       status: "à confirmer",
-      contactStage: "contacted",
+      contactStage: "quote",
       shortlisted: true,
       paymentStatus: "acompte à payer",
+      bookingStage: "validation",
       bookedAt: null,
       nextTouchpointAt: addHours(now, 18),
       summary: "Fleurs, verrière, signalétique décor et bascule esthétique en plan B.",
@@ -1068,6 +1107,7 @@ function createVendorMarketplace(now) {
       contactStage: "booked",
       shortlisted: false,
       paymentStatus: "payé",
+      bookingStage: "locked",
       bookedAt: addHours(now, -60),
       nextTouchpointAt: addHours(now, 132),
       summary: "Navettes invités, retours tardifs et logistique de mobilité le soir.",
@@ -1083,11 +1123,217 @@ function createVendorMarketplace(now) {
       priceFrom: 760,
       responseTime: "8h",
       status: "option",
+      contactStage: "new",
+      shortlisted: false,
       paymentStatus: "option à confirmer",
+      bookingStage: "quote",
       bookedAt: null,
       nextTouchpointAt: addHours(now, 60),
       summary: "Coiffure et maquillage mariée + retouches discrètes pendant la journée.",
       tags: ["Beauté", "Mariée", "Retouches"],
+    },
+  ];
+}
+
+function createVendorCommitments(now) {
+  return [
+    {
+      id: "commit_planner_quote",
+      vendorId: "planner_maison",
+      kind: "quote",
+      label: "Devis coordination",
+      amount: 3200,
+      status: "approved",
+      dueAt: addHours(now, -192),
+      note: "Arbitrage couple déjà validé.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_planner_contract",
+      vendorId: "planner_maison",
+      kind: "contract",
+      label: "Contrat coordination",
+      amount: 3200,
+      status: "signed",
+      dueAt: addHours(now, -184),
+      note: "Contrat verrouillé, plus aucune zone floue.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_venue_quote",
+      vendorId: "venue_lys",
+      kind: "quote",
+      label: "Devis lieu",
+      amount: 6200,
+      status: "approved",
+      dueAt: addHours(now, -216),
+      note: "Inclut verrière et logistique d'accès.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_venue_contract",
+      vendorId: "venue_lys",
+      kind: "contract",
+      label: "Contrat lieu",
+      amount: 6200,
+      status: "signed",
+      dueAt: addHours(now, -204),
+      note: "Reste uniquement le suivi du solde.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_photo_quote",
+      vendorId: "photo_sillage",
+      kind: "quote",
+      label: "Option drone",
+      amount: 400,
+      status: "received",
+      dueAt: addHours(now, 24),
+      note: "À valider selon météo et marge disponible.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_photo_contract",
+      vendorId: "photo_sillage",
+      kind: "contract",
+      label: "Contrat photo / vidéo",
+      amount: 3200,
+      status: "signed",
+      dueAt: addHours(now, -144),
+      note: "Le socle photo est verrouillé.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_catering_quote",
+      vendorId: "catering_aurore",
+      kind: "quote",
+      label: "Devis traiteur",
+      amount: 9800,
+      status: "approved",
+      dueAt: addHours(now, -160),
+      note: "Le volume reste sensible aux dernières réponses invités.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_catering_contract",
+      vendorId: "catering_aurore",
+      kind: "contract",
+      label: "Contrat traiteur",
+      amount: 9800,
+      status: "signed",
+      dueAt: addHours(now, -152),
+      note: "Le menu et les régimes spéciaux sont intégrés.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_catering_invoice",
+      vendorId: "catering_aurore",
+      kind: "invoice",
+      label: "Facture solde traiteur",
+      amount: 4900,
+      status: "due",
+      dueAt: addHours(now, 72),
+      note: "Paiement à lancer avant la dernière réunion terrain.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_music_contract",
+      vendorId: "music_sonore",
+      kind: "contract",
+      label: "Contrat DJ / son",
+      amount: 1800,
+      status: "signed",
+      dueAt: addHours(now, -96),
+      note: "Micros et ouverture de bal inclus.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_music_invoice",
+      vendorId: "music_sonore",
+      kind: "invoice",
+      label: "Facture DJ / son",
+      amount: 1800,
+      status: "scheduled",
+      dueAt: addHours(now, 120),
+      note: "Paiement planifié avant le mariage.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_flowers_quote",
+      vendorId: "flowers_ligne",
+      kind: "quote",
+      label: "Devis fleurs & déco",
+      amount: 2100,
+      status: "received",
+      dueAt: addHours(now, 18),
+      note: "Le couple doit arbitrer la version verrière du plan B.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_flowers_contract",
+      vendorId: "flowers_ligne",
+      kind: "contract",
+      label: "Contrat fleurs & déco",
+      amount: 2100,
+      status: "sent",
+      dueAt: addHours(now, 36),
+      note: "Signature attendue après validation du devis.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_flowers_invoice",
+      vendorId: "flowers_ligne",
+      kind: "invoice",
+      label: "Acompte fleurs & déco",
+      amount: 1050,
+      status: "due",
+      dueAt: addHours(now, 48),
+      note: "À payer dès validation définitive.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_transport_quote",
+      vendorId: "transport_nuit",
+      kind: "quote",
+      label: "Devis navettes",
+      amount: 900,
+      status: "approved",
+      dueAt: addHours(now, -84),
+      note: "Circuit nuit déjà arbitré.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_transport_invoice",
+      vendorId: "transport_nuit",
+      kind: "invoice",
+      label: "Facture navettes",
+      amount: 900,
+      status: "paid",
+      dueAt: addHours(now, -36),
+      note: "Dossier verrouillé.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_beauty_quote",
+      vendorId: "beauty_aube",
+      kind: "quote",
+      label: "Option beauté mariée",
+      amount: 760,
+      status: "received",
+      dueAt: addHours(now, 60),
+      note: "Option encore ouverte, pas de décision finale.",
+      updatedAt: now.toISOString(),
+    },
+    {
+      id: "commit_beauty_contract",
+      vendorId: "beauty_aube",
+      kind: "contract",
+      label: "Contrat beauté",
+      amount: 760,
+      status: "missing",
+      dueAt: addHours(now, 72),
+      note: "Ne signer que si l'option est confirmée.",
+      updatedAt: now.toISOString(),
     },
   ];
 }
@@ -1131,7 +1377,7 @@ function createVendorPayments(now) {
     { id: "pay_venue_1", vendorId: "venue_lys", label: "Acompte lieu", amount: 3100, dueAt: addHours(now, -96), status: "paid", method: "virement" },
     { id: "pay_venue_2", vendorId: "venue_lys", label: "Solde lieu", amount: 3100, dueAt: addHours(now, 168), status: "scheduled", method: "virement" },
     { id: "pay_photo_1", vendorId: "photo_sillage", label: "Acompte photo / vidéo", amount: 1600, dueAt: addHours(now, -72), status: "paid", method: "virement" },
-    { id: "pay_photo_2", vendorId: "photo_sillage", label: "Option drone", amount: 400, dueAt: addHours(now, 24), status: "due", method: "virement" },
+    { id: "pay_photo_2", vendorId: "photo_sillage", label: "Facture option drone", amount: 400, dueAt: addHours(now, 24), status: "due", method: "virement" },
     { id: "pay_catering_1", vendorId: "catering_aurore", label: "Acompte traiteur", amount: 4900, dueAt: addHours(now, -48), status: "paid", method: "virement" },
     { id: "pay_catering_2", vendorId: "catering_aurore", label: "Solde traiteur", amount: 4900, dueAt: addHours(now, 72), status: "due", method: "virement" },
     { id: "pay_music_1", vendorId: "music_sonore", label: "Solde DJ / son", amount: 1800, dueAt: addHours(now, 120), status: "scheduled", method: "virement" },
@@ -1261,6 +1507,7 @@ export function createDefaultWeddingState() {
     vendors: {
       marketplace: createVendorMarketplace(now),
       payments: createVendorPayments(now),
+      commitments: createVendorCommitments(now),
     },
     guestPortal: createGuestPortal(now),
     notes: createSharedNotes(now),
@@ -1286,6 +1533,16 @@ export function createDefaultWeddingState() {
       },
     ],
   };
+}
+
+function mergeCollectionById(baseItems = [], parsedItems = []) {
+  if (!Array.isArray(parsedItems)) return baseItems;
+  const baseMap = new Map(baseItems.map((item) => [item.id, item]));
+  const parsedIds = new Set(parsedItems.map((item) => item.id));
+  return [
+    ...parsedItems.map((item) => ({ ...(baseMap.get(item.id) || {}), ...item })),
+    ...baseItems.filter((item) => !parsedIds.has(item.id)),
+  ];
 }
 
 export function readWeddingState() {
@@ -1338,8 +1595,9 @@ export function readWeddingState() {
         history: Array.isArray(parsed.communications?.history) ? parsed.communications.history : base.communications.history,
       },
       vendors: {
-        marketplace: Array.isArray(parsed.vendors?.marketplace) ? parsed.vendors.marketplace : base.vendors.marketplace,
-        payments: Array.isArray(parsed.vendors?.payments) ? parsed.vendors.payments : base.vendors.payments,
+        marketplace: mergeCollectionById(base.vendors.marketplace, parsed.vendors?.marketplace),
+        payments: mergeCollectionById(base.vendors.payments, parsed.vendors?.payments),
+        commitments: mergeCollectionById(base.vendors.commitments, parsed.vendors?.commitments),
       },
       guestPortal: {
         ...base.guestPortal,
@@ -1573,6 +1831,7 @@ export function getNotificationsForRole(state, roleView = "planner") {
   const budgetItems = state.budget?.items || [];
   const budgetDecisions = state.budget?.decisions || [];
   const vendorPayments = state.vendors?.payments || [];
+  const vendorCommitments = state.vendors?.commitments || [];
   const vendorDirectory = state.vendors?.marketplace || [];
   const communications = state.communications?.history || [];
 
@@ -1697,6 +1956,50 @@ export function getNotificationsForRole(state, roleView = "planner") {
         source: "Paiement prestataire",
         href: "/budget",
         cta: "Voir paiement",
+      });
+    }
+  }
+
+  for (const commitment of vendorCommitments) {
+    const vendor = vendorDirectory.find((item) => item.id === commitment.vendorId);
+    if (!vendor) continue;
+
+    if (commitment.kind === "quote" && commitment.status === "received") {
+      out.push({
+        id: `commit_${commitment.id}`,
+        type: "vendor",
+        level: "warning",
+        title: `${vendor.name} · ${commitment.label}`,
+        text: `Devis reçu · ${formatMoney(commitment.amount)} · validation attendue ${formatRelativeDue(commitment.dueAt)}.`,
+        source: "Validation prestataire",
+        href: `/prestataires/${vendor.id}`,
+        cta: "Valider",
+      });
+    }
+
+    if (commitment.kind === "contract" && ["missing", "sent"].includes(commitment.status)) {
+      out.push({
+        id: `commit_${commitment.id}`,
+        type: "vendor",
+        level: commitment.status === "missing" ? "critical" : "warning",
+        title: `${vendor.name} · ${commitment.label}`,
+        text: `${VENDOR_COMMITMENT_STATUS[commitment.status]?.label || commitment.status} · signature attendue ${formatRelativeDue(commitment.dueAt)}.`,
+        source: "Contrat prestataire",
+        href: `/prestataires/${vendor.id}`,
+        cta: "Ouvrir",
+      });
+    }
+
+    if (commitment.kind === "invoice" && commitment.status === "due") {
+      out.push({
+        id: `commit_${commitment.id}`,
+        type: "budget",
+        level: "warning",
+        title: `${vendor.name} · ${commitment.label}`,
+        text: `${formatMoney(commitment.amount)} · facture à payer ${formatRelativeDue(commitment.dueAt)}.`,
+        source: "Facture prestataire",
+        href: "/budget",
+        cta: "Régler",
       });
     }
   }
@@ -2019,6 +2322,29 @@ export function getVendorPaymentSummary(state) {
   };
 }
 
+export function getVendorCommitments(state, vendorId = null) {
+  const commitments = state?.vendors?.commitments || [];
+  return vendorId
+    ? commitments.filter((item) => item.vendorId === vendorId)
+    : commitments;
+}
+
+export function getVendorCommitmentSummary(state) {
+  const commitments = state?.vendors?.commitments || [];
+  const vendors = state?.vendors?.marketplace || [];
+  return {
+    total: commitments.length,
+    quotesPending: commitments.filter((item) => item.kind === "quote" && item.status === "received").length,
+    contractsPending: commitments.filter((item) => item.kind === "contract" && ["missing", "sent"].includes(item.status)).length,
+    invoicesOpen: commitments.filter((item) => item.kind === "invoice" && ["due", "scheduled"].includes(item.status)).length,
+    dueAmount: commitments
+      .filter((item) => item.kind === "invoice" && item.status === "due")
+      .reduce((sum, item) => sum + (item.amount || 0), 0),
+    missingDocs: commitments.filter((item) => item.status === "missing").length,
+    lockedVendors: vendors.filter((item) => item.bookingStage === "locked").length,
+  };
+}
+
 export function getNotesForRole(state, roleView = "planner") {
   const role = ROLE_VIEWS[roleView] || ROLE_VIEWS.planner;
   return (state?.notes || []).filter((note) =>
@@ -2030,6 +2356,7 @@ export function getSmartCalendarItems(state, roleView = "couple") {
   const role = ROLE_VIEWS[roleView] || ROLE_VIEWS.planner;
   const reminders = (state?.reminders || []).filter((item) => role.members.includes(item.owner) || item.owner === "planning");
   const payments = (state?.vendors?.payments || []);
+  const commitments = (state?.vendors?.commitments || []);
   const vendors = (state?.vendors?.marketplace || []);
 
   const reminderItems = reminders.map((item) => ({
@@ -2069,6 +2396,20 @@ export function getSmartCalendarItems(state, roleView = "couple") {
       };
     });
 
+  const commitmentItems = commitments
+    .filter((item) => ["received", "sent", "due", "scheduled", "missing"].includes(item.status))
+    .map((item) => {
+      const vendor = vendors.find((entry) => entry.id === item.vendorId);
+      return {
+        id: `commit_${item.id}`,
+        at: item.dueAt,
+        kind: "vendor",
+        level: ["due", "missing"].includes(item.status) ? "high" : "normal",
+        title: `${vendor?.name || "Prestataire"} · ${item.label}`,
+        detail: `${VENDOR_COMMITMENT_STATUS[item.status]?.label || item.status}${item.amount ? ` · ${formatMoney(item.amount)}` : ""}`,
+      };
+    });
+
   const weddingDay = state?.meta?.date
     ? [{
         id: "wedding_day",
@@ -2080,7 +2421,7 @@ export function getSmartCalendarItems(state, roleView = "couple") {
       }]
     : [];
 
-  return [...vendorItems, ...paymentItems, ...reminderItems, ...weddingDay]
+  return [...vendorItems, ...commitmentItems, ...paymentItems, ...reminderItems, ...weddingDay]
     .sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime())
     .slice(0, 10);
 }
@@ -2123,6 +2464,24 @@ export function updateVendorPaymentInState(currentState, paymentId, patch) {
               paidAt: patch.status === "paid" ? new Date().toISOString() : payment.paidAt || null,
             }
           : payment,
+      ),
+    },
+  };
+}
+
+export function updateVendorCommitmentInState(currentState, commitmentId, patch) {
+  return {
+    ...currentState,
+    vendors: {
+      ...currentState.vendors,
+      commitments: (currentState.vendors?.commitments || []).map((commitment) =>
+        commitment.id === commitmentId
+          ? {
+              ...commitment,
+              ...patch,
+              updatedAt: new Date().toISOString(),
+            }
+          : commitment,
       ),
     },
   };

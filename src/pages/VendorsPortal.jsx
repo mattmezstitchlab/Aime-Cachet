@@ -10,10 +10,13 @@ import {
   filterDocumentsByRole,
   filterTimelineByRole,
   getNotificationsForRole,
+  getVendorCommitments,
+  getVendorCommitmentSummary,
   getVendorMarketplace,
   getVendorPaymentSummary,
   readWeddingState,
-  VENDOR_PAYMENT_STATUS,
+  VENDOR_BOOKING_STAGES,
+  VENDOR_COMMITMENT_STATUS,
   VENDOR_TAXONOMY,
 } from "@/lib/aimeWeddingCore";
 
@@ -63,10 +66,16 @@ function fmtMoney(value) {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value || 0);
 }
 
-function paymentTone(status = "scheduled") {
-  if (status === "paid") return "border-emerald-200 bg-emerald-50 text-emerald-800";
-  if (status === "due") return "border-black/8 bg-white text-zinc-900";
-  return "border-black/8 bg-[#fbfaf8] text-zinc-700";
+function commitmentKindLabel(kind = "quote") {
+  if (kind === "contract") return "Contrat";
+  if (kind === "invoice") return "Facture";
+  return "Devis";
+}
+
+function commitmentTone(status = "received") {
+  if (["missing", "due"].includes(status)) return "border-black bg-black text-white";
+  if (["received", "sent"].includes(status)) return "border-black/8 bg-white text-zinc-900";
+  return "border-black/8 bg-black/[0.02] text-zinc-700";
 }
 
 export default function VendorsPortal() {
@@ -76,10 +85,8 @@ export default function VendorsPortal() {
 
   const marketplace = useMemo(() => getVendorMarketplace(state, taxonomy), [state, taxonomy]);
   const paymentSummary = useMemo(() => getVendorPaymentSummary(state), [state]);
-  const paymentVendors = useMemo(() => {
-    const selectedIds = new Set(marketplace.map((vendor) => vendor.id));
-    return (state.vendors?.payments || []).filter((payment) => taxonomy === "all" || selectedIds.has(payment.vendorId));
-  }, [marketplace, state.vendors?.payments, taxonomy]);
+  const commitmentSummary = useMemo(() => getVendorCommitmentSummary(state), [state]);
+  const visibleVendorIds = useMemo(() => marketplace.map((vendor) => vendor.id), [marketplace]);
 
   const allDocs = filterDocumentsByRole(state.documents, "vendors");
   const allSteps = filterTimelineByRole(state.timeline?.steps || [], "vendors");
@@ -99,34 +106,44 @@ export default function VendorsPortal() {
     if (focus === "all") return allNotifications;
     return allNotifications.filter((item) => {
       const text = `${item.title} ${item.text}`.toLowerCase();
-      return text.includes(focus) || (focus === "lieu" && text.includes("accès")) || (focus === "photo" && text.includes("photo")) || (focus === "traiteur" && text.includes("traiteur")) || (focus === "famille" && text.includes("famille"));
+      return text.includes(focus)
+        || (focus === "lieu" && text.includes("accès"))
+        || (focus === "photo" && text.includes("photo"))
+        || (focus === "traiteur" && text.includes("traiteur"))
+        || (focus === "famille" && text.includes("famille"));
     });
   }, [allNotifications, focus]);
 
   const contacts = useMemo(() => {
-    if (focus === "all") return [state.contacts?.planning, state.contacts?.lieu, state.contacts?.photo, state.contacts?.traiteur].filter(Boolean);
+    if (focus === "all") {
+      return [state.contacts?.planning, state.contacts?.lieu, state.contacts?.photo, state.contacts?.traiteur].filter(Boolean);
+    }
     return [state.contacts?.planning, state.contacts?.[focus]].filter(Boolean);
   }, [focus, state.contacts]);
 
-  const nextStep = steps.find((step) => step.status !== "done") || steps[0] || null;
-  const docAttention = docs.filter((doc) => !["prêt", "partagé", "complet"].includes(doc.status));
-  const upcomingPayments = paymentVendors.filter((payment) => payment.status !== "paid").slice(0, 4);
+  const openCommitments = useMemo(() => {
+    const visibleIds = new Set(visibleVendorIds);
+    return getVendorCommitments(state)
+      .filter((item) => taxonomy === "all" || visibleIds.has(item.vendorId))
+      .filter((item) => ["received", "sent", "missing", "due", "scheduled"].includes(item.status))
+      .sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime())
+      .slice(0, 6);
+  }, [state, taxonomy, visibleVendorIds]);
 
   return (
     <div className="min-h-screen bg-[var(--color-warm-white)] text-[var(--color-text-primary)] overflow-x-hidden">
       <div className="max-w-[1380px] mx-auto px-5 md:px-8 lg:px-10 py-6 md:py-8">
-
         <div className="mb-8 md:mb-10">
           <WeddingPageHero
-            eyebrow="Prestataires · marketplace · terrain"
-            title="Le portail prestataire, au premier coup d'œil."
-            description="Taxonomie, cartes prestataires, paiements, créneaux, documents utiles."
+            eyebrow="Prestataires · marketplace · exécution"
+            title="Le portail prestataire, simple et pilotable."
+            description="Qui est retenu, ce qui doit être validé, signé ou payé, et ce qui concerne vraiment chaque équipe."
             image="/landing/ares.jpg"
             stats={[
               { label: "Prestataires", value: marketplace.length, hint: "visibles" },
+              { label: "Validations", value: commitmentSummary.quotesPending + commitmentSummary.contractsPending, hint: "ouvertes" },
+              { label: "Factures", value: commitmentSummary.invoicesOpen, hint: "à suivre" },
               { label: "Paiements", value: paymentSummary.openCount, hint: "ouverts" },
-              { label: "Alertes", value: notifications.length, hint: "utiles" },
-              { label: "Créneaux", value: steps.length, hint: "visibles" },
             ]}
             actions={(
               <>
@@ -160,20 +177,17 @@ export default function VendorsPortal() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="text-sm font-semibold text-zinc-950">{vendor.name}</div>
-                      <div className="text-xs text-zinc-500 mt-2 uppercase tracking-[0.16em]">{VENDOR_TAXONOMY.find((item) => item.id === vendor.category)?.label || vendor.category} · {vendor.city}</div>
+                      <div className="text-xs text-zinc-500 mt-2 uppercase tracking-[0.16em]">
+                        {VENDOR_TAXONOMY.find((item) => item.id === vendor.category)?.label || vendor.category} · {vendor.city}
+                      </div>
                     </div>
                     <span className="rounded-full border border-black/8 bg-white px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-zinc-700">
                       {vendor.status}
                     </span>
                   </div>
+
                   <p className="text-sm text-zinc-600 mt-3 leading-relaxed">{compactText(vendor.summary, 92)}</p>
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {vendor.tags.map((tag) => (
-                      <span key={tag} className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+
                   <div className="grid grid-cols-3 gap-3 mt-4 text-sm">
                     <div>
                       <div className="aime-label text-zinc-500 mb-1">À partir de</div>
@@ -188,11 +202,26 @@ export default function VendorsPortal() {
                       <div className="inline-flex items-center gap-1 text-zinc-900"><Star className="w-3.5 h-3.5" /> {vendor.rating}</div>
                     </div>
                   </div>
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <div className="rounded-[20px] border border-black/8 bg-white p-3 text-sm text-zinc-700 inline-flex items-center gap-2">
-                      <CreditCard className="w-4 h-4" />
+
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    <span className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700">
+                      {VENDOR_BOOKING_STAGES[vendor.bookingStage]?.label || "À structurer"}
+                    </span>
+                    <span className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700 inline-flex items-center gap-2">
+                      <CreditCard className="w-3.5 h-3.5" />
                       {vendor.paymentStatus}
-                    </div>
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {vendor.tags.map((tag) => (
+                      <span key={tag} className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
                     <Link to={`/prestataires/${vendor.id}`} className="rounded-full border border-black/8 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-black/[0.03]">
                       Voir fiche
                     </Link>
@@ -202,31 +231,61 @@ export default function VendorsPortal() {
             </div>
           </Card>
 
-          <Card title="Paiements prestataires" eyebrow="À suivre">
+          <Card title="Devis, contrats, factures" eyebrow="Ce qui n'est pas encore verrouillé">
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              <div className="rounded-[20px] border border-black/8 bg-black/[0.02] p-4">
+                <div className="aime-label text-zinc-500 mb-2">Devis</div>
+                <div className="text-xl font-display text-zinc-950">{commitmentSummary.quotesPending}</div>
+              </div>
+              <div className="rounded-[20px] border border-black/8 bg-black/[0.02] p-4">
+                <div className="aime-label text-zinc-500 mb-2">Contrats</div>
+                <div className="text-xl font-display text-zinc-950">{commitmentSummary.contractsPending}</div>
+              </div>
+              <div className="rounded-[20px] border border-black/8 bg-black/[0.02] p-4">
+                <div className="aime-label text-zinc-500 mb-2">Factures</div>
+                <div className="text-xl font-display text-zinc-950">{commitmentSummary.invoicesOpen}</div>
+              </div>
+            </div>
+
             <div className="space-y-3">
-              {upcomingPayments.map((payment) => {
-                const vendor = (state.vendors?.marketplace || []).find((item) => item.id === payment.vendorId);
+              {openCommitments.map((item) => {
+                const vendor = (state.vendors?.marketplace || []).find((entry) => entry.id === item.vendorId);
                 return (
-                  <div key={payment.id} className={`rounded-[22px] border p-4 ${paymentTone(payment.status)}`}>
-                    <div className="flex items-center justify-between gap-3">
+                  <div key={item.id} className={`rounded-[22px] border p-4 ${commitmentTone(item.status)}`}>
+                    <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="text-sm font-semibold">{vendor?.name || "Prestataire"}</div>
-                        <div className="text-xs uppercase tracking-[0.16em] mt-2 opacity-70">{payment.label}</div>
+                        <div className="text-xs uppercase tracking-[0.16em] mt-2 opacity-70">
+                          {commitmentKindLabel(item.kind)} · {VENDOR_COMMITMENT_STATUS[item.status]?.label || item.status}
+                        </div>
                       </div>
-                      <div className="text-sm font-semibold">{fmtMoney(payment.amount)}</div>
+                      <div className="text-sm font-semibold">{fmtMoney(item.amount)}</div>
                     </div>
-                    <div className="text-sm mt-3 opacity-90">{VENDOR_PAYMENT_STATUS[payment.status]?.label || payment.status} · {new Date(payment.dueAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })}</div>
+                    <div className="text-sm mt-3 opacity-90">{item.label} · échéance {new Date(item.dueAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })}</div>
+                    <p className="text-sm mt-3 opacity-80 leading-relaxed">{compactText(item.note, 92)}</p>
+                    {vendor && (
+                      <Link
+                        to={`/prestataires/${vendor.id}`}
+                        className={`mt-4 inline-flex items-center rounded-full px-4 py-2 text-sm ${["missing", "due"].includes(item.status) ? "border border-white/20 bg-white/10 text-white" : "border border-black/8 bg-white text-zinc-700 hover:bg-black/[0.03]"}`}
+                      >
+                        Ouvrir la fiche
+                      </Link>
+                    )}
                   </div>
                 );
               })}
-              {upcomingPayments.length === 0 && (
+
+              {openCommitments.length === 0 && (
                 <div className="rounded-[22px] border border-black/8 bg-black/[0.02] p-4 text-sm text-zinc-600">
-                  Aucun paiement ouvert pour ce filtre.
+                  Aucun devis, contrat ou facture en attente pour ce filtre.
                 </div>
               )}
-              <Link to="/budget" className="inline-flex items-center rounded-full border border-black/8 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-black/[0.03]">
-                Voir budget & paiements
-              </Link>
+
+              <div className="flex flex-wrap gap-2">
+                <Link to="/budget" className="inline-flex items-center rounded-full border border-black/8 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-black/[0.03]">
+                  Ouvrir budget & règlements
+                </Link>
+              </div>
             </div>
           </Card>
         </div>
@@ -248,6 +307,11 @@ export default function VendorsPortal() {
                     </div>
                   </div>
                 ))}
+                {steps.length === 0 && (
+                  <div className="rounded-[24px] border border-black/8 bg-black/[0.02] p-5 text-sm text-zinc-600">
+                    Aucun créneau utile à afficher pour ce filtre.
+                  </div>
+                )}
               </div>
             </Card>
 
@@ -277,8 +341,8 @@ export default function VendorsPortal() {
             <Card title="Changements utiles" eyebrow="Alertes filtrées">
               <div className="space-y-3">
                 {notifications.length === 0 && (
-                  <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-800">
-                    Rien de critique pour ce prestataire pour le moment.
+                  <div className="rounded-[24px] border border-black/8 bg-black/[0.02] p-5 text-sm text-zinc-600">
+                    Rien d'utile à remonter pour ce filtre pour le moment.
                   </div>
                 )}
                 {notifications.map((item) => (
@@ -286,7 +350,7 @@ export default function VendorsPortal() {
                     <div className="text-sm font-semibold">{item.title}</div>
                     <p className="text-sm mt-3 leading-relaxed opacity-90">{compactText(item.text, 96)}</p>
                     {item.href && (
-                      <Link to={item.href} className="mt-4 inline-flex items-center rounded-full border border-current/15 bg-white/70 px-4 py-2 text-sm font-medium">
+                      <Link to={item.href} className={`mt-4 inline-flex items-center rounded-full px-4 py-2 text-sm font-medium ${item.level === "critical" ? "border border-white/15 bg-white/10 text-white" : "border border-black/8 bg-white text-zinc-700 hover:bg-black/[0.03]"}`}>
                         {item.cta || "Ouvrir"}
                       </Link>
                     )}
@@ -298,7 +362,7 @@ export default function VendorsPortal() {
             <Card title="Vos contacts utiles" eyebrow="Parler à la bonne personne vite">
               <div className="space-y-3">
                 {contacts.map((contact) => (
-                  <div key={contact.id} className="rounded-[24px] border border-black/8 bg-black/[0.02] p-4">
+                  <div key={`${contact.label}-${contact.phone}`} className="rounded-[24px] border border-black/8 bg-black/[0.02] p-4">
                     <div className="text-sm font-semibold text-zinc-950">{contact.name}</div>
                     <div className="text-xs text-zinc-500 mt-1 uppercase tracking-[0.16em]">{contact.label}</div>
                     <p className="text-sm text-zinc-600 mt-2 leading-relaxed">{compactText(contact.note, 82)}</p>
