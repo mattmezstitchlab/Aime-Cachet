@@ -1,0 +1,117 @@
+{
+  "name": "Prestation",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "employer": {
+      "type": "string"
+    },
+    "production": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "Artiste",
+        "Technicien"
+      ]
+    },
+    "annexe": {
+      "type": "string",
+      "enum": [
+        "8",
+        "10"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "brouillon",
+        "a_completer",
+        "pret_a_verifier",
+        "transmis",
+        "valide"
+      ],
+      "default": "brouillon"
+    },
+    "missing_documents": {
+      "type": "number",
+      "default": 0
+    },
+    "amount": {
+      "type": "number"
+    },
+    "duration_hours": {
+      "type": "number"
+    },
+    "nature": {
+      "type": "string"
+    },
+    "sector": {
+      "type": "string",
+      "enum": [
+        "spectacle_vivant",
+        "audiovisuel",
+        "autre"
+      ]
+    },
+    "employer_contact": {
+      "type": "string"
+    },
+    "employer_email": {
+      "type": "string"
+    },
+    "employer_phone": {
+      "type": "string"
+    },
+    "employer_siret": {
+      "type": "string"
+    },
+    "employer_kind": {
+      "type": "string",
+      "enum": [
+        "occasionnel",
+        "professionnel"
+      ]
+    },
+    "cachet_code": {
+      "type": "string",
+      "description": "Code Cachet unique stable AIME-CCH-YYYYMMDD-XXXXXX"
+    },
+    "custom_notes": {
+      "type": "string",
+      "description": "Notes libres ajout\u00e9es par l'utilisateur sur la fiche"
+    },
+    "doc_type": {
+      "type": "string",
+      "enum": [
+        "cachet",
+        "devis",
+        "honoraires",
+        "recu"
+      ],
+      "default": "cachet",
+      "description": "Type de document affich\u00e9 par d\u00e9faut sur la fiche"
+    },
+    "wallet_id": {
+      "type": "string",
+      "description": "ID du wallet (dossier) auquel la fiche est rang\u00e9e. Vide = non rang\u00e9e."
+    },
+    "verification_hash": {
+      "type": "string",
+      "description": "Empreinte technique SHA-256 des 8 champs publics (v1.3). Coh\u00e9rence technique uniquement \u2014 pas une certification administrative."
+    },
+    "verification_hash_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Horodatage du scellement du verification_hash (v1.3)."
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,31 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="1000" fill="#0C0C0C"/>
+  <g opacity="0.7">
+    <circle cx="1180" cy="220" r="240" fill="url(#g1)"/>
+    <circle cx="430" cy="760" r="280" fill="url(#g2)"/>
+    <circle cx="820" cy="500" r="340" fill="url(#g3)"/>
+  </g>
+  <rect x="260" y="250" width="460" height="520" rx="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+  <rect x="320" y="320" width="340" height="24" rx="12" fill="rgba(255,255,255,0.12)"/>
+  <rect x="320" y="390" width="290" height="18" rx="9" fill="rgba(255,255,255,0.1)"/>
+  <rect x="320" y="435" width="240" height="18" rx="9" fill="rgba(255,255,255,0.08)"/>
+  <rect x="320" y="520" width="210" height="150" rx="24" fill="rgba(255,255,255,0.08)"/>
+  <path d="M1040 280L1260 500L1040 720" stroke="rgba(255,255,255,0.20)" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M860 280L640 500L860 720" stroke="rgba(255,255,255,0.12)" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="1110" cy="500" r="120" stroke="rgba(255,210,160,0.7)" stroke-width="16"/>
+  <circle cx="1110" cy="500" r="64" fill="rgba(255,210,160,0.12)"/>
+  <defs>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1180 220) rotate(90) scale(240)">
+      <stop stop-color="#FFCC8A"/>
+      <stop offset="1" stop-color="#FFCC8A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(430 760) rotate(90) scale(280)">
+      <stop stop-color="#C47A3A"/>
+      <stop offset="1" stop-color="#C47A3A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(820 500) rotate(90) scale(340)">
+      <stop stop-color="#5A2D18"/>
+      <stop offset="1" stop-color="#5A2D18" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
