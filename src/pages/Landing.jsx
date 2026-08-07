@@ -371,7 +371,7 @@ function EntryTile({ item }) {
           </div>
         </div>
 
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-4 py-2.5 text-sm text-white/88 backdrop-blur-xl transition-colors group-hover:bg-white/[0.12]">
+        <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm text-black shadow-[0_10px_24px_rgba(0,0,0,0.18)] transition-transform group-hover:-translate-y-0.5">
           {item.cta}
           <ArrowRight className="w-4 h-4" />
         </span>
@@ -449,7 +449,7 @@ function PillarSection({ pillar }) {
                 <span className="aime-label text-white/55">{pillar.number}</span>
                 <span>{pillar.myth}</span>
               </div>
-              <Link to={pillar.href} className="rounded-full border border-white/12 px-4 py-2 text-sm text-white/88 hover:bg-white/5 inline-flex items-center gap-2">
+              <Link to={pillar.href} className="rounded-full bg-white px-4 py-2 text-sm text-black inline-flex items-center gap-2 shadow-[0_12px_28px_rgba(0,0,0,0.18)]">
                 {pillar.cta}
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -504,11 +504,11 @@ export default function Landing() {
               </p>
 
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <Link to="/setup" className="aime-button-primary rounded-full px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2">
+                <Link to="/setup" className="rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black shadow-[0_12px_28px_rgba(0,0,0,0.18)] inline-flex items-center gap-2">
                   Créer mon mariage
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-                <a href="#registre" className="rounded-full border border-white/12 bg-white/[0.05] px-6 py-3.5 text-sm text-white/88 hover:bg-white/[0.1] inline-flex items-center gap-2 transition-colors">
+                <a href="#registre" className="rounded-full bg-black px-6 py-3.5 text-sm text-white inline-flex items-center gap-2 transition-colors hover:bg-zinc-900">
                   Explorer le registre
                 </a>
               </div>
@@ -591,10 +591,10 @@ export default function Landing() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link to="/setup" className="aime-button-primary rounded-full px-5 py-3 text-sm font-medium inline-flex items-center gap-2">
+                <Link to="/setup" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black inline-flex items-center gap-2 shadow-[0_12px_28px_rgba(0,0,0,0.18)]">
                   Créer mon mariage
                 </Link>
-                <Link to="/prestataires" className="rounded-full border border-white/12 px-5 py-3 text-sm text-white/88 hover:bg-white/5 inline-flex items-center gap-2">
+                <Link to="/prestataires" className="rounded-full bg-black px-5 py-3 text-sm text-white hover:bg-zinc-900 inline-flex items-center gap-2">
                   Voir le registre
                 </Link>
               </div>
