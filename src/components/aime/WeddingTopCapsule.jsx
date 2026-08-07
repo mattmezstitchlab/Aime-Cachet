@@ -9,6 +9,7 @@ const UNIVERSE_ITEMS = UNIVERSES.map((item) => ({
   subtitle: item.subtitle,
   to: item.route,
   gradient: UNIVERSE_GRADIENTS[item.id],
+  menuItems: item.menuItems || [],
 }));
 
 const ACCESS_ITEMS = [
@@ -38,6 +39,35 @@ function getCurrentUniverse(pathname = "/") {
   if (pathname.startsWith("/prestataires")) return "artemis";
   if (pathname.startsWith("/invites") || pathname.startsWith("/espace-invites") || pathname.startsWith("/couple") || pathname.startsWith("/setup")) return "hestia";
   return null;
+}
+
+function UniverseRow({ item, onSelect }) {
+  return (
+    <div className="rounded-[18px] bg-[var(--color-warm-white)] px-3 py-3">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center">
+        <Link
+          to={item.to}
+          onClick={onSelect}
+          className="inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold italic text-white shadow-[0_12px_24px_rgba(0,0,0,0.14)] md:min-w-[126px]"
+          style={{ background: item.gradient }}
+        >
+          {item.label}
+        </Link>
+        <div className="flex flex-wrap gap-2">
+          {item.menuItems.map((entry) => (
+            <Link
+              key={`${item.id}-${entry.label}`}
+              to={entry.to}
+              onClick={onSelect}
+              className="rounded-full border border-black/8 bg-white px-3 py-2 text-xs text-zinc-700 hover:bg-black/[0.03]"
+            >
+              {entry.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function WeddingTopCapsule() {
@@ -116,27 +146,25 @@ export default function WeddingTopCapsule() {
               </button>
 
               {openUniverse && (
-                <div className="absolute left-0 top-full mt-3 w-[min(960px,calc(100vw-28px))] rounded-[28px] border border-black/8 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.14)]">
-                  <div className="grid gap-2 md:grid-cols-3 xl:grid-cols-4">
-                    <Link
-                      to="/"
-                      onClick={() => setOpenUniverse(false)}
-                      className="rounded-[22px] p-4 bg-black text-white min-h-[112px] flex flex-col justify-between"
-                    >
-                      <div className="text-lg font-semibold italic">Accueil</div>
-                      <div className="text-xs uppercase tracking-[0.16em] text-white/78">Landing</div>
-                    </Link>
+                <div className="absolute left-0 top-full mt-3 w-[min(640px,calc(100vw-28px))] rounded-[24px] border border-black/8 bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.14)]">
+                  <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1">
+                    <div className="rounded-[18px] bg-[var(--color-warm-white)] px-3 py-3">
+                      <div className="flex flex-col gap-3 md:flex-row md:items-center">
+                        <Link
+                          to="/"
+                          onClick={() => setOpenUniverse(false)}
+                          className="inline-flex items-center justify-center rounded-full bg-black px-4 py-2.5 text-sm font-semibold italic text-white md:min-w-[126px]"
+                        >
+                          Accueil
+                        </Link>
+                        <div className="flex flex-wrap gap-2">
+                          <Link to="/#registre" onClick={() => setOpenUniverse(false)} className="rounded-full border border-black/8 bg-white px-3 py-2 text-xs text-zinc-700 hover:bg-black/[0.03]">Registre</Link>
+                          <Link to="/#pillars" onClick={() => setOpenUniverse(false)} className="rounded-full border border-black/8 bg-white px-3 py-2 text-xs text-zinc-700 hover:bg-black/[0.03]">12 univers</Link>
+                        </div>
+                      </div>
+                    </div>
                     {UNIVERSE_ITEMS.map((item) => (
-                      <Link
-                        key={item.id}
-                        to={item.to}
-                        onClick={() => setOpenUniverse(false)}
-                        className="rounded-[22px] p-4 text-white min-h-[112px] flex flex-col justify-between"
-                        style={{ background: item.gradient }}
-                      >
-                        <div className="text-lg font-semibold italic">{item.label}</div>
-                        <div className="text-xs uppercase tracking-[0.16em] text-white/78">{item.subtitle}</div>
-                      </Link>
+                      <UniverseRow key={item.id} item={item} onSelect={() => setOpenUniverse(false)} />
                     ))}
                   </div>
                 </div>

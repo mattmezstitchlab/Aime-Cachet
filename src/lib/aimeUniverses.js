@@ -28,6 +28,11 @@ export const UNIVERSES = [
     image: "/landing/zeus.jpg",
     route: "/univers/zeus",
     moduleRoute: "/point-zero",
+    menuItems: [
+      { label: "Cockpit", to: "/point-zero" },
+      { label: "Alertes", to: "/notifications" },
+      { label: "Jour J", to: "/jour-j" },
+    ],
   },
   {
     id: "poseidon",
@@ -43,6 +48,11 @@ export const UNIVERSES = [
     image: "/landing/poseidon.jpg",
     route: "/univers/poseidon",
     moduleRoute: "/prestataires?category=music",
+    menuItems: [
+      { label: "Son", to: "/prestataires?category=music" },
+      { label: "Soirée", to: "/univers/dionysos" },
+      { label: "Prestataires", to: "/prestataires" },
+    ],
   },
   {
     id: "athena",
@@ -58,6 +68,11 @@ export const UNIVERSES = [
     image: "/landing/athena.jpg",
     route: "/univers/athena",
     moduleRoute: "/point-zero?section=reminders",
+    menuItems: [
+      { label: "Rappels", to: "/point-zero?section=reminders" },
+      { label: "Alertes", to: "/notifications" },
+      { label: "Automations", to: "/point-zero?section=automations" },
+    ],
   },
   {
     id: "aphrodite",
@@ -73,6 +88,11 @@ export const UNIVERSES = [
     image: "/landing/aphrodite.jpg",
     route: "/univers/aphrodite",
     moduleRoute: "/documents",
+    menuItems: [
+      { label: "Moodboard", to: "/univers/aphrodite" },
+      { label: "Documents", to: "/documents" },
+      { label: "Fleurs & déco", to: "/prestataires?category=flowers-decor" },
+    ],
   },
   {
     id: "apollon",
@@ -88,6 +108,11 @@ export const UNIVERSES = [
     image: "/landing/apollon.jpg",
     route: "/univers/apollon",
     moduleRoute: "/espace-invites",
+    menuItems: [
+      { label: "Galerie", to: "/univers/apollon" },
+      { label: "Invités", to: "/espace-invites" },
+      { label: "Photo / vidéo", to: "/prestataires?category=photo-video" },
+    ],
   },
   {
     id: "hermes",
@@ -103,6 +128,11 @@ export const UNIVERSES = [
     image: "/landing/hermes.jpg",
     route: "/univers/hermes",
     moduleRoute: "/communication",
+    menuItems: [
+      { label: "Messages", to: "/communication" },
+      { label: "Documents", to: "/documents" },
+      { label: "Prestataires", to: "/prestataires" },
+    ],
   },
   {
     id: "ares",
@@ -118,6 +148,11 @@ export const UNIVERSES = [
     image: "/landing/ares.jpg",
     route: "/univers/ares",
     moduleRoute: "/jour-j",
+    menuItems: [
+      { label: "Timeline", to: "/jour-j" },
+      { label: "Prestataires", to: "/prestataires" },
+      { label: "Plan B", to: "/documents" },
+    ],
   },
   {
     id: "demeter",
@@ -133,6 +168,11 @@ export const UNIVERSES = [
     image: "/landing/demeter.jpg",
     route: "/univers/demeter",
     moduleRoute: "/budget",
+    menuItems: [
+      { label: "Budget", to: "/budget" },
+      { label: "Invités", to: "/invites" },
+      { label: "Traiteur", to: "/prestataires?category=catering" },
+    ],
   },
   {
     id: "artemis",
@@ -148,6 +188,11 @@ export const UNIVERSES = [
     image: "/landing/artemis.jpg",
     route: "/univers/artemis",
     moduleRoute: "/prestataires?category=venue",
+    menuItems: [
+      { label: "Lieux", to: "/prestataires?category=venue" },
+      { label: "Registre", to: "/prestataires" },
+      { label: "Setup", to: "/setup" },
+    ],
   },
   {
     id: "hephaistos",
@@ -163,6 +208,11 @@ export const UNIVERSES = [
     image: "/landing/hephaistos.jpg",
     route: "/univers/hephaistos",
     moduleRoute: "/exports",
+    menuItems: [
+      { label: "Exports", to: "/exports" },
+      { label: "Documents", to: "/documents" },
+      { label: "Supports", to: "/univers/hephaistos" },
+    ],
   },
   {
     id: "dionysos",
@@ -178,6 +228,11 @@ export const UNIVERSES = [
     image: "/landing/dionysos.jpg",
     route: "/univers/dionysos",
     moduleRoute: "/prestataires?category=music",
+    menuItems: [
+      { label: "Soirée", to: "/univers/dionysos" },
+      { label: "Jour J", to: "/jour-j" },
+      { label: "Animations", to: "/prestataires?category=music" },
+    ],
   },
   {
     id: "hestia",
@@ -193,6 +248,11 @@ export const UNIVERSES = [
     image: "/landing/hestia.jpg",
     route: "/univers/hestia",
     moduleRoute: "/invites",
+    menuItems: [
+      { label: "Invités", to: "/invites" },
+      { label: "RSVP", to: "/espace-invites" },
+      { label: "Couple", to: "/couple" },
+    ],
   },
 ];
 
