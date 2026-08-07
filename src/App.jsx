@@ -18,6 +18,7 @@ import WeddingBudget from "@/pages/WeddingBudget";
 import WeddingCommunication from "@/pages/WeddingCommunication";
 import WeddingSetup from "@/pages/WeddingSetup";
 import DesignSystem from "@/pages/DesignSystem";
+import UniversePage from "@/pages/UniversePage";
 import { isWeddingSetupComplete, readWeddingState } from "@/lib/aimeWeddingCore";
 
 function RequireWeddingSetup({ children }) {
@@ -49,6 +50,7 @@ function AppShell() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/design-system" element={<DesignSystem />} />
+          <Route path="/univers/:universeId" element={<UniversePage />} />
           <Route path="/setup" element={<WeddingSetup />} />
           <Route path="/point-zero" element={<RequireWeddingSetup><PointZero /></RequireWeddingSetup>} />
           <Route path="/documents" element={<RequireWeddingSetup><WeddingDocs /></RequireWeddingSetup>} />

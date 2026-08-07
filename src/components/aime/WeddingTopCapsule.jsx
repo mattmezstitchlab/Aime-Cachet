@@ -1,21 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
+import { UNIVERSES, UNIVERSE_GRADIENTS } from "@/lib/aimeUniverses";
 
-const UNIVERSE_ITEMS = [
-  { id: "zeus", label: "Zeus", subtitle: "Point Zéro", to: "/point-zero", gradient: "linear-gradient(135deg, #7C6CFF 0%, #4A56C6 100%)" },
-  { id: "poseidon", label: "Poséidon", subtitle: "Ambiance sonore", to: "/prestataires", gradient: "linear-gradient(135deg, #4FCBFF 0%, #3F7FD2 100%)" },
-  { id: "athena", label: "Athéna", subtitle: "Planning", to: "/notifications", gradient: "linear-gradient(135deg, #D6DBFF 0%, #8D94CC 100%)" },
-  { id: "aphrodite", label: "Aphrodite", subtitle: "Esthétique", to: "/documents", gradient: "linear-gradient(135deg, #F4B6C8 0%, #B989B7 100%)" },
-  { id: "apollon", label: "Apollon", subtitle: "Souvenirs", to: "/espace-invites", gradient: "linear-gradient(135deg, #F7C39A 0%, #C98663 100%)" },
-  { id: "hermes", label: "Hermès", subtitle: "Communication", to: "/communication", gradient: "linear-gradient(135deg, #55E6D5 0%, #4A9FB0 100%)" },
-  { id: "ares", label: "Arès", subtitle: "Jour J", to: "/jour-j", gradient: "linear-gradient(135deg, #9FA9C9 0%, #586487 100%)" },
-  { id: "demeter", label: "Déméter", subtitle: "Budget", to: "/budget", gradient: "linear-gradient(135deg, #7AE3C2 0%, #63AB95 100%)" },
-  { id: "artemis", label: "Artémis", subtitle: "Registre", to: "/prestataires", gradient: "linear-gradient(135deg, #6C5AE8 0%, #41339E 100%)" },
-  { id: "hephaistos", label: "Héphaïstos", subtitle: "Supports", to: "/exports", gradient: "linear-gradient(135deg, #F29B5C 0%, #C4664A 100%)" },
-  { id: "dionysos", label: "Dionysos", subtitle: "Soirée", to: "/jour-j", gradient: "linear-gradient(135deg, #D85AE5 0%, #8B439C 100%)" },
-  { id: "hestia", label: "Hestia", subtitle: "Invités", to: "/invites", gradient: "linear-gradient(135deg, #E9C0BA 0%, #C9939E 100%)" },
-];
+const UNIVERSE_ITEMS = UNIVERSES.map((item) => ({
+  id: item.id,
+  label: item.label,
+  subtitle: item.subtitle,
+  to: item.route,
+  gradient: UNIVERSE_GRADIENTS[item.id],
+}));
 
 const ACCESS_ITEMS = [
   { id: "couple", label: "Créer mon mariage", to: "/setup" },
@@ -26,6 +20,8 @@ const ACCESS_ITEMS = [
 
 function getCurrentUniverse(pathname = "/") {
   if (pathname === "/" || pathname === "/design-system") return null;
+  const universeMatch = /^\/univers\/([^/]+)/.exec(pathname);
+  if (universeMatch) return universeMatch[1];
   if (pathname.startsWith("/point-zero")) return "zeus";
   if (pathname.startsWith("/notifications")) return "athena";
   if (pathname.startsWith("/communication")) return "hermes";
