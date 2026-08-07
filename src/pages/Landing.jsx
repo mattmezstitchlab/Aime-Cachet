@@ -234,14 +234,6 @@ const PILLARS = [
   },
 ];
 
-function compactText(value, max = 116) {
-  if (!value) return "";
-  const clean = value.replace(/\s+/g, " ").trim();
-  if (clean.length <= max) return clean;
-  const cutoff = clean.lastIndexOf(" ", max);
-  return `${clean.slice(0, cutoff > 48 ? cutoff : max).trim()}…`;
-}
-
 function fmtMoney(value) {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
@@ -296,43 +288,24 @@ function RegistryCard({ vendor }) {
   const image = VENDOR_VISUALS[vendor.id] || HERO_BG;
 
   return (
-    <article className="overflow-hidden rounded-[28px] border border-white/10 bg-[#151515] text-white shadow-[0_18px_54px_rgba(0,0,0,0.12)] min-w-[280px] max-w-[280px] shrink-0">
-      <div className="relative aspect-[0.92] overflow-hidden">
+    <Link
+      to={`/prestataires/${vendor.id}`}
+      className="overflow-hidden rounded-[26px] border border-black/8 bg-white shadow-[0_12px_34px_rgba(0,0,0,0.06)] min-w-[248px] max-w-[248px] shrink-0 transition-transform hover:-translate-y-0.5"
+    >
+      <div className="relative h-40 overflow-hidden bg-[var(--color-warm-gray-100)]">
         <img src={image} alt={vendor.name} className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.42))]" aria-hidden="true" />
-        <div className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/45 px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-white/84 backdrop-blur-xl">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.22))]" aria-hidden="true" />
+        <div className="absolute left-3 top-3 rounded-full bg-white/92 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-zinc-600 backdrop-blur-xl">
           {categoryLabel}
         </div>
       </div>
 
-      <div className="p-5 md:p-6">
-        <h3 className="text-[1.75rem] font-display leading-[1] text-white">{vendor.name}</h3>
-        <div className="mt-3 text-sm text-white/58">
-          {vendor.city} · {vendor.responseTime} de réponse
-        </div>
-        <p className="mt-4 text-sm leading-relaxed text-white/62">
-          {compactText(vendor.summary, 120)}
-        </p>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {vendor.tags.slice(0, 2).map((tag) => (
-            <span key={tag} className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] uppercase tracking-[0.16em] text-white/68">
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-5 flex items-center justify-between gap-3">
-          <div>
-            <div className="text-[11px] uppercase tracking-[0.18em] text-white/42">À partir de</div>
-            <div className="mt-2 text-base font-semibold text-white">{fmtMoney(vendor.priceFrom)}</div>
-          </div>
-          <Link to={`/prestataires/${vendor.id}`} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm text-white/88 hover:bg-white/[0.1] transition-colors">
-            Voir la fiche
-          </Link>
-        </div>
+      <div className="p-4 md:p-5 text-zinc-950">
+        <h3 className="text-[1.25rem] font-semibold leading-[1.1]">{vendor.name}</h3>
+        <div className="mt-2 text-sm text-zinc-500">{vendor.city}</div>
+        <div className="mt-3 text-sm text-zinc-800">À partir de {fmtMoney(vendor.priceFrom)}</div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -362,7 +335,6 @@ function PillarSection({ pillar }) {
             </div>
 
             <div className="max-w-4xl">
-              <div className="aime-kicker mb-6">{pillar.myth} · mariage · système</div>
               <h2 className="font-display text-[2.8rem] sm:text-[4rem] lg:text-[5.2rem] leading-[0.94] tracking-[var(--tracking-display)] text-white">
                 {pillar.title}
               </h2>
@@ -397,35 +369,30 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-[var(--color-warm-white)] text-[var(--color-text-primary)]">
       <main>
-        <section className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 pt-5 md:pt-6 scroll-mt-28">
-          <div className="relative min-h-[calc(100vh-116px)] overflow-hidden rounded-[40px] bg-[var(--color-black)] text-white shadow-[0_24px_90px_rgba(0,0,0,0.18)]">
-            <img src={HERO_BG} alt="AIME Wedding" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.12),rgba(0,0,0,0.74))]" aria-hidden="true" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),transparent_24%)]" aria-hidden="true" />
+        <section id="hero" className="relative -mt-20 md:-mt-24 min-h-[100svh] scroll-mt-28 overflow-hidden bg-[var(--color-black)] text-white">
+          <img src={HERO_BG} alt="AIME Wedding" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.62))]" aria-hidden="true" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_24%)]" aria-hidden="true" />
 
-            <div className="relative z-10 flex min-h-[calc(100vh-116px)] flex-col justify-end px-6 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
-              <div className="max-w-4xl">
-                <div className="aime-kicker mb-5">Couple · invités · prestataires · planner</div>
-                <h1 className="font-display text-[3rem] sm:text-[4.8rem] lg:text-[7rem] leading-[0.9] tracking-[var(--tracking-display)] text-white">
-                  Tout le mariage,
-                  <span className="block text-white/88">au bon endroit.</span>
-                </h1>
-                <p className="mt-5 max-w-2xl text-[15px] md:text-[18px] text-white/66 leading-[var(--leading-body)]">
-                  Un accès simple pour le couple, les invités, les prestataires et le planner.
-                </p>
+          <div className="relative z-10 min-h-[100svh] flex items-center justify-center px-5 md:px-8 pt-24 md:pt-28 pb-16 text-center">
+            <div className="max-w-4xl mx-auto">
+              <div className="aime-kicker mb-5">Couple · invités · prestataires · planner</div>
+              <h1 className="font-display text-[3rem] sm:text-[4.8rem] lg:text-[7rem] leading-[0.9] tracking-[var(--tracking-display)] text-white">
+                Tout le mariage,
+                <span className="block text-white/88">au bon endroit.</span>
+              </h1>
+              <p className="mt-5 max-w-2xl mx-auto text-[15px] md:text-[18px] text-white/66 leading-[var(--leading-body)]">
+                Un accès simple pour le couple, les invités, les prestataires et le planner.
+              </p>
 
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link to="/setup" className="aime-button-primary rounded-full px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2">
-                    Créer mon mariage
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <a href="#registre" className="rounded-full border border-white/12 bg-white/[0.05] px-6 py-3.5 text-sm text-white/88 hover:bg-white/[0.1] inline-flex items-center gap-2 transition-colors">
-                    Explorer le registre
-                  </a>
-                  <a href="#pillars" className="rounded-full border border-white/12 bg-white/[0.05] px-6 py-3.5 text-sm text-white/88 hover:bg-white/[0.1] inline-flex items-center gap-2 transition-colors">
-                    Voir les 12 marques
-                  </a>
-                </div>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <Link to="/setup" className="aime-button-primary rounded-full px-6 py-3.5 text-sm font-medium inline-flex items-center gap-2">
+                  Créer mon mariage
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <a href="#registre" className="rounded-full border border-white/12 bg-white/[0.05] px-6 py-3.5 text-sm text-white/88 hover:bg-white/[0.1] inline-flex items-center gap-2 transition-colors">
+                  Explorer le registre
+                </a>
               </div>
             </div>
           </div>
@@ -445,10 +412,10 @@ export default function Landing() {
               <div className="aime-label text-zinc-500 mb-4">Registre prestataires</div>
               <h2 className="font-display text-4xl md:text-6xl tracking-[var(--tracking-h2)] leading-[0.94] text-zinc-950">
                 Une sélection claire,
-                <span className="block text-zinc-950/88">filtrable et en mouvement.</span>
+                <span className="block text-zinc-950/88">filtrable et premium.</span>
               </h2>
               <p className="mt-4 text-base md:text-lg text-zinc-600 leading-[var(--leading-body)] max-w-2xl">
-                Lieux, photo, traiteur, fleurs, son, transport, beauté et coordination : le registre s’aperçoit d’un seul geste, puis s’ouvre en profondeur dans le portail prestataires.
+                Le registre se découvre vite, puis s’ouvre en profondeur dans le portail prestataires.
               </p>
             </div>
 
@@ -461,14 +428,11 @@ export default function Landing() {
             </div>
           </div>
 
-          <div className="mt-8 rounded-[32px] bg-[var(--color-black)] p-4 md:p-5 overflow-hidden">
-            <div className="aime-label text-white/45 mb-4 px-1">Bande horizontale</div>
-            <div className="overflow-hidden">
-              <div className="aime-marquee-track flex gap-4 w-max">
-                {marqueeVendors.map((vendor, index) => (
-                  <RegistryCard key={`${vendor.id}-${index}`} vendor={vendor} />
-                ))}
-              </div>
+          <div className="mt-8 overflow-hidden">
+            <div className="aime-marquee-track flex gap-4 w-max pb-2">
+              {marqueeVendors.map((vendor, index) => (
+                <RegistryCard key={`${vendor.id}-${index}`} vendor={vendor} />
+              ))}
             </div>
           </div>
 
@@ -477,22 +441,16 @@ export default function Landing() {
               Ouvrir le registre complet
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link to="/espace-invites" className="rounded-full border border-black/8 bg-white px-5 py-3 text-sm text-zinc-700 hover:bg-black/[0.03] inline-flex items-center gap-2">
-              Accès invités
-            </Link>
           </div>
         </section>
 
         <section id="pillars" className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 pb-16 md:pb-20 scroll-mt-28">
           <div className="mb-8 md:mb-10">
-            <div className="aime-label text-zinc-500 mb-4">Les 12 marques</div>
+            <div className="aime-label text-zinc-500 mb-4">Les 12 univers</div>
             <h2 className="font-display text-4xl md:text-6xl tracking-[var(--tracking-h2)] leading-[0.94] text-zinc-950 max-w-4xl">
               Douze forces éditoriales,
               <span className="block text-zinc-950/88">un seul produit derrière.</span>
             </h2>
-            <p className="mt-4 max-w-3xl text-base md:text-lg text-zinc-600 leading-[var(--leading-body)]">
-              Chaque dieu reste important sur la landing parce qu’il donne une lecture claire des fonctions déjà présentes dans l’application : coordination, invités, diffusion, logistique, esthétique, médias, lieux, soirée et fabrication.
-            </p>
           </div>
 
           <div className="space-y-8">

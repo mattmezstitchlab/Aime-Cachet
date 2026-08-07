@@ -146,7 +146,7 @@ export default function WeddingTopCapsule() {
                   Registre
                 </a>
                 <a href="#pillars" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                  12 marques
+                  12 univers
                 </a>
                 <Link to="/espace-invites" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
                   Invités
