@@ -21,21 +21,18 @@ import {
 } from "@/lib/aimeWeddingCore";
 
 const VENDOR_OPTIONS = [
-  { id: "all", label: "Tous les prestataires" },
+  { id: "all", label: "Tous" },
   { id: "lieu", label: "Lieu" },
   { id: "photo", label: "Photo / Vidéo" },
   { id: "traiteur", label: "Traiteur" },
   { id: "famille", label: "Famille / Témoins" },
 ];
 
-function Card({ title, eyebrow, children, action = null }) {
+function Card({ title, children, action = null }) {
   return (
     <section className="aime-card-light rounded-[32px] overflow-hidden">
       <div className="px-5 md:px-6 py-4 border-b border-black/8 flex items-center justify-between gap-3">
-        <div>
-          {eyebrow && <div className="aime-label text-zinc-500 mb-1">{eyebrow}</div>}
-          <h2 className="text-zinc-950 text-lg md:text-xl font-semibold">{title}</h2>
-        </div>
+        <h2 className="text-zinc-950 text-lg md:text-xl font-semibold">{title}</h2>
         {action}
       </div>
       <div className="p-5 md:p-6">{children}</div>
@@ -76,6 +73,54 @@ function commitmentTone(status = "received") {
   if (["missing", "due"].includes(status)) return "border-black bg-black text-white";
   if (["received", "sent"].includes(status)) return "border-black/8 bg-white text-zinc-900";
   return "border-black/8 bg-black/[0.02] text-zinc-700";
+}
+
+function VendorCard({ vendor }) {
+  return (
+    <Link
+      to={`/prestataires/${vendor.id}`}
+      className="block rounded-[24px] border border-black/8 bg-black/[0.02] p-4 transition-transform hover:-translate-y-0.5"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-sm font-semibold text-zinc-950">{vendor.name}</div>
+          <div className="text-xs text-zinc-500 mt-2 uppercase tracking-[0.16em]">
+            {VENDOR_TAXONOMY.find((item) => item.id === vendor.category)?.label || vendor.category} · {vendor.city}
+          </div>
+        </div>
+        <span className="rounded-full border border-black/8 bg-white px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-zinc-700">
+          {vendor.status}
+        </span>
+      </div>
+
+      <p className="text-sm text-zinc-600 mt-3 leading-relaxed">{compactText(vendor.summary, 86)}</p>
+
+      <div className="grid grid-cols-3 gap-3 mt-4 text-sm">
+        <div>
+          <div className="aime-label text-zinc-500 mb-1">À partir de</div>
+          <div className="text-zinc-900">{fmtMoney(vendor.priceFrom)}</div>
+        </div>
+        <div>
+          <div className="aime-label text-zinc-500 mb-1">Réponse</div>
+          <div className="text-zinc-900">{vendor.responseTime}</div>
+        </div>
+        <div>
+          <div className="aime-label text-zinc-500 mb-1">Avis</div>
+          <div className="inline-flex items-center gap-1 text-zinc-900"><Star className="w-3.5 h-3.5" /> {vendor.rating}</div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mt-4">
+        <span className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700">
+          {VENDOR_BOOKING_STAGES[vendor.bookingStage]?.label || "À structurer"}
+        </span>
+        <span className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700 inline-flex items-center gap-2">
+          <CreditCard className="w-3.5 h-3.5" />
+          {vendor.paymentStatus}
+        </span>
+      </div>
+    </Link>
+  );
 }
 
 export default function VendorsPortal() {
@@ -135,7 +180,7 @@ export default function VendorsPortal() {
       <div className="max-w-[1380px] mx-auto px-5 md:px-8 lg:px-10 py-6 md:py-8">
         <div className="mb-8 md:mb-10">
           <WeddingPageHero
-            eyebrow="Prestataires · marketplace · exécution"
+            eyebrow="Prestataires"
             title="Le portail prestataire, simple et pilotable."
             description="Qui est retenu, ce qui doit être validé, signé ou payé, et ce qui concerne vraiment chaque équipe."
             image="/landing/ares.jpg"
@@ -145,93 +190,44 @@ export default function VendorsPortal() {
               { label: "Factures", value: commitmentSummary.invoicesOpen, hint: "à suivre" },
               { label: "Paiements", value: paymentSummary.openCount, hint: "ouverts" },
             ]}
-            actions={(
-              <>
+          />
+        </div>
+
+        <section className="mb-4 rounded-[32px] border border-black/8 bg-white p-5 md:p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto] items-start">
+            <div>
+              <div className="aime-label text-zinc-500 mb-3">Filtres</div>
+              <div className="flex flex-wrap gap-2 mb-3">
                 {VENDOR_OPTIONS.map((item) => (
                   <FilterChip key={item.id} active={focus === item.id} onClick={() => setFocus(item.id)}>
                     {item.label}
                   </FilterChip>
                 ))}
-              </>
-            )}
-          />
-        </div>
-
-        <div className="grid gap-4 xl:grid-cols-[1.12fr_0.88fr] items-start mb-4">
-          <Card
-            title="Marketplace prestataires"
-            eyebrow="Taxonomie mariage"
-            action={
-              <div className="flex flex-wrap gap-2 justify-end">
+              </div>
+              <div className="flex flex-wrap gap-2">
                 {VENDOR_TAXONOMY.map((item) => (
                   <FilterChip key={item.id} active={taxonomy === item.id} onClick={() => setTaxonomy(item.id)}>
                     {item.label}
                   </FilterChip>
                 ))}
               </div>
-            }
-          >
+            </div>
+            <Link to="/budget" className="rounded-full bg-black px-5 py-3 text-sm text-white hover:bg-zinc-800 inline-flex items-center gap-2">
+              Ouvrir budget & règlements
+            </Link>
+          </div>
+        </section>
+
+        <div className="grid gap-4 xl:grid-cols-[1.12fr_0.88fr] items-start mb-4">
+          <Card title="Prestataires visibles">
             <div className="grid md:grid-cols-2 gap-4">
               {marketplace.map((vendor) => (
-                <div key={vendor.id} className="rounded-[24px] border border-black/8 bg-black/[0.02] p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="text-sm font-semibold text-zinc-950">{vendor.name}</div>
-                      <div className="text-xs text-zinc-500 mt-2 uppercase tracking-[0.16em]">
-                        {VENDOR_TAXONOMY.find((item) => item.id === vendor.category)?.label || vendor.category} · {vendor.city}
-                      </div>
-                    </div>
-                    <span className="rounded-full border border-black/8 bg-white px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-zinc-700">
-                      {vendor.status}
-                    </span>
-                  </div>
-
-                  <p className="text-sm text-zinc-600 mt-3 leading-relaxed">{compactText(vendor.summary, 92)}</p>
-
-                  <div className="grid grid-cols-3 gap-3 mt-4 text-sm">
-                    <div>
-                      <div className="aime-label text-zinc-500 mb-1">À partir de</div>
-                      <div className="text-zinc-900">{fmtMoney(vendor.priceFrom)}</div>
-                    </div>
-                    <div>
-                      <div className="aime-label text-zinc-500 mb-1">Réponse</div>
-                      <div className="text-zinc-900">{vendor.responseTime}</div>
-                    </div>
-                    <div>
-                      <div className="aime-label text-zinc-500 mb-1">Avis</div>
-                      <div className="inline-flex items-center gap-1 text-zinc-900"><Star className="w-3.5 h-3.5" /> {vendor.rating}</div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    <span className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700">
-                      {VENDOR_BOOKING_STAGES[vendor.bookingStage]?.label || "À structurer"}
-                    </span>
-                    <span className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700 inline-flex items-center gap-2">
-                      <CreditCard className="w-3.5 h-3.5" />
-                      {vendor.paymentStatus}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {vendor.tags.map((tag) => (
-                      <span key={tag} className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-xs text-zinc-700">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <Link to={`/prestataires/${vendor.id}`} className="rounded-full border border-black/8 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-black/[0.03]">
-                      Voir fiche
-                    </Link>
-                  </div>
-                </div>
+                <VendorCard key={vendor.id} vendor={vendor} />
               ))}
             </div>
           </Card>
 
-          <Card title="Devis, contrats, factures" eyebrow="Ce qui n'est pas encore verrouillé">
+          <Card title="Validations à suivre">
             <div className="grid grid-cols-3 gap-3 mb-4">
               <div className="rounded-[20px] border border-black/8 bg-black/[0.02] p-4">
                 <div className="aime-label text-zinc-500 mb-2">Devis</div>
@@ -280,19 +276,13 @@ export default function VendorsPortal() {
                   Aucun devis, contrat ou facture en attente pour ce filtre.
                 </div>
               )}
-
-              <div className="flex flex-wrap gap-2">
-                <Link to="/budget" className="inline-flex items-center rounded-full border border-black/8 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-black/[0.03]">
-                  Ouvrir budget & règlements
-                </Link>
-              </div>
             </div>
           </Card>
         </div>
 
         <div className="grid gap-4 xl:grid-cols-[1fr_1fr] items-start">
           <div className="space-y-4">
-            <Card title="Vos horaires utiles" eyebrow="Ce qui vous concerne vraiment">
+            <Card title="Horaires utiles">
               <div className="space-y-3">
                 {steps.map((step) => (
                   <div key={step.id} className="rounded-[24px] border border-black/8 bg-black/[0.02] p-4">
@@ -315,7 +305,7 @@ export default function VendorsPortal() {
               </div>
             </Card>
 
-            <Card title="Documents utiles" eyebrow="Pas de version fantôme">
+            <Card title="Documents utiles">
               <div className="space-y-3">
                 {docs.map((doc) => (
                   <div key={doc.id} className="rounded-[24px] border border-black/8 bg-black/[0.02] p-4">
@@ -338,7 +328,7 @@ export default function VendorsPortal() {
           </div>
 
           <div className="space-y-4">
-            <Card title="Changements utiles" eyebrow="Alertes filtrées">
+            <Card title="Changements utiles">
               <div className="space-y-3">
                 {notifications.length === 0 && (
                   <div className="rounded-[24px] border border-black/8 bg-black/[0.02] p-5 text-sm text-zinc-600">
@@ -359,7 +349,7 @@ export default function VendorsPortal() {
               </div>
             </Card>
 
-            <Card title="Vos contacts utiles" eyebrow="Parler à la bonne personne vite">
+            <Card title="Contacts utiles">
               <div className="space-y-3">
                 {contacts.map((contact) => (
                   <div key={`${contact.label}-${contact.phone}`} className="rounded-[24px] border border-black/8 bg-black/[0.02] p-4">
