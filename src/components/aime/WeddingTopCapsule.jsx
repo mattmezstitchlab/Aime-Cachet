@@ -119,6 +119,7 @@ export default function WeddingTopCapsule() {
   const profileName = wedding.meta?.couple || "Profil mariage";
   const initials = getInitials(profileName);
   const onLanding = location.pathname === "/";
+  const onSetup = location.pathname === "/setup";
   const supportsRoleSwitch = ROLE_ROUTES.has(location.pathname);
   const activeRole = ROLE_OPTIONS.some((item) => item.id === searchParams.get("role"))
     ? searchParams.get("role")
@@ -165,6 +166,8 @@ export default function WeddingTopCapsule() {
                 </Link>
               </div>
             </>
+          ) : onSetup ? (
+            <div className="shrink-0" />
           ) : (
             <>
               {supportsRoleSwitch && (
