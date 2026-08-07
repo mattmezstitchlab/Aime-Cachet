@@ -58,10 +58,19 @@ const PILLARS = [
     myth: "Zeus",
     title: "Orchestration globale",
     visualHook: "Le flux souverain qui relie tous les rôles du mariage sans jamais casser la lecture d'ensemble.",
-    bullets: [
-      "Vue unique pour le planner, mais sans bruit inutile pour le couple.",
-      "Rappels, alertes et arbitrages rassemblés dans une même logique d'orchestration.",
-      "Chaque décision prise ici doit immédiatement se refléter dans le reste du système.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "Gardez la vision d’ensemble sans porter le bruit opérationnel du mariage.",
+      },
+      {
+        title: "Pour le planner",
+        text: "Centralisez validations, rôles, timings et décisions sensibles dans la même vue.",
+      },
+      {
+        title: "Ce que cela tient",
+        text: "Budget, documents, diffusion et jour J restent alignés sans perte d’information.",
+      },
     ],
     href: "/point-zero",
     cta: "Ouvrir Point Zéro",
@@ -73,10 +82,19 @@ const PILLARS = [
     myth: "Poséidon",
     title: "Son, lumière & ambiance",
     visualHook: "L'immersion émotionnelle d'un mariage ne se pilote pas à l'instinct : elle se prépare comme une vague parfaitement tenue.",
-    bullets: [
-      "Le tempo de la soirée dépend du dîner, des discours et des transitions visibles dans le planning.",
-      "Le portail prestataires et la timeline live servent de point d'appui à la technique terrain.",
-      "Le langage de marque peut être plus fort ici, tant que l'usage reste crédible.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "L’ambiance se prépare par séquences, pas par intuition de dernière minute.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "DJ, son, lumière et timing lisent tous le même déroulé partagé.",
+      },
+      {
+        title: "Ce que cela règle",
+        text: "Cocktail, dîner, entrée, ouverture de bal et soirée gardent le bon rythme.",
+      },
     ],
     href: "/prestataires",
     cta: "Voir le portail prestataires",
@@ -88,10 +106,19 @@ const PILLARS = [
     myth: "Athéna",
     title: "Stratégie & automatisation",
     visualHook: "La vraie intelligence d'un mariage se joue dans l'anticipation, pas dans l'accumulation de formulaires.",
-    bullets: [
-      "Les automatismes restent sobres : seulement ceux qui enlèvent de la charge mentale réelle.",
-      "Le setup initialise des rappels utiles au lieu d'ouvrir une app vide ou confuse.",
-      "Chaque signal doit produire une conséquence lisible dans les documents, le budget ou le Jour J.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "Vous voyez ce qui mérite une décision, pas tout le bruit de préparation.",
+      },
+      {
+        title: "Pour le planner",
+        text: "Rappels, alertes et dépendances se lisent avant de devenir des urgences.",
+      },
+      {
+        title: "Ce que cela anticipe",
+        text: "Météo, accès, retards, invités et arbitrages sensibles sont remontés plus tôt.",
+      },
     ],
     href: "/notifications",
     cta: "Voir les notifications",
@@ -103,10 +130,19 @@ const PILLARS = [
     myth: "Aphrodite",
     title: "Scénographie & esthétique",
     visualHook: "La beauté du mariage devient plus forte quand elle est cadrée, transmise et relue comme un langage partagé.",
-    bullets: [
-      "La scénographie gagne en crédibilité quand elle vit dans des documents réellement partagés.",
-      "L'esthétique influence aussi la circulation, les timings image et l'expérience invités.",
-      "Le module Documents devient la colonne vertébrale de cette mise en forme.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "L’esthétique reste tenue sans se perdre entre captures, messages et validations.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "Fleurs, déco, scénographie et implantation partagent la même direction visuelle.",
+      },
+      {
+        title: "Ce que cela cadre",
+        text: "Ambiance, matières, palette et circulation visuelle du lieu restent cohérentes.",
+      },
     ],
     href: "/documents",
     cta: "Voir les documents",
@@ -118,10 +154,19 @@ const PILLARS = [
     myth: "Apollon",
     title: "Photo, vidéo & souvenirs",
     visualHook: "La mémoire du mariage dépend d'une lumière tenue, d'un rythme juste et de séquences réellement respectées.",
-    bullets: [
-      "La timeline live aide à préserver les moments les plus sensibles à la lumière et au tempo.",
-      "Les exports et la feuille de service donnent une base exploitable aux équipes image.",
-      "La landing peut glorifier l'art visuel, l'app reste concentrée sur l'exécution utile.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "Les souvenirs gagnent en justesse quand les bons moments sont protégés.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "Photo et vidéo savent quand intervenir, où se placer et quoi couvrir.",
+      },
+      {
+        title: "Ce que cela préserve",
+        text: "Fenêtres de lumière, transitions, captation et galerie finale restent bien tenues.",
+      },
     ],
     href: "/prestataires",
     cta: "Voir les métiers image",
@@ -133,10 +178,19 @@ const PILLARS = [
     myth: "Hermès",
     title: "Communication & diffusion",
     visualHook: "Un mariage se fragilise quand l'information circule mal. Hermès raconte la vitesse, mais surtout la justesse du message.",
-    bullets: [
-      "Un message ne part jamais vers tout le monde sans raison.",
-      "Les changements critiques doivent être diffusés avec audience, source et conséquence claire.",
-      "Le produit reste sobre : pas d'usine à mails, mais un vrai centre de diffusion utile.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "Vous recevez les bonnes informations au bon moment, sans surcharge inutile.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "Les échanges restent clairs, tracés et reliés aux pièces réellement utiles.",
+      },
+      {
+        title: "Ce que cela diffuse",
+        text: "Messages, relances, plans B et documents partagés partent au bon public.",
+      },
     ],
     href: "/communication",
     cta: "Voir la diffusion ciblée",
@@ -148,10 +202,19 @@ const PILLARS = [
     myth: "Arès",
     title: "Régie terrain & exécution",
     visualHook: "Le terrain n'a rien de poétique quand il déraille. Il doit être précis, rapide et maintenu sans panique.",
-    bullets: [
-      "Le Jour J doit rester lisible même sous pression.",
-      "Chaque incident doit se convertir en rappel, note ou document utile.",
-      "Le planner garde la vue globale, mais les équipes terrain voient seulement l'essentiel à exécuter.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "Le terrain reste invisible quand il fonctionne vraiment bien.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "Montage, circulation, mobilier et incidents se pilotent sans flottement.",
+      },
+      {
+        title: "Ce que cela exécute",
+        text: "Implantation, accès, chronologie et check final restent lisibles sous pression.",
+      },
     ],
     href: "/jour-j",
     cta: "Voir la timeline live",
@@ -163,10 +226,19 @@ const PILLARS = [
     myth: "Déméter",
     title: "Table, service & ressources",
     visualHook: "Le dîner, les régimes, le service et les arbitrages budgétaires forment un même système, pas des sujets séparés.",
-    bullets: [
-      "Le budget et le plan de table dialoguent directement avec le réel du service.",
-      "Les documents repas spéciaux évitent les oublis silencieux mais critiques.",
-      "La table devient un sujet d'orchestration, pas juste de décoration.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "Le dîner se décide avec goût, mais aussi avec cohérence réelle.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "Traiteur, régimes, tables et volumes parlent le même langage.",
+      },
+      {
+        title: "Ce que cela tient",
+        text: "Menus, allergies, service, budget repas et rythme du dîner restent alignés.",
+      },
     ],
     href: "/budget",
     cta: "Voir budget & arbitrages",
@@ -178,10 +250,19 @@ const PILLARS = [
     myth: "Artémis",
     title: "Lieux & espaces",
     visualHook: "Le lieu n'est pas un décor fixe. C'est une matière vivante : accès, météo, flux, accueil, extérieur, repli.",
-    bullets: [
-      "Le setup pose les contraintes du lieu dès l'initialisation du mariage.",
-      "Les documents d'accueil et d'accessibilité transforment le lieu en expérience maîtrisée.",
-      "La landing peut être plus audacieuse ici sans perdre l'ancrage opérationnel.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "Le lieu se choisit pour son usage réel, pas seulement pour sa photo.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "Capacité, accès, repli météo et logistique se lisent dès la recherche.",
+      },
+      {
+        title: "Ce que cela éclaire",
+        text: "Distance, disponibilité, style, circulation et plan B sont visibles plus tôt.",
+      },
     ],
     href: "/prestataires",
     cta: "Voir les lieux",
@@ -193,10 +274,19 @@ const PILLARS = [
     myth: "Héphaïstos",
     title: "Outils & supports sur-mesure",
     visualHook: "Quand le mariage demande une fiche, un export, une feuille ou un support spécifique, il faut pouvoir le forger proprement.",
-    bullets: [
-      "Le système peut générer des supports lisibles par rôle et par moment.",
-      "Les documents spécialisés apparaissent selon les besoins réels du mariage.",
-      "La fabrication reste discrète, premium et très utilitaire.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "Les supports restent beaux, lisibles et prêts au bon moment.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "Papeterie, exports et feuilles de rôle se fabriquent sans friction.",
+      },
+      {
+        title: "Ce que cela produit",
+        text: "Faire-part, menus, plans, PDF et rendus finaux sortent au bon format.",
+      },
     ],
     href: "/exports",
     cta: "Voir les exports",
@@ -208,10 +298,19 @@ const PILLARS = [
     myth: "Dionysos",
     title: "Fête & soirée",
     visualHook: "La nuit réussie d'un mariage est le résultat d'un enchaînement tenu, pas d'un simple bouton fête.",
-    bullets: [
-      "La soirée dépend directement de la tenue du tempo précédent.",
-      "Les décisions de dernière minute doivent protéger la fête, pas la fragiliser.",
-      "La landing célèbre l'euphorie, l'app protège la fluidité réelle.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "La soirée garde son intensité sans casser le déroulé de la journée.",
+      },
+      {
+        title: "Pour les partenaires",
+        text: "Animations, bar, ouverture et after se calent sur le vrai tempo.",
+      },
+      {
+        title: "Ce que cela amplifie",
+        text: "Énergie, programmation, temps forts et fin de soirée restent cohérents.",
+      },
     ],
     href: "/jour-j",
     cta: "Suivre la soirée",
@@ -223,10 +322,19 @@ const PILLARS = [
     myth: "Hestia",
     title: "Accueil, famille & transmission",
     visualHook: "Un mariage reste un foyer temporaire : il faut accueillir, rassurer, relier et transmettre l'expérience à toutes les générations.",
-    bullets: [
-      "Le couple ne doit pas absorber le bruit inutile.",
-      "Les témoins et la famille jouent un vrai rôle de transmission terrain.",
-      "Le système protège le cœur humain du mariage, pas seulement sa logistique.",
+    columns: [
+      {
+        title: "Pour les mariés",
+        text: "L’accueil reste doux, lisible et humain pour toutes les générations.",
+      },
+      {
+        title: "Pour les proches",
+        text: "Famille, témoins, enfants et aînés trouvent leur place sans flottement.",
+      },
+      {
+        title: "Ce que cela protège",
+        text: "RSVP, tables, foyers, hébergements et lien humain du mariage restent tenus.",
+      },
     ],
     href: "/couple",
     cta: "Voir l'espace couple",
@@ -309,6 +417,19 @@ function RegistryCard({ vendor }) {
   );
 }
 
+function EditorialColumn({ item }) {
+  return (
+    <div className="py-6 md:py-8 md:px-6 first:md:pl-0 last:md:pr-0">
+      <div className="text-[11px] md:text-[12px] uppercase tracking-[0.16em] text-zinc-500 mb-4">
+        {item.title}
+      </div>
+      <p className="max-w-[28ch] text-[15px] md:text-[18px] leading-[1.8] text-zinc-700">
+        {item.text}
+      </p>
+    </div>
+  );
+}
+
 function PillarSection({ pillar }) {
   return (
     <section id={pillar.id} className="scroll-mt-28">
@@ -345,12 +466,10 @@ function PillarSection({ pillar }) {
           </div>
         </div>
 
-        <div className="bg-white px-6 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10 text-zinc-950">
-          <div className="grid md:grid-cols-3 gap-3">
-            {pillar.bullets.map((item) => (
-              <div key={item} className="rounded-[22px] border border-black/8 bg-[var(--color-warm-white)] p-4 text-sm text-zinc-700 leading-relaxed">
-                {item}
-              </div>
+        <div className="bg-white px-6 md:px-8 lg:px-10 text-zinc-950">
+          <div className="grid md:grid-cols-3 md:divide-x divide-black/8">
+            {pillar.columns.map((item) => (
+              <EditorialColumn key={item.title} item={item} />
             ))}
           </div>
         </div>
@@ -376,7 +495,6 @@ export default function Landing() {
 
           <div className="relative z-10 min-h-[100svh] flex items-center justify-center px-5 md:px-8 pt-24 md:pt-28 pb-16 text-center">
             <div className="max-w-4xl mx-auto">
-              <div className="aime-kicker mb-5">Couple · invités · prestataires · planner</div>
               <h1 className="font-display text-[3rem] sm:text-[4.8rem] lg:text-[7rem] leading-[0.9] tracking-[var(--tracking-display)] text-white">
                 Tout le mariage,
                 <span className="block text-white/88">au bon endroit.</span>
