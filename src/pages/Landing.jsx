@@ -463,7 +463,7 @@ function PillarSection({ pillar }) {
           <div className="relative z-10 flex min-h-[62vh] md:min-h-[68vh] flex-col justify-between p-6 md:p-8 lg:p-10 text-white">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div
-                className="inline-flex items-center rounded-full px-4 py-2 text-sm text-white shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+                className="inline-flex items-center rounded-full px-4 py-2 text-[15px] font-semibold italic text-white shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
                 style={{ background: badgeBackground }}
               >
                 {pillar.myth}
