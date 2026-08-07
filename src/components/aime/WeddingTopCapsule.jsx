@@ -139,52 +139,71 @@ export default function WeddingTopCapsule() {
             <div className="font-display text-[18px] md:text-[22px] leading-[1] text-zinc-950 truncate">AIME Wedding</div>
           </Link>
 
-          {onLanding && (
-            <nav className="hidden lg:flex items-center gap-1.5">
-              <a href="#systeme" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                Le système
-              </a>
-              <a href="#pillars" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                12 piliers
-              </a>
-            </nav>
-          )}
+          {onLanding ? (
+            <>
+              <nav className="hidden lg:flex items-center gap-1.5">
+                <a href="#registre" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
+                  Registre
+                </a>
+                <Link to="/espace-invites" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
+                  Invités
+                </Link>
+                <Link to="/setup" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
+                  Couple
+                </Link>
+                <Link to="/point-zero?role=planner" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
+                  Planner
+                </Link>
+              </nav>
 
-          {supportsRoleSwitch && !onLanding && (
-            <div className="hidden md:flex items-center gap-1 rounded-full border border-black/8 bg-white p-1">
-              {ROLE_OPTIONS.map((role) => (
-                <button
-                  key={role.id}
-                  onClick={() => setRole(role.id)}
-                  className={`rounded-full px-3 py-1.5 text-xs transition-colors ${activeRole === role.id ? "bg-black text-white" : "text-zinc-700 hover:bg-black/[0.03]"}`}
+              <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
+                <Link to="/prestataires" className="hidden sm:inline-flex rounded-full border border-black/8 bg-white px-4 py-2.5 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
+                  Registre
+                </Link>
+                <Link to="/setup" className="inline-flex rounded-full bg-black px-4 py-2.5 text-sm text-white hover:bg-zinc-800 transition-colors">
+                  Créer mon mariage
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              {supportsRoleSwitch && (
+                <div className="hidden md:flex items-center gap-1 rounded-full border border-black/8 bg-white p-1">
+                  {ROLE_OPTIONS.map((role) => (
+                    <button
+                      key={role.id}
+                      onClick={() => setRole(role.id)}
+                      className={`rounded-full px-3 py-1.5 text-xs transition-colors ${activeRole === role.id ? "bg-black text-white" : "text-zinc-700 hover:bg-black/[0.03]"}`}
+                    >
+                      {role.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
+                {contextActions.map((item) =>
+                  item.type === "button" ? (
+                    <CapsuleIconButton key={item.label} onClick={item.onClick} icon={item.icon} label={item.label} />
+                  ) : (
+                    <CapsuleIconLink key={item.label} to={item.to} icon={item.icon} label={item.label} />
+                  ),
+                )}
+                <Link
+                  to="/couple"
+                  aria-label="Profil"
+                  title={profileName}
+                  className="rounded-full p-2.5 text-black/82 hover:text-black hover:bg-black/[0.04] transition-colors inline-flex items-center justify-center"
                 >
-                  {role.label}
-                </button>
-              ))}
-            </div>
+                  <span className="w-4 h-4 inline-flex items-center justify-center text-[10px] font-semibold leading-none">
+                    {initials}
+                  </span>
+                </Link>
+                <CapsuleIconLink to="/setup" icon={Settings2} label="Setup mariage" />
+                <CapsuleIconLink to="/point-zero" icon={PlayCircle} label="Point Zéro" />
+              </div>
+            </>
           )}
-
-          <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
-            {contextActions.map((item) =>
-              item.type === "button" ? (
-                <CapsuleIconButton key={item.label} onClick={item.onClick} icon={item.icon} label={item.label} />
-              ) : (
-                <CapsuleIconLink key={item.label} to={item.to} icon={item.icon} label={item.label} />
-              ),
-            )}
-            <Link
-              to="/couple"
-              aria-label="Profil"
-              title={profileName}
-              className="rounded-full p-2.5 text-black/82 hover:text-black hover:bg-black/[0.04] transition-colors inline-flex items-center justify-center"
-            >
-              <span className="w-4 h-4 inline-flex items-center justify-center text-[10px] font-semibold leading-none">
-                {initials}
-              </span>
-            </Link>
-            <CapsuleIconLink to="/setup" icon={Settings2} label="Setup mariage" />
-            <CapsuleIconLink to="/point-zero" icon={PlayCircle} label="Point Zéro" />
-          </div>
         </div>
       </div>
     </div>

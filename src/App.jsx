@@ -50,9 +50,9 @@ function AppShell() {
           <Route path="/notifications" element={<RequireWeddingSetup><WeddingNotifications /></RequireWeddingSetup>} />
           <Route path="/couple" element={<RequireWeddingSetup><CoupleHome /></RequireWeddingSetup>} />
           <Route path="/invites" element={<RequireWeddingSetup><WeddingGuests /></RequireWeddingSetup>} />
-          <Route path="/espace-invites" element={<RequireWeddingSetup><WeddingGuestPortal /></RequireWeddingSetup>} />
-          <Route path="/prestataires" element={<RequireWeddingSetup><VendorsPortal /></RequireWeddingSetup>} />
-          <Route path="/prestataires/:vendorId" element={<RequireWeddingSetup><VendorProfile /></RequireWeddingSetup>} />
+          <Route path="/espace-invites" element={<WeddingGuestPortal />} />
+          <Route path="/prestataires" element={<VendorsPortal />} />
+          <Route path="/prestataires/:vendorId" element={<VendorProfile />} />
           <Route path="/exports" element={<RequireWeddingSetup><WeddingExports /></RequireWeddingSetup>} />
           <Route path="/budget" element={<RequireWeddingSetup><WeddingBudget /></RequireWeddingSetup>} />
           <Route path="/communication" element={<RequireWeddingSetup><WeddingCommunication /></RequireWeddingSetup>} />
