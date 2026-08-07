@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { UNIVERSES, UNIVERSE_GRADIENTS } from "@/lib/aimeUniverses";
@@ -9,8 +9,15 @@ const UNIVERSE_ITEMS = UNIVERSES.map((item) => ({
   subtitle: item.subtitle,
   to: item.route,
   gradient: UNIVERSE_GRADIENTS[item.id],
-  menuItems: item.menuItems || [],
+  menuByMode: item.menuByMode || {},
 }));
+
+const MODE_OPTIONS = [
+  { id: "couple", label: "Mariés" },
+  { id: "guests", label: "Invités" },
+  { id: "vendors", label: "Prestataires" },
+  { id: "planner", label: "Planner" },
+];
 
 const ACCESS_ITEMS = [
   { id: "couple", label: "Créer mon mariage", to: "/setup" },
@@ -41,7 +48,17 @@ function getCurrentUniverse(pathname = "/") {
   return null;
 }
 
-function UniverseRow({ item, onSelect }) {
+function inferMode(pathname = "/") {
+  if (pathname.startsWith("/setup") || pathname.startsWith("/couple")) return "couple";
+  if (pathname.startsWith("/espace-invites")) return "guests";
+  if (pathname.startsWith("/prestataires")) return "vendors";
+  if (pathname.startsWith("/point-zero")) return "planner";
+  return "couple";
+}
+
+function UniverseRow({ item, mode, onSelect }) {
+  const subItems = item.menuByMode?.[mode] || [];
+
   return (
     <div className="rounded-[18px] bg-[var(--color-warm-white)] px-3 py-3">
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
@@ -54,9 +71,9 @@ function UniverseRow({ item, onSelect }) {
           {item.label}
         </Link>
         <div className="flex flex-wrap gap-2">
-          {item.menuItems.map((entry) => (
+          {subItems.map((entry) => (
             <Link
-              key={`${item.id}-${entry.label}`}
+              key={`${item.id}-${mode}-${entry.label}`}
               to={entry.to}
               onClick={onSelect}
               className="rounded-full border border-black/8 bg-white px-3 py-2 text-xs text-zinc-700 hover:bg-black/[0.03]"
@@ -75,6 +92,16 @@ export default function WeddingTopCapsule() {
   const [openUniverse, setOpenUniverse] = useState(false);
   const [openAccess, setOpenAccess] = useState(false);
   const [openAime, setOpenAime] = useState(false);
+  const [menuMode, setMenuMode] = useState(() => {
+    if (typeof window === "undefined") return "couple";
+    return window.localStorage.getItem("aime_universe_menu_mode") || inferMode(window.location.pathname);
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("aime_universe_menu_mode", menuMode);
+  }, [menuMode]);
+
   const currentUniverseId = getCurrentUniverse(location.pathname);
   const currentUniverse = useMemo(
     () => UNIVERSE_ITEMS.find((item) => item.id === currentUniverseId) || null,
@@ -84,7 +111,7 @@ export default function WeddingTopCapsule() {
 
   const centerGradient = currentUniverse
     ? currentUniverse.gradient
-    : "linear-gradient(135deg, #7C6CFF 0%, #4FCBFF 35%, #F4B6C8 70%, #F29B5C 100%)";
+    : "linear-gradient(135deg, #8459ff 0%, #4fd0ff 24%, #47e3b8 42%, #f4b6c8 68%, #ff9b52 100%)";
 
   return (
     <div className="fixed top-3 left-1/2 z-[60] -translate-x-1/2 w-[min(1440px,calc(100%-20px))] print:hidden">
@@ -99,9 +126,12 @@ export default function WeddingTopCapsule() {
                   setOpenUniverse(false);
                   setOpenAccess(false);
                 }}
-                className="rounded-full px-4 md:px-5 py-2.5 text-sm md:text-[15px] inline-flex items-center gap-2 hover:bg-black/[0.03] transition-colors"
+                className="rounded-full px-4 md:px-5 py-2.5 text-sm md:text-[15px] inline-flex items-center gap-3 hover:bg-black/[0.03] transition-colors"
               >
-                <span className="font-display text-[18px] md:text-[22px] leading-[1] text-zinc-950">AIME</span>
+                <span className="text-left leading-[1]">
+                  <span className="font-display text-[18px] md:text-[22px] text-zinc-950 block">AIME</span>
+                  <span className="text-[11px] uppercase tracking-[0.16em] text-zinc-400 block mt-1">Wedding</span>
+                </span>
                 <ChevronDown className={`w-4 h-4 text-zinc-600 transition-transform ${openAime ? "rotate-180" : ""}`} />
               </button>
 
@@ -147,6 +177,20 @@ export default function WeddingTopCapsule() {
 
               {openUniverse && (
                 <div className="absolute left-0 top-full mt-3 w-[min(640px,calc(100vw-28px))] rounded-[24px] border border-black/8 bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.14)]">
+                  <div className="p-2 border-b border-black/8 mb-2">
+                    <div className="flex flex-wrap gap-2">
+                      {MODE_OPTIONS.map((mode) => (
+                        <button
+                          key={mode.id}
+                          type="button"
+                          onClick={() => setMenuMode(mode.id)}
+                          className={`rounded-full px-3.5 py-2 text-xs transition-colors ${menuMode === mode.id ? "bg-black text-white" : "bg-[var(--color-warm-white)] text-zinc-700 hover:bg-black/[0.03]"}`}
+                        >
+                          {mode.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                   <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1">
                     <div className="rounded-[18px] bg-[var(--color-warm-white)] px-3 py-3">
                       <div className="flex flex-col gap-3 md:flex-row md:items-center">
@@ -164,7 +208,7 @@ export default function WeddingTopCapsule() {
                       </div>
                     </div>
                     {UNIVERSE_ITEMS.map((item) => (
-                      <UniverseRow key={item.id} item={item} onSelect={() => setOpenUniverse(false)} />
+                      <UniverseRow key={item.id} item={item} mode={menuMode} onSelect={() => setOpenUniverse(false)} />
                     ))}
                   </div>
                 </div>

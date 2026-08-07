@@ -28,11 +28,28 @@ export const UNIVERSES = [
     image: "/landing/zeus.jpg",
     route: "/univers/zeus",
     moduleRoute: "/point-zero",
-    menuItems: [
-      { label: "Cockpit", to: "/point-zero" },
-      { label: "Alertes", to: "/notifications" },
-      { label: "Jour J", to: "/jour-j" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Vue couple", to: "/couple" },
+        { label: "Décisions", to: "/budget" },
+        { label: "Jour J", to: "/jour-j?role=couple" },
+      ],
+      guests: [
+        { label: "Accueil", to: "/espace-invites" },
+        { label: "Programme", to: "/espace-invites" },
+        { label: "Infos utiles", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Portail", to: "/prestataires" },
+        { label: "Horaires", to: "/jour-j?role=vendors" },
+        { label: "Docs", to: "/documents?role=vendors" },
+      ],
+      planner: [
+        { label: "Cockpit", to: "/point-zero" },
+        { label: "Alertes", to: "/notifications?role=planner" },
+        { label: "Jour J", to: "/jour-j?role=planner" },
+      ],
+    },
   },
   {
     id: "poseidon",
@@ -48,11 +65,27 @@ export const UNIVERSES = [
     image: "/landing/poseidon.jpg",
     route: "/univers/poseidon",
     moduleRoute: "/prestataires?category=music",
-    menuItems: [
-      { label: "Son", to: "/prestataires?category=music" },
-      { label: "Soirée", to: "/univers/dionysos" },
-      { label: "Prestataires", to: "/prestataires" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Ambiance", to: "/univers/poseidon" },
+        { label: "Soirée", to: "/univers/dionysos" },
+        { label: "Budget", to: "/budget" },
+      ],
+      guests: [
+        { label: "Programme", to: "/espace-invites" },
+        { label: "Soirée", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "DJ / son", to: "/prestataires?category=music" },
+        { label: "Jour J", to: "/jour-j?role=vendors" },
+        { label: "Paiements", to: "/budget" },
+      ],
+      planner: [
+        { label: "Son", to: "/prestataires?category=music" },
+        { label: "Cocktail", to: "/jour-j?role=planner" },
+        { label: "After", to: "/univers/dionysos" },
+      ],
+    },
   },
   {
     id: "athena",
@@ -68,11 +101,24 @@ export const UNIVERSES = [
     image: "/landing/athena.jpg",
     route: "/univers/athena",
     moduleRoute: "/point-zero?section=reminders",
-    menuItems: [
-      { label: "Rappels", to: "/point-zero?section=reminders" },
-      { label: "Alertes", to: "/notifications" },
-      { label: "Automations", to: "/point-zero?section=automations" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "À valider", to: "/couple" },
+        { label: "Alertes", to: "/notifications?role=couple" },
+      ],
+      guests: [
+        { label: "Infos utiles", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Tâches", to: "/point-zero?role=vendors" },
+        { label: "Docs", to: "/documents?role=vendors" },
+      ],
+      planner: [
+        { label: "Rappels", to: "/point-zero?section=reminders&role=planner" },
+        { label: "Alertes", to: "/notifications?role=planner" },
+        { label: "Automations", to: "/point-zero?section=automations&role=planner" },
+      ],
+    },
   },
   {
     id: "aphrodite",
@@ -88,11 +134,25 @@ export const UNIVERSES = [
     image: "/landing/aphrodite.jpg",
     route: "/univers/aphrodite",
     moduleRoute: "/documents",
-    menuItems: [
-      { label: "Moodboard", to: "/univers/aphrodite" },
-      { label: "Documents", to: "/documents" },
-      { label: "Fleurs & déco", to: "/prestataires?category=flowers-decor" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Inspiration", to: "/univers/aphrodite" },
+        { label: "Documents", to: "/documents?role=couple" },
+      ],
+      guests: [
+        { label: "Dress code", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Fleurs & déco", to: "/prestataires?category=flowers-decor" },
+        { label: "Documents", to: "/documents?role=vendors" },
+        { label: "Plan salle", to: "/documents" },
+      ],
+      planner: [
+        { label: "Moodboard", to: "/univers/aphrodite" },
+        { label: "Documents", to: "/documents?role=planner" },
+        { label: "Plan salle", to: "/documents" },
+      ],
+    },
   },
   {
     id: "apollon",
@@ -108,11 +168,26 @@ export const UNIVERSES = [
     image: "/landing/apollon.jpg",
     route: "/univers/apollon",
     moduleRoute: "/espace-invites",
-    menuItems: [
-      { label: "Galerie", to: "/univers/apollon" },
-      { label: "Invités", to: "/espace-invites" },
-      { label: "Photo / vidéo", to: "/prestataires?category=photo-video" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Souvenirs", to: "/univers/apollon" },
+        { label: "Photo / vidéo", to: "/prestataires?category=photo-video" },
+      ],
+      guests: [
+        { label: "Galerie", to: "/espace-invites" },
+        { label: "Accès invité", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Équipes image", to: "/prestataires?category=photo-video" },
+        { label: "Planning", to: "/jour-j?role=vendors" },
+        { label: "Documents", to: "/documents?role=vendors" },
+      ],
+      planner: [
+        { label: "Photo / vidéo", to: "/prestataires?category=photo-video" },
+        { label: "Timeline", to: "/jour-j?role=planner" },
+        { label: "Galerie", to: "/univers/apollon" },
+      ],
+    },
   },
   {
     id: "hermes",
@@ -128,11 +203,26 @@ export const UNIVERSES = [
     image: "/landing/hermes.jpg",
     route: "/univers/hermes",
     moduleRoute: "/communication",
-    menuItems: [
-      { label: "Messages", to: "/communication" },
-      { label: "Documents", to: "/documents" },
-      { label: "Prestataires", to: "/prestataires" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Messages", to: "/communication?role=couple" },
+        { label: "Notifications", to: "/notifications?role=couple" },
+      ],
+      guests: [
+        { label: "Infos utiles", to: "/espace-invites" },
+        { label: "FAQ", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Messages", to: "/communication?role=vendors" },
+        { label: "Docs", to: "/documents?role=vendors" },
+        { label: "Portail", to: "/prestataires" },
+      ],
+      planner: [
+        { label: "Centre de diffusion", to: "/communication?role=planner" },
+        { label: "Prestataires", to: "/prestataires" },
+        { label: "Documents", to: "/documents?role=planner" },
+      ],
+    },
   },
   {
     id: "ares",
@@ -148,11 +238,26 @@ export const UNIVERSES = [
     image: "/landing/ares.jpg",
     route: "/univers/ares",
     moduleRoute: "/jour-j",
-    menuItems: [
-      { label: "Timeline", to: "/jour-j" },
-      { label: "Prestataires", to: "/prestataires" },
-      { label: "Plan B", to: "/documents" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Jour J", to: "/jour-j?role=couple" },
+        { label: "Rassurance", to: "/couple" },
+      ],
+      guests: [
+        { label: "Programme", to: "/espace-invites" },
+        { label: "Venir", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Timeline", to: "/jour-j?role=vendors" },
+        { label: "Portail", to: "/prestataires" },
+        { label: "Documents", to: "/documents?role=vendors" },
+      ],
+      planner: [
+        { label: "Timeline live", to: "/jour-j?role=planner" },
+        { label: "Prestataires", to: "/prestataires" },
+        { label: "Plan B", to: "/documents" },
+      ],
+    },
   },
   {
     id: "demeter",
@@ -168,11 +273,27 @@ export const UNIVERSES = [
     image: "/landing/demeter.jpg",
     route: "/univers/demeter",
     moduleRoute: "/budget",
-    menuItems: [
-      { label: "Budget", to: "/budget" },
-      { label: "Invités", to: "/invites" },
-      { label: "Traiteur", to: "/prestataires?category=catering" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Budget", to: "/budget" },
+        { label: "Arbitrages", to: "/budget" },
+        { label: "Tables", to: "/invites?role=couple" },
+      ],
+      guests: [
+        { label: "Programme", to: "/espace-invites" },
+        { label: "Hébergements", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Traiteur", to: "/prestataires?category=catering" },
+        { label: "Paiements", to: "/budget" },
+        { label: "Invités", to: "/invites?role=vendors" },
+      ],
+      planner: [
+        { label: "Budget", to: "/budget" },
+        { label: "Paiements", to: "/budget" },
+        { label: "Tables", to: "/invites?role=planner" },
+      ],
+    },
   },
   {
     id: "artemis",
@@ -188,11 +309,28 @@ export const UNIVERSES = [
     image: "/landing/artemis.jpg",
     route: "/univers/artemis",
     moduleRoute: "/prestataires?category=venue",
-    menuItems: [
-      { label: "Lieux", to: "/prestataires?category=venue" },
-      { label: "Registre", to: "/prestataires" },
-      { label: "Setup", to: "/setup" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Lieux", to: "/prestataires?category=venue" },
+        { label: "Setup", to: "/setup" },
+        { label: "Plan B", to: "/documents" },
+      ],
+      guests: [
+        { label: "Venir", to: "/espace-invites" },
+        { label: "Hébergements", to: "/espace-invites" },
+        { label: "Navettes", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Lieux", to: "/prestataires?category=venue" },
+        { label: "Registre", to: "/prestataires" },
+        { label: "Accès", to: "/documents?role=vendors" },
+      ],
+      planner: [
+        { label: "Registre", to: "/prestataires" },
+        { label: "Lieux", to: "/prestataires?category=venue" },
+        { label: "Setup", to: "/setup" },
+      ],
+    },
   },
   {
     id: "hephaistos",
@@ -208,11 +346,26 @@ export const UNIVERSES = [
     image: "/landing/hephaistos.jpg",
     route: "/univers/hephaistos",
     moduleRoute: "/exports",
-    menuItems: [
-      { label: "Exports", to: "/exports" },
-      { label: "Documents", to: "/documents" },
-      { label: "Supports", to: "/univers/hephaistos" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Exports", to: "/exports?view=couple" },
+        { label: "Documents", to: "/documents?role=couple" },
+      ],
+      guests: [
+        { label: "Infos utiles", to: "/espace-invites" },
+        { label: "FAQ", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Exports", to: "/exports?view=vendors" },
+        { label: "Docs", to: "/documents?role=vendors" },
+        { label: "Jour J", to: "/jour-j?role=vendors" },
+      ],
+      planner: [
+        { label: "Exports", to: "/exports?view=planner" },
+        { label: "Documents", to: "/documents?role=planner" },
+        { label: "Feuilles", to: "/exports?view=dayj" },
+      ],
+    },
   },
   {
     id: "dionysos",
@@ -228,11 +381,26 @@ export const UNIVERSES = [
     image: "/landing/dionysos.jpg",
     route: "/univers/dionysos",
     moduleRoute: "/prestataires?category=music",
-    menuItems: [
-      { label: "Soirée", to: "/univers/dionysos" },
-      { label: "Jour J", to: "/jour-j" },
-      { label: "Animations", to: "/prestataires?category=music" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Soirée", to: "/univers/dionysos" },
+        { label: "Jour J", to: "/jour-j?role=couple" },
+      ],
+      guests: [
+        { label: "Programme", to: "/espace-invites" },
+        { label: "Retour", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "DJ / son", to: "/prestataires?category=music" },
+        { label: "Jour J", to: "/jour-j?role=vendors" },
+        { label: "Paiements", to: "/budget" },
+      ],
+      planner: [
+        { label: "Soirée", to: "/univers/dionysos" },
+        { label: "Jour J", to: "/jour-j?role=planner" },
+        { label: "Animations", to: "/prestataires?category=music" },
+      ],
+    },
   },
   {
     id: "hestia",
@@ -248,11 +416,28 @@ export const UNIVERSES = [
     image: "/landing/hestia.jpg",
     route: "/univers/hestia",
     moduleRoute: "/invites",
-    menuItems: [
-      { label: "Invités", to: "/invites" },
-      { label: "RSVP", to: "/espace-invites" },
-      { label: "Couple", to: "/couple" },
-    ],
+    menuByMode: {
+      couple: [
+        { label: "Invités", to: "/invites?role=couple" },
+        { label: "Mini site", to: "/espace-invites" },
+        { label: "Tables", to: "/invites?role=couple" },
+      ],
+      guests: [
+        { label: "Accueil", to: "/espace-invites" },
+        { label: "RSVP", to: "/espace-invites" },
+        { label: "FAQ", to: "/espace-invites" },
+      ],
+      vendors: [
+        { label: "Invités", to: "/invites?role=vendors" },
+        { label: "Tables", to: "/invites?role=vendors" },
+        { label: "Allergies", to: "/documents?role=vendors" },
+      ],
+      planner: [
+        { label: "Invités", to: "/invites?role=planner" },
+        { label: "Foyers", to: "/invites?role=planner" },
+        { label: "Tables", to: "/invites?role=planner" },
+      ],
+    },
   },
 ];
 
