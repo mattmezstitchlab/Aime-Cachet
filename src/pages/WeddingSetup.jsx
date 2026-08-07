@@ -109,9 +109,17 @@ function buildSetupPayload(form) {
   };
 }
 
-function SetupHero() {
+function SetupHero({ summary, countdownDays, activeContacts, selectedDocs, configured, saveState, onForceSave }) {
+  const saveDot = saveState === "saving"
+    ? "bg-[#F5A524]"
+    : saveState === "saved"
+    ? "bg-[#34C759]"
+    : configured
+    ? "bg-[#34C759]"
+    : "bg-white/35";
+
   return (
-    <section id="hero" className="relative min-h-[100svh] scroll-mt-28 overflow-hidden bg-[var(--color-black)] text-white">
+    <section id="hero" className="relative min-h-[100svh] overflow-hidden bg-[var(--color-black)] text-white">
       <img src="/landing/hestia.jpg" alt="Créer votre mariage" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.66))]" aria-hidden="true" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_24%)]" aria-hidden="true" />
@@ -127,6 +135,7 @@ function SetupHero() {
             <p className="mt-5 max-w-2xl text-[15px] md:text-[18px] text-white/66 leading-[var(--leading-body)]">
               Commencez par le couple, la date, le lieu, les invités et le budget. AIME ouvre ensuite votre espace couple, les invités, les partenaires et le cockpit planner.
             </p>
+
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#setup-form" className="rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black shadow-[0_12px_28px_rgba(0,0,0,0.18)] inline-flex items-center gap-2">
                 Commencer
@@ -136,69 +145,93 @@ function SetupHero() {
           </div>
         </div>
       </div>
-    </section>
-  );
-}
 
-function SetupStepDock({ activeStep, onStepSelect, saveState, countdownDays, activeContacts, configured, selectedDocs }) {
-  const saveTone = saveState === "saving"
-    ? "bg-[#F5A524]"
-    : saveState === "saved"
-    ? "bg-[#34C759]"
-    : configured
-    ? "bg-[#34C759]"
-    : "bg-white/35";
-
-  return (
-    <div className="fixed bottom-4 left-1/2 z-[70] w-[min(1480px,calc(100%-20px))] -translate-x-1/2 print:hidden">
-      <div className="rounded-[28px] border border-white/10 bg-black/86 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.28)] px-3 md:px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="flex-1 overflow-x-auto no-scrollbar">
-            <div className="flex min-w-max gap-2 md:gap-3">
-              {SETUP_STEPS.map((step) => (
-                <button
-                  key={step.id}
-                  type="button"
-                  onClick={() => {
-                    onStepSelect(step.id);
-                    document.getElementById("setup-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }}
-                  className={`min-w-[118px] rounded-[18px] px-3 py-3 text-left transition-colors ${activeStep === step.id ? "bg-white text-black" : "bg-white/[0.05] text-white hover:bg-white/[0.08]"}`}
-                >
-                  <div className="text-[11px] uppercase tracking-[0.16em] opacity-65">{step.number}</div>
-                  <div className="mt-2 text-sm font-medium">{step.title}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="hidden xl:grid grid-cols-3 gap-5 text-sm text-white/82 shrink-0">
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Compte à rebours</div>
-              <div className="mt-2 inline-flex items-center gap-2"><Calendar className="w-4 h-4" /> {countdownDays} jours</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Contacts</div>
-              <div className="mt-2">{activeContacts}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">État</div>
-              <div className="mt-2 inline-flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${configured ? "bg-[#34C759]" : "bg-[#F5A524]"}`} />
-                {configured ? `${selectedDocs} docs actifs` : "en cours"}
+      <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/86 backdrop-blur-xl">
+        <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-4 md:py-5 flex items-center justify-between gap-4">
+          <div className="overflow-x-auto no-scrollbar flex-1">
+            <div className="flex min-w-max gap-5 md:gap-7 text-white/82">
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Date</div>
+                <div className="mt-2 text-sm">{summary.dateLabel}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Lieu</div>
+                <div className="mt-2 text-sm">{summary.venue}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Budget</div>
+                <div className="mt-2 text-sm">{summary.budgetLabel}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Invités</div>
+                <div className="mt-2 text-sm">{summary.guests}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Compte à rebours</div>
+                <div className="mt-2 text-sm inline-flex items-center gap-2"><Calendar className="w-4 h-4" /> {countdownDays} jours</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Contacts</div>
+                <div className="mt-2 text-sm">{activeContacts}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Docs</div>
+                <div className="mt-2 text-sm">{selectedDocs}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">État</div>
+                <div className="mt-2 text-sm inline-flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${configured ? "bg-[#34C759]" : "bg-[#F5A524]"}`} />
+                  {configured ? "configuré" : "en cours"}
+                </div>
               </div>
             </div>
           </div>
 
           <button
             type="button"
-            aria-label="Sauvegarde automatique"
-            title={saveState === "saving" ? "Sauvegarde en cours" : "Sauvegarde automatique active"}
+            onClick={onForceSave}
+            aria-label="Enregistrer le setup"
+            title="Enregistrer le setup"
             className="relative w-12 h-12 rounded-full bg-white text-black inline-flex items-center justify-center shadow-[0_12px_28px_rgba(0,0,0,0.18)] shrink-0"
           >
             <Save className="w-4 h-4" />
-            <span className={`absolute right-2 top-2 w-2 h-2 rounded-full ${saveTone}`} />
+            <span className={`absolute right-2 top-2 w-2 h-2 rounded-full ${saveDot}`} />
           </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SetupStepsHeader({ activeStep, onStepSelect, configured, requestedPath, continueLabel }) {
+  return (
+    <div className="px-5 md:px-6 pt-5 md:pt-6 pb-4 border-b border-black/8">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div>
+          <div className="aime-label text-zinc-500 mb-2">Étapes</div>
+          <div className="text-lg md:text-xl font-semibold text-zinc-950">Le setup se construit pas à pas.</div>
+        </div>
+        {configured && (
+          <Link to={requestedPath} className="rounded-full bg-black px-5 py-3 text-sm text-white hover:bg-zinc-800 inline-flex items-center gap-2">
+            Continuer vers {continueLabel}
+          </Link>
+        )}
+      </div>
+
+      <div className="overflow-x-auto no-scrollbar">
+        <div className="flex min-w-max gap-2 md:gap-3">
+          {SETUP_STEPS.map((step) => (
+            <button
+              key={step.id}
+              type="button"
+              onClick={() => onStepSelect(step.id)}
+              className={`min-w-[132px] rounded-[18px] px-4 py-3 text-left transition-colors ${activeStep === step.id ? "bg-black text-white" : "bg-[#fbfaf8] text-zinc-900 ring-1 ring-black/8 hover:bg-black/[0.03]"}`}
+            >
+              <div className={`text-[11px] uppercase tracking-[0.16em] ${activeStep === step.id ? "text-white/55" : "text-zinc-500"}`}>{step.number}</div>
+              <div className="mt-2 text-sm font-medium">{step.title}</div>
+            </button>
+          ))}
         </div>
       </div>
     </div>
@@ -328,7 +361,19 @@ function DocCard({ active, label, description, badge, onClick }) {
   );
 }
 
-function SummaryPanel({ summary, countdownDays, selectedDocs, activeContacts, coordinationLabel, ceremonyLabel, guestBadges, configured, requestedPath, continueLabel, saveState }) {
+function SummaryPanel({
+  summary,
+  countdownDays,
+  selectedDocs,
+  activeContacts,
+  coordinationLabel,
+  ceremonyLabel,
+  guestBadges,
+  configured,
+  requestedPath,
+  continueLabel,
+  saveState,
+}) {
   return (
     <div className="space-y-4 xl:sticky xl:top-24">
       <section className="rounded-[32px] overflow-hidden bg-[var(--color-black)] text-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
@@ -351,7 +396,7 @@ function SummaryPanel({ summary, countdownDays, selectedDocs, activeContacts, co
       <section className="aime-card-light rounded-[32px] overflow-hidden">
         <div className="px-5 md:px-6 py-5 border-b border-black/8">
           <div className="aime-label text-zinc-500 mb-3">Sauvegarde</div>
-          <div className="text-lg font-semibold text-zinc-950">Vos informations se conservent au fil des étapes.</div>
+          <div className="text-lg font-semibold text-zinc-950">Les infos se mettent à jour au fil des étapes.</div>
         </div>
         <div className="p-5 md:p-6 space-y-3">
           <div className="rounded-[22px] bg-[#fbfaf8] p-4 ring-1 ring-black/8 text-sm text-zinc-700 leading-relaxed">
@@ -398,6 +443,8 @@ export default function WeddingSetup() {
   const [activeStep, setActiveStep] = useState("cadre");
   const [saveState, setSaveState] = useState("saved");
   const autoSaveReadyRef = useRef(false);
+  const stateRef = useRef(state);
+  const formRef = useRef(form);
 
   const requestedPath = searchParams.get("from") || "/couple";
   const continueLabel = labelForPath(requestedPath);
@@ -405,6 +452,14 @@ export default function WeddingSetup() {
   const countdownDays = useMemo(() => getCountdownDays(form.date), [form.date]);
   const selectedDocs = form.starterDocs.length;
   const activeContacts = CONTACT_FIELDS.filter((field) => form.contacts[field.id]?.name?.trim()).length;
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  useEffect(() => {
+    formRef.current = form;
+  }, [form]);
 
   const summary = useMemo(() => ({
     couple: form.couple.trim() || "Votre mariage",
@@ -442,13 +497,20 @@ export default function WeddingSetup() {
     speeches: summary.speeches,
   }, form.orchestration), [form.orchestration, summary.children, summary.pmr, summary.specialMeals, summary.speeches]);
 
-  const persistSetup = ({ notify = false } = {}) => {
-    const next = configureWeddingInState(state, buildSetupPayload(form));
+  const persistSetup = ({ notify = false, redirect = false } = {}) => {
+    const next = configureWeddingInState(stateRef.current, buildSetupPayload(formRef.current));
+    stateRef.current = next;
     setState(next);
     writeWeddingState(next);
     setSaveState("saved");
-    if (notify) toast.success("Setup enregistré");
-    return next;
+
+    if (notify) {
+      toast.success(next.setup?.completed ? "Setup enregistré" : "Mariage initialisé");
+    }
+
+    if (redirect) {
+      navigate(requestedPath, { replace: true });
+    }
   };
 
   useEffect(() => {
@@ -552,13 +614,6 @@ export default function WeddingSetup() {
       ...current,
       starterDocs: [...new Set([...current.starterDocs, ...recommendedDocIds])],
     }));
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const next = persistSetup({ notify: true });
-    navigate(requestedPath, { replace: true });
-    return next;
   };
 
   const renderActiveStep = () => {
@@ -737,37 +792,46 @@ export default function WeddingSetup() {
 
   return (
     <div className="min-h-screen bg-[var(--color-warm-white)] text-[var(--color-text-primary)] overflow-x-hidden">
-      <SetupHero />
-      <SetupStepDock
-        activeStep={activeStep}
-        onStepSelect={setActiveStep}
-        saveState={saveState}
+      <SetupHero
+        summary={summary}
         countdownDays={countdownDays}
         activeContacts={activeContacts}
-        configured={configured}
         selectedDocs={selectedDocs}
+        configured={configured}
+        saveState={saveState}
+        onForceSave={() => persistSetup({ notify: true })}
       />
 
-      <main id="setup-form" className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-8 md:py-10 pb-32 md:pb-36">
-        <form id="wedding-setup-form" onSubmit={handleSubmit} className="grid gap-4 xl:grid-cols-[1.04fr_0.96fr] items-start">
-          <div className="space-y-4">
-            {renderActiveStep()}
-          </div>
-
-          <SummaryPanel
-            summary={summary}
-            countdownDays={countdownDays}
-            selectedDocs={selectedDocs}
-            activeContacts={activeContacts}
-            coordinationLabel={coordinationLabel}
-            ceremonyLabel={ceremonyLabel}
-            guestBadges={guestBadges}
+      <main id="setup-form" className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 -mt-10 md:-mt-12 relative z-10 pb-16 md:pb-20">
+        <div className="aime-card-light rounded-[34px] overflow-hidden shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+          <SetupStepsHeader
+            activeStep={activeStep}
+            onStepSelect={setActiveStep}
             configured={configured}
             requestedPath={requestedPath}
             continueLabel={continueLabel}
-            saveState={saveState}
           />
-        </form>
+
+          <div className="grid gap-4 xl:grid-cols-[1.04fr_0.96fr] items-start p-5 md:p-6">
+            <div className="space-y-4">
+              {renderActiveStep()}
+            </div>
+
+            <SummaryPanel
+              summary={summary}
+              countdownDays={countdownDays}
+              selectedDocs={selectedDocs}
+              activeContacts={activeContacts}
+              coordinationLabel={coordinationLabel}
+              ceremonyLabel={ceremonyLabel}
+              guestBadges={guestBadges}
+              configured={configured}
+              requestedPath={requestedPath}
+              continueLabel={continueLabel}
+              saveState={saveState}
+            />
+          </div>
+        </div>
       </main>
     </div>
   );
