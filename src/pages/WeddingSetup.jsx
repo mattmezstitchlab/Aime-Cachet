@@ -4,7 +4,11 @@ import {
   ArrowRight,
   Calendar,
   CheckCircle2,
+  Euro,
+  FileText,
+  MapPin,
   Save,
+  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -150,44 +154,42 @@ function SetupStatusBar({ summary, countdownDays, activeContacts, selectedDocs, 
     ? "bg-[#34C759]"
     : "bg-white/35";
 
+  const items = [
+    { label: "Date", value: summary.dateLabel, icon: Calendar },
+    { label: "Lieu", value: summary.venue, icon: MapPin },
+    { label: "Budget", value: summary.budgetLabel, icon: Euro },
+    { label: "Invités", value: summary.guests, icon: Users },
+    { label: "Compte à rebours", value: `${countdownDays} jours`, icon: Calendar },
+    { label: "Contacts", value: activeContacts, icon: Users },
+    { label: "Docs", value: selectedDocs, icon: FileText },
+  ];
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[70] border-t border-white/10 bg-black text-white print:hidden">
       <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-4 md:py-5 flex items-center justify-between gap-4">
         <div className="overflow-x-auto no-scrollbar flex-1">
           <div className="flex min-w-max gap-5 md:gap-7 text-white/82">
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Date</div>
-              <div className="mt-2 text-sm">{summary.dateLabel}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Lieu</div>
-              <div className="mt-2 text-sm">{summary.venue}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Budget</div>
-              <div className="mt-2 text-sm">{summary.budgetLabel}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Invités</div>
-              <div className="mt-2 text-sm">{summary.guests}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Compte à rebours</div>
-              <div className="mt-2 text-sm inline-flex items-center gap-2"><Calendar className="w-4 h-4" /> {countdownDays} jours</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Contacts</div>
-              <div className="mt-2 text-sm">{activeContacts}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Docs</div>
-              <div className="mt-2 text-sm">{selectedDocs}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">État</div>
-              <div className="mt-2 text-sm inline-flex items-center gap-2">
+            {items.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.label} className="inline-flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] inline-flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4 text-white/72" />
+                  </span>
+                  <div>
+                    <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">{item.label}</div>
+                    <div className="mt-1.5 text-sm">{item.value}</div>
+                  </div>
+                </div>
+              );
+            })}
+            <div className="inline-flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full border border-white/10 bg-white/[0.04] inline-flex items-center justify-center shrink-0">
                 <span className={`w-2 h-2 rounded-full ${configured ? "bg-[#34C759]" : "bg-[#F5A524]"}`} />
-                {configured ? "configuré" : "en cours"}
+              </span>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">État</div>
+                <div className="mt-1.5 text-sm">{configured ? "configuré" : "en cours"}</div>
               </div>
             </div>
           </div>
@@ -210,7 +212,7 @@ function SetupStatusBar({ summary, countdownDays, activeContacts, selectedDocs, 
 
 function SetupStepsHeader({ activeStep, onStepSelect, configured, requestedPath, continueLabel, saveState }) {
   return (
-    <div className="py-8 md:py-10">
+    <div className="py-8 md:py-10 border-b border-black/8">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
           <div className="text-3xl md:text-4xl font-display text-zinc-950 leading-[0.96]">Le setup se construit pas à pas.</div>
@@ -231,7 +233,7 @@ function SetupStepsHeader({ activeStep, onStepSelect, configured, requestedPath,
         </div>
       </div>
 
-      <div className="overflow-x-auto no-scrollbar border-b border-black/8">
+      <div className="overflow-x-auto no-scrollbar">
         <div className="flex min-w-max gap-6 md:gap-10">
           {SETUP_STEPS.map((step) => (
             <button
@@ -253,7 +255,7 @@ function SetupStepsHeader({ activeStep, onStepSelect, configured, requestedPath,
 
 function SectionPanel({ eyebrow, title, intro, children, action = null }) {
   return (
-    <section className="py-8 md:py-10">
+    <section className="py-8 md:py-10 border-b border-black/8 last:border-b-0">
       <div className="flex items-start justify-between gap-4">
         <div className="max-w-3xl">
           {eyebrow && <div className="aime-label text-zinc-500 mb-3">{eyebrow}</div>}
@@ -283,7 +285,7 @@ function Input(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-[18px] bg-[#fbfaf8] px-4 py-3.5 text-sm text-zinc-900 outline-none transition-colors border-0 ring-1 ring-black/8 focus:ring-2 focus:ring-black"
+      className="w-full rounded-none border-0 border-b border-black/10 bg-transparent px-0 py-3.5 text-sm text-zinc-900 outline-none transition-colors focus:border-black focus:ring-0"
     />
   );
 }
@@ -324,12 +326,12 @@ function ToggleCard({ active, label, description, onClick }) {
 
 function ContactRow({ label, hint, value, onChange }) {
   return (
-    <div className="rounded-[24px] bg-[#fbfaf8] p-4 md:p-5 ring-1 ring-black/8">
+    <div className="py-5 border-b border-black/8 last:border-b-0">
       <div className="mb-4">
         <div className="text-sm font-semibold text-zinc-950">{label}</div>
         <div className="text-sm text-zinc-500 mt-1">{hint}</div>
       </div>
-      <div className="grid md:grid-cols-2 gap-3">
+      <div className="grid md:grid-cols-2 gap-6">
         <Input
           type="text"
           value={value.name}
