@@ -40,11 +40,12 @@ function AppShell() {
     && location.pathname !== "/"
     && location.pathname !== "/setup"
     && location.pathname !== "/design-system";
+  const fullBleedTop = location.pathname === "/setup";
 
   return (
     <>
       <WeddingTopCapsule />
-      <div className={`${showDock ? "pb-28 md:pb-32" : ""} pt-20 md:pt-24`}>
+      <div className={`${showDock ? "pb-28 md:pb-32" : ""} ${fullBleedTop ? "pt-0" : "pt-20 md:pt-24"}`}>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/design-system" element={<DesignSystem />} />

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowRight,
@@ -93,25 +93,40 @@ function labelForPath(pathname = "/couple") {
   return "l’espace couple";
 }
 
-function SetupHero({ activeStep, onStepSelect, configured, countdownDays, activeContacts, selectedDocs }) {
+function buildSetupPayload(form) {
+  return {
+    ...form,
+    guests: Number(form.guests || 0),
+    budgetEnvelope: Number(form.budgetEnvelope || 0),
+    contacts: form.contacts,
+    guestsProfile: {
+      children: Number(form.guestsProfile.children || 0),
+      pmr: Number(form.guestsProfile.pmr || 0),
+      specialMeals: Number(form.guestsProfile.specialMeals || 0),
+      speeches: Number(form.guestsProfile.speeches || 0),
+    },
+    orchestration: form.orchestration,
+  };
+}
+
+function SetupHero() {
   return (
-    <section id="hero" className="relative -mt-24 md:-mt-28 min-h-[84svh] scroll-mt-28 overflow-hidden bg-[var(--color-black)] text-white">
+    <section id="hero" className="relative min-h-[100svh] scroll-mt-28 overflow-hidden bg-[var(--color-black)] text-white">
       <img src="/landing/hestia.jpg" alt="Créer votre mariage" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.68))]" aria-hidden="true" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.66))]" aria-hidden="true" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_24%)]" aria-hidden="true" />
 
-      <div className="relative z-10 min-h-[84svh] flex items-end px-5 md:px-8 lg:px-10 pt-28 md:pt-32">
+      <div className="relative z-10 min-h-[100svh] flex items-end px-5 md:px-8 lg:px-10 pb-28 md:pb-32 pt-24 md:pt-28">
         <div className="w-full max-w-[1480px] mx-auto">
-          <div className="max-w-4xl pb-28 md:pb-32">
+          <div className="max-w-4xl">
             <div className="aime-kicker mb-5">Pour les mariés</div>
-            <h1 className="font-display text-[2.8rem] sm:text-[4.6rem] lg:text-[6.4rem] leading-[0.9] tracking-[var(--tracking-display)] text-white">
+            <h1 className="font-display text-[2.8rem] sm:text-[4.6rem] lg:text-[6.5rem] leading-[0.9] tracking-[var(--tracking-display)] text-white">
               Créez votre mariage,
               <span className="block text-white/88">simplement.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-[15px] md:text-[18px] text-white/66 leading-[var(--leading-body)]">
               Commencez par le couple, la date, le lieu, les invités et le budget. AIME ouvre ensuite votre espace couple, les invités, les partenaires et le cockpit planner.
             </p>
-
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#setup-form" className="rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black shadow-[0_12px_28px_rgba(0,0,0,0.18)] inline-flex items-center gap-2">
                 Commencer
@@ -121,9 +136,23 @@ function SetupHero({ activeStep, onStepSelect, configured, countdownDays, active
           </div>
         </div>
       </div>
+    </section>
+  );
+}
 
-      <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/82 backdrop-blur-xl">
-        <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-4 md:py-5 flex items-center gap-4">
+function SetupStepDock({ activeStep, onStepSelect, saveState, countdownDays, activeContacts, configured, selectedDocs }) {
+  const saveTone = saveState === "saving"
+    ? "bg-[#F5A524]"
+    : saveState === "saved"
+    ? "bg-[#34C759]"
+    : configured
+    ? "bg-[#34C759]"
+    : "bg-white/35";
+
+  return (
+    <div className="fixed bottom-4 left-1/2 z-[70] w-[min(1480px,calc(100%-20px))] -translate-x-1/2 print:hidden">
+      <div className="rounded-[28px] border border-white/10 bg-black/86 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.28)] px-3 md:px-4 py-3">
+        <div className="flex items-center gap-3">
           <div className="flex-1 overflow-x-auto no-scrollbar">
             <div className="flex min-w-max gap-2 md:gap-3">
               {SETUP_STEPS.map((step) => (
@@ -134,7 +163,7 @@ function SetupHero({ activeStep, onStepSelect, configured, countdownDays, active
                     onStepSelect(step.id);
                     document.getElementById("setup-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
                   }}
-                  className={`min-w-[110px] rounded-[18px] px-3 py-3 text-left transition-colors ${activeStep === step.id ? "bg-white text-black" : "bg-white/[0.05] text-white hover:bg-white/[0.08]"}`}
+                  className={`min-w-[118px] rounded-[18px] px-3 py-3 text-left transition-colors ${activeStep === step.id ? "bg-white text-black" : "bg-white/[0.05] text-white hover:bg-white/[0.08]"}`}
                 >
                   <div className="text-[11px] uppercase tracking-[0.16em] opacity-65">{step.number}</div>
                   <div className="mt-2 text-sm font-medium">{step.title}</div>
@@ -143,7 +172,7 @@ function SetupHero({ activeStep, onStepSelect, configured, countdownDays, active
             </div>
           </div>
 
-          <div className="hidden md:grid grid-cols-3 gap-6 text-sm text-white/82 shrink-0">
+          <div className="hidden xl:grid grid-cols-3 gap-5 text-sm text-white/82 shrink-0">
             <div>
               <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Compte à rebours</div>
               <div className="mt-2 inline-flex items-center gap-2"><Calendar className="w-4 h-4" /> {countdownDays} jours</div>
@@ -156,23 +185,23 @@ function SetupHero({ activeStep, onStepSelect, configured, countdownDays, active
               <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">État</div>
               <div className="mt-2 inline-flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full ${configured ? "bg-[#34C759]" : "bg-[#F5A524]"}`} />
-                {configured ? `${selectedDocs} docs actifs` : "à initialiser"}
+                {configured ? `${selectedDocs} docs actifs` : "en cours"}
               </div>
             </div>
           </div>
 
           <button
-            type="submit"
-            form="wedding-setup-form"
-            aria-label="Enregistrer le setup"
-            title="Enregistrer le setup"
-            className="w-12 h-12 rounded-full bg-white text-black inline-flex items-center justify-center shadow-[0_12px_28px_rgba(0,0,0,0.18)] shrink-0"
+            type="button"
+            aria-label="Sauvegarde automatique"
+            title={saveState === "saving" ? "Sauvegarde en cours" : "Sauvegarde automatique active"}
+            className="relative w-12 h-12 rounded-full bg-white text-black inline-flex items-center justify-center shadow-[0_12px_28px_rgba(0,0,0,0.18)] shrink-0"
           >
             <Save className="w-4 h-4" />
+            <span className={`absolute right-2 top-2 w-2 h-2 rounded-full ${saveTone}`} />
           </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -299,18 +328,7 @@ function DocCard({ active, label, description, badge, onClick }) {
   );
 }
 
-function SummaryPanel({
-  summary,
-  countdownDays,
-  selectedDocs,
-  activeContacts,
-  coordinationLabel,
-  ceremonyLabel,
-  guestBadges,
-  configured,
-  requestedPath,
-  continueLabel,
-}) {
+function SummaryPanel({ summary, countdownDays, selectedDocs, activeContacts, coordinationLabel, ceremonyLabel, guestBadges, configured, requestedPath, continueLabel, saveState }) {
   return (
     <div className="space-y-4 xl:sticky xl:top-24">
       <section className="rounded-[32px] overflow-hidden bg-[var(--color-black)] text-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
@@ -322,25 +340,29 @@ function SummaryPanel({
           </p>
         </div>
         <div className="px-5 md:px-6 py-5 space-y-3 text-sm">
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-white/55">Date</span>
-            <span>{summary.dateLabel}</span>
+          <div className="flex items-center justify-between gap-3"><span className="text-white/55">Date</span><span>{summary.dateLabel}</span></div>
+          <div className="flex items-center justify-between gap-3"><span className="text-white/55">Lieu</span><span className="text-right">{summary.venue}</span></div>
+          <div className="flex items-center justify-between gap-3"><span className="text-white/55">Budget</span><span>{summary.budgetLabel}</span></div>
+          <div className="flex items-center justify-between gap-3"><span className="text-white/55">Contacts</span><span>{activeContacts}</span></div>
+          <div className="flex items-center justify-between gap-3"><span className="text-white/55">Docs de départ</span><span>{selectedDocs}</span></div>
+        </div>
+      </section>
+
+      <section className="aime-card-light rounded-[32px] overflow-hidden">
+        <div className="px-5 md:px-6 py-5 border-b border-black/8">
+          <div className="aime-label text-zinc-500 mb-3">Sauvegarde</div>
+          <div className="text-lg font-semibold text-zinc-950">Vos informations se conservent au fil des étapes.</div>
+        </div>
+        <div className="p-5 md:p-6 space-y-3">
+          <div className="rounded-[22px] bg-[#fbfaf8] p-4 ring-1 ring-black/8 text-sm text-zinc-700 leading-relaxed">
+            <div className="inline-flex items-center gap-2 font-medium text-zinc-950">
+              <span className={`w-2 h-2 rounded-full ${saveState === "saving" ? "bg-[#F5A524]" : "bg-[#34C759]"}`} />
+              {saveState === "saving" ? "Sauvegarde en cours" : "Sauvegarde automatique active"}
+            </div>
+            <p className="mt-2">Vous pouvez avancer d’une étape à l’autre sans chercher un bouton de validation intermédiaire.</p>
           </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-white/55">Lieu</span>
-            <span className="text-right">{summary.venue}</span>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-white/55">Budget</span>
-            <span>{summary.budgetLabel}</span>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-white/55">Contacts</span>
-            <span>{activeContacts}</span>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-white/55">Docs de départ</span>
-            <span>{selectedDocs}</span>
+          <div className="rounded-[22px] bg-[#fbfaf8] p-4 ring-1 ring-black/8 text-sm text-zinc-700 leading-relaxed">
+            {coordinationLabel} · cérémonie {ceremonyLabel.toLowerCase()} · {guestBadges.length ? guestBadges.join(" · ") : "aucune contrainte particulière"}.
           </div>
         </div>
       </section>
@@ -357,26 +379,10 @@ function SummaryPanel({
             <div className="rounded-[18px] bg-[#fbfaf8] px-3 py-2 ring-1 ring-black/8">Prestataires</div>
             <div className="rounded-[18px] bg-[#fbfaf8] px-3 py-2 ring-1 ring-black/8">Point Zéro</div>
           </div>
-          <div className="rounded-[22px] bg-[#fbfaf8] p-4 ring-1 ring-black/8 text-sm text-zinc-700 leading-relaxed">
-            {coordinationLabel} · cérémonie {ceremonyLabel.toLowerCase()} · {guestBadges.length ? guestBadges.join(" · ") : "aucune contrainte particulière"}.
-          </div>
-        </div>
-      </section>
-
-      <section className="aime-card-light rounded-[32px] overflow-hidden">
-        <div className="px-5 md:px-6 py-5 border-b border-black/8">
-          <div className="aime-label text-zinc-500 mb-3">Continuer</div>
-          <div className="text-lg font-semibold text-zinc-950">Enregistrez puis ouvrez le bon espace.</div>
-        </div>
-        <div className="p-5 md:p-6 space-y-3">
-          {configured ? (
+          {configured && (
             <Link to={requestedPath} className="w-full rounded-full bg-black px-5 py-3.5 text-sm text-white inline-flex items-center justify-center gap-2 hover:bg-zinc-800">
               Continuer vers {continueLabel}
             </Link>
-          ) : (
-            <div className="rounded-[22px] bg-[#fbfaf8] px-5 py-4 text-sm text-zinc-600 text-center ring-1 ring-black/8">
-              Enregistrez une première fois pour ouvrir les autres espaces.
-            </div>
           )}
         </div>
       </section>
@@ -390,6 +396,8 @@ export default function WeddingSetup() {
   const [state, setState] = useState(() => readWeddingState());
   const [form, setForm] = useState(() => createFormState(readWeddingState()));
   const [activeStep, setActiveStep] = useState("cadre");
+  const [saveState, setSaveState] = useState("saved");
+  const autoSaveReadyRef = useRef(false);
 
   const requestedPath = searchParams.get("from") || "/couple";
   const continueLabel = labelForPath(requestedPath);
@@ -433,6 +441,29 @@ export default function WeddingSetup() {
     specialMeals: summary.specialMeals,
     speeches: summary.speeches,
   }, form.orchestration), [form.orchestration, summary.children, summary.pmr, summary.specialMeals, summary.speeches]);
+
+  const persistSetup = ({ notify = false } = {}) => {
+    const next = configureWeddingInState(state, buildSetupPayload(form));
+    setState(next);
+    writeWeddingState(next);
+    setSaveState("saved");
+    if (notify) toast.success("Setup enregistré");
+    return next;
+  };
+
+  useEffect(() => {
+    if (!autoSaveReadyRef.current) {
+      autoSaveReadyRef.current = true;
+      return undefined;
+    }
+
+    setSaveState("saving");
+    const timeout = window.setTimeout(() => {
+      persistSetup();
+    }, 500);
+
+    return () => window.clearTimeout(timeout);
+  }, [form]);
 
   const updateField = (key, value) => {
     setForm((current) => {
@@ -525,25 +556,9 @@ export default function WeddingSetup() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const next = configureWeddingInState(state, {
-      ...form,
-      guests: Number(form.guests || 0),
-      budgetEnvelope: Number(form.budgetEnvelope || 0),
-      contacts: form.contacts,
-      guestsProfile: {
-        children: Number(form.guestsProfile.children || 0),
-        pmr: Number(form.guestsProfile.pmr || 0),
-        specialMeals: Number(form.guestsProfile.specialMeals || 0),
-        speeches: Number(form.guestsProfile.speeches || 0),
-      },
-      orchestration: form.orchestration,
-    });
-
-    setState(next);
-    setForm(createFormState(next));
-    writeWeddingState(next);
-    toast.success(configured ? "Setup mis à jour" : "Mariage initialisé");
+    const next = persistSetup({ notify: true });
     navigate(requestedPath, { replace: true });
+    return next;
   };
 
   const renderActiveStep = () => {
@@ -722,16 +737,18 @@ export default function WeddingSetup() {
 
   return (
     <div className="min-h-screen bg-[var(--color-warm-white)] text-[var(--color-text-primary)] overflow-x-hidden">
-      <SetupHero
+      <SetupHero />
+      <SetupStepDock
         activeStep={activeStep}
         onStepSelect={setActiveStep}
-        configured={configured}
+        saveState={saveState}
         countdownDays={countdownDays}
         activeContacts={activeContacts}
+        configured={configured}
         selectedDocs={selectedDocs}
       />
 
-      <main id="setup-form" className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-8 md:py-10 pb-16 md:pb-20">
+      <main id="setup-form" className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-8 md:py-10 pb-32 md:pb-36">
         <form id="wedding-setup-form" onSubmit={handleSubmit} className="grid gap-4 xl:grid-cols-[1.04fr_0.96fr] items-start">
           <div className="space-y-4">
             {renderActiveStep()}
@@ -748,6 +765,7 @@ export default function WeddingSetup() {
             configured={configured}
             requestedPath={requestedPath}
             continueLabel={continueLabel}
+            saveState={saveState}
           />
         </form>
       </main>
