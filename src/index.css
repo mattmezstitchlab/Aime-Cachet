@@ -177,4 +177,20 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+  .aime-marquee-track {
+    animation: aime-marquee 42s linear infinite;
+    will-change: transform;
+  }
+  .aime-marquee-track:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes aime-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - 8px));
+  }
 }
