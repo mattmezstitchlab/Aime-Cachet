@@ -51,6 +51,21 @@ const VENDOR_VISUALS = {
   beauty_aube: "/landing/hestia.jpg",
 };
 
+const PILLAR_BADGE_STYLES = {
+  zeus: "linear-gradient(135deg, #7C6CFF 0%, #4A56C6 100%)",
+  poseidon: "linear-gradient(135deg, #4FCBFF 0%, #3F7FD2 100%)",
+  athena: "linear-gradient(135deg, #D6DBFF 0%, #8D94CC 100%)",
+  aphrodite: "linear-gradient(135deg, #F4B6C8 0%, #B989B7 100%)",
+  apollon: "linear-gradient(135deg, #F7C39A 0%, #C98663 100%)",
+  hermes: "linear-gradient(135deg, #55E6D5 0%, #4A9FB0 100%)",
+  ares: "linear-gradient(135deg, #9FA9C9 0%, #586487 100%)",
+  demeter: "linear-gradient(135deg, #7AE3C2 0%, #63AB95 100%)",
+  artemis: "linear-gradient(135deg, #6C5AE8 0%, #41339E 100%)",
+  hephaistos: "linear-gradient(135deg, #F29B5C 0%, #C4664A 100%)",
+  dionysos: "linear-gradient(135deg, #D85AE5 0%, #8B439C 100%)",
+  hestia: "linear-gradient(135deg, #E9C0BA 0%, #C9939E 100%)",
+};
+
 const PILLARS = [
   {
     id: "zeus",
@@ -431,6 +446,8 @@ function EditorialColumn({ item }) {
 }
 
 function PillarSection({ pillar }) {
+  const badgeBackground = PILLAR_BADGE_STYLES[pillar.id] || "linear-gradient(135deg, #a1a1aa 0%, #71717a 100%)";
+
   return (
     <section id={pillar.id} className="scroll-mt-28">
       <div className="rounded-[38px] overflow-hidden border border-black/8 bg-[var(--color-black)] shadow-[0_24px_80px_rgba(0,0,0,0.12)]">
@@ -445,9 +462,11 @@ function PillarSection({ pillar }) {
 
           <div className="relative z-10 flex min-h-[62vh] md:min-h-[68vh] flex-col justify-between p-6 md:p-8 lg:p-10 text-white">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-4 py-2 text-sm text-white/82 backdrop-blur-xl">
-                <span className="aime-label text-white/55">{pillar.number}</span>
-                <span>{pillar.myth}</span>
+              <div
+                className="inline-flex items-center rounded-full px-4 py-2 text-sm text-white shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+                style={{ background: badgeBackground }}
+              >
+                {pillar.myth}
               </div>
               <Link to={pillar.href} className="rounded-full bg-white px-4 py-2 text-sm text-black inline-flex items-center gap-2 shadow-[0_12px_28px_rgba(0,0,0,0.18)]">
                 {pillar.cta}
