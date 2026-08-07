@@ -398,12 +398,14 @@ export default function WeddingSetup() {
               { label: "Contacts", value: activeContacts, hint: "saisis" },
               { label: "Docs", value: selectedDocs, hint: "de départ" },
             ]}
-            actions={(
-              <>
-                <Link to={requestedPath} className="aime-button-primary rounded-full px-5 py-3 text-sm font-medium inline-flex items-center gap-2">
-                  Continuer vers {continueLabel}
-                </Link>
-              </>
+            actions={configured ? (
+              <Link to={requestedPath} className="aime-button-primary rounded-full px-5 py-3 text-sm font-medium inline-flex items-center gap-2">
+                Continuer vers {continueLabel}
+              </Link>
+            ) : (
+              <div className="rounded-full border border-black/8 bg-white px-5 py-3 text-sm text-zinc-700">
+                Enregistre d'abord le setup pour ouvrir les autres vues
+              </div>
             )}
           />
           <div className="mt-4 rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] max-w-3xl">
@@ -414,7 +416,7 @@ export default function WeddingSetup() {
             <p className="text-sm text-zinc-600 mt-3 leading-relaxed">
               {configured
                 ? "Vous pouvez ajuster le cadre sans toucher au reste du produit."
-                : `Vous avez demandé ${continueLabel}. Commencez ici avant d'ouvrir les autres vues.`}
+                : `Vous avez demandé ${continueLabel}. La navigation reste verrouillée tant que ce setup n'est pas enregistré.`}
             </p>
           </div>
         </div>
@@ -646,12 +648,20 @@ export default function WeddingSetup() {
                   <Save className="w-4 h-4" />
                   Enregistrer le setup
                 </button>
-                <Link to={requestedPath} className="w-full rounded-full border border-black/8 bg-white px-5 py-3 text-sm text-zinc-700 hover:bg-black/[0.03] inline-flex items-center justify-center">
-                  Continuer vers {continueLabel}
-                </Link>
-                <Link to="/point-zero" className="w-full rounded-full border border-black/8 bg-white px-5 py-3 text-sm text-zinc-700 hover:bg-black/[0.03] inline-flex items-center justify-center">
-                  Ouvrir le cockpit planner
-                </Link>
+                {configured ? (
+                  <>
+                    <Link to={requestedPath} className="w-full rounded-full border border-black/8 bg-white px-5 py-3 text-sm text-zinc-700 hover:bg-black/[0.03] inline-flex items-center justify-center">
+                      Continuer vers {continueLabel}
+                    </Link>
+                    <Link to="/point-zero" className="w-full rounded-full border border-black/8 bg-white px-5 py-3 text-sm text-zinc-700 hover:bg-black/[0.03] inline-flex items-center justify-center">
+                      Ouvrir le cockpit planner
+                    </Link>
+                  </>
+                ) : (
+                  <div className="w-full rounded-[22px] border border-black/8 bg-white px-5 py-4 text-sm text-zinc-600 text-center">
+                    Enregistre le setup une première fois, puis la navigation complète s'ouvre.
+                  </div>
+                )}
               </div>
               <div className="mt-4 rounded-[22px] border border-black/8 bg-white p-4 text-sm text-zinc-700 leading-relaxed">
                 Conseil : gardez au moins une feuille de service, un programme Jour J et les contacts planner / lieu / traiteur avant de diffuser le produit aux autres rôles.

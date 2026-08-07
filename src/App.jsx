@@ -34,7 +34,8 @@ function RequireWeddingSetup({ children }) {
 
 function AppShell() {
   const location = useLocation();
-  const showDock = location.pathname !== "/";
+  const weddingReady = isWeddingSetupComplete(readWeddingState());
+  const showDock = weddingReady && location.pathname !== "/" && location.pathname !== "/setup";
 
   return (
     <>
