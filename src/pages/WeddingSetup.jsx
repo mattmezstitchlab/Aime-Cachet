@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Calendar,
   CheckCircle2,
-  FileText,
   Save,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -30,12 +29,12 @@ const CONTACT_FIELDS = [
   { id: "dj", label: "DJ / Son", hint: "Le contact son, micros et ouverture de bal." },
 ];
 
-const STEP_LINKS = [
-  { id: "cadre", label: "Le cadre" },
-  { id: "invites", label: "Les invités" },
-  { id: "coordination", label: "La coordination" },
-  { id: "contacts", label: "Les contacts" },
-  { id: "documents", label: "Les documents" },
+const SETUP_STEPS = [
+  { id: "cadre", number: "01", title: "Le cadre" },
+  { id: "invites", number: "02", title: "Les invités" },
+  { id: "coordination", number: "03", title: "La coordination" },
+  { id: "contacts", number: "04", title: "Les contacts" },
+  { id: "documents", number: "05", title: "Les documents" },
 ];
 
 function createFormState(state) {
@@ -94,16 +93,16 @@ function labelForPath(pathname = "/couple") {
   return "l’espace couple";
 }
 
-function SetupHero({ countdownDays, configured, activeContacts, selectedDocs, requestedPath, continueLabel }) {
+function SetupHero({ activeStep, onStepSelect, configured, countdownDays, activeContacts, selectedDocs }) {
   return (
-    <section className="relative -mt-20 md:-mt-24 overflow-hidden bg-[var(--color-black)] text-white min-h-[74svh]">
+    <section id="hero" className="relative -mt-24 md:-mt-28 min-h-[84svh] scroll-mt-28 overflow-hidden bg-[var(--color-black)] text-white">
       <img src="/landing/hestia.jpg" alt="Créer votre mariage" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.12),rgba(0,0,0,0.68))]" aria-hidden="true" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.68))]" aria-hidden="true" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_24%)]" aria-hidden="true" />
 
-      <div className="relative z-10 min-h-[74svh] flex items-end px-5 md:px-8 lg:px-10 pt-24 md:pt-28">
+      <div className="relative z-10 min-h-[84svh] flex items-end px-5 md:px-8 lg:px-10 pt-28 md:pt-32">
         <div className="w-full max-w-[1480px] mx-auto">
-          <div className="max-w-4xl pb-10 md:pb-12">
+          <div className="max-w-4xl pb-28 md:pb-32">
             <div className="aime-kicker mb-5">Pour les mariés</div>
             <h1 className="font-display text-[2.8rem] sm:text-[4.6rem] lg:text-[6.4rem] leading-[0.9] tracking-[var(--tracking-display)] text-white">
               Créez votre mariage,
@@ -112,54 +111,77 @@ function SetupHero({ countdownDays, configured, activeContacts, selectedDocs, re
             <p className="mt-5 max-w-2xl text-[15px] md:text-[18px] text-white/66 leading-[var(--leading-body)]">
               Commencez par le couple, la date, le lieu, les invités et le budget. AIME ouvre ensuite votre espace couple, les invités, les partenaires et le cockpit planner.
             </p>
+
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#setup-form" className="rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black shadow-[0_12px_28px_rgba(0,0,0,0.18)] inline-flex items-center gap-2">
                 Commencer
                 <ArrowRight className="w-4 h-4" />
               </a>
-              {configured && (
-                <Link to={requestedPath} className="rounded-full bg-black px-6 py-3.5 text-sm text-white inline-flex items-center gap-2 hover:bg-zinc-900">
-                  Continuer vers {continueLabel}
-                </Link>
-              )}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 border-t border-white/10 bg-black/78 backdrop-blur-xl">
-        <div className="max-w-[1480px] mx-auto grid gap-3 md:grid-cols-4 px-5 md:px-8 lg:px-10 py-4 md:py-5">
-          <div>
-            <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Compte à rebours</div>
-            <div className="mt-2 text-sm text-white inline-flex items-center gap-2"><Calendar className="w-4 h-4" /> {countdownDays} jours</div>
-          </div>
-          <div>
-            <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Contacts saisis</div>
-            <div className="mt-2 text-sm text-white">{activeContacts}</div>
-          </div>
-          <div>
-            <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Documents de départ</div>
-            <div className="mt-2 text-sm text-white inline-flex items-center gap-2"><FileText className="w-4 h-4" /> {selectedDocs}</div>
-          </div>
-          <div>
-            <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">État</div>
-            <div className="mt-2 text-sm text-white inline-flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${configured ? "bg-[#34C759]" : "bg-[#F5A524]"}`} />
-              {configured ? "déjà configuré" : "à initialiser"}
+      <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/82 backdrop-blur-xl">
+        <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-4 md:py-5 flex items-center gap-4">
+          <div className="flex-1 overflow-x-auto no-scrollbar">
+            <div className="flex min-w-max gap-2 md:gap-3">
+              {SETUP_STEPS.map((step) => (
+                <button
+                  key={step.id}
+                  type="button"
+                  onClick={() => {
+                    onStepSelect(step.id);
+                    document.getElementById("setup-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                  className={`min-w-[110px] rounded-[18px] px-3 py-3 text-left transition-colors ${activeStep === step.id ? "bg-white text-black" : "bg-white/[0.05] text-white hover:bg-white/[0.08]"}`}
+                >
+                  <div className="text-[11px] uppercase tracking-[0.16em] opacity-65">{step.number}</div>
+                  <div className="mt-2 text-sm font-medium">{step.title}</div>
+                </button>
+              ))}
             </div>
           </div>
+
+          <div className="hidden md:grid grid-cols-3 gap-6 text-sm text-white/82 shrink-0">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Compte à rebours</div>
+              <div className="mt-2 inline-flex items-center gap-2"><Calendar className="w-4 h-4" /> {countdownDays} jours</div>
+            </div>
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">Contacts</div>
+              <div className="mt-2">{activeContacts}</div>
+            </div>
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.16em] text-white/42">État</div>
+              <div className="mt-2 inline-flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${configured ? "bg-[#34C759]" : "bg-[#F5A524]"}`} />
+                {configured ? `${selectedDocs} docs actifs` : "à initialiser"}
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            form="wedding-setup-form"
+            aria-label="Enregistrer le setup"
+            title="Enregistrer le setup"
+            className="w-12 h-12 rounded-full bg-white text-black inline-flex items-center justify-center shadow-[0_12px_28px_rgba(0,0,0,0.18)] shrink-0"
+          >
+            <Save className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </section>
   );
 }
 
-function SectionCard({ id, index, title, intro, children, action = null }) {
+function SectionCard({ title, eyebrow, intro, children, action = null }) {
   return (
-    <section id={id} className="aime-card-light rounded-[32px] overflow-hidden scroll-mt-28">
+    <section className="aime-card-light rounded-[32px] overflow-hidden">
       <div className="px-5 md:px-6 py-5 border-b border-black/8 flex items-start justify-between gap-4">
         <div className="max-w-2xl">
-          <div className="aime-label text-zinc-500 mb-3">Étape {index}</div>
+          {eyebrow && <div className="aime-label text-zinc-500 mb-3">{eyebrow}</div>}
           <h2 className="text-zinc-950 text-xl md:text-2xl font-semibold">{title}</h2>
           {intro && <p className="text-sm md:text-base text-zinc-600 mt-3 leading-relaxed">{intro}</p>}
         </div>
@@ -325,25 +347,15 @@ function SummaryPanel({
 
       <section className="aime-card-light rounded-[32px] overflow-hidden">
         <div className="px-5 md:px-6 py-5 border-b border-black/8">
-          <div className="aime-label text-zinc-500 mb-3">Navigation</div>
-          <div className="text-lg font-semibold text-zinc-950">Mettez en place le cadre puis ouvrez les espaces.</div>
+          <div className="aime-label text-zinc-500 mb-3">Après validation</div>
+          <div className="text-lg font-semibold text-zinc-950">Les espaces qui s’ouvrent.</div>
         </div>
         <div className="p-5 md:p-6 space-y-3">
-          <div className="flex flex-wrap gap-2">
-            {STEP_LINKS.map((item) => (
-              <a key={item.id} href={`#${item.id}`} className="rounded-full bg-[#f5f3f0] px-3.5 py-2 text-sm text-zinc-700">
-                {item.label}
-              </a>
-            ))}
-          </div>
-          <div className="rounded-[22px] bg-[#fbfaf8] p-4 ring-1 ring-black/8">
-            <div className="text-sm font-semibold text-zinc-950">Après enregistrement</div>
-            <div className="grid grid-cols-2 gap-2 mt-3 text-sm text-zinc-700">
-              <div className="rounded-[18px] bg-white px-3 py-2 ring-1 ring-black/8">Espace couple</div>
-              <div className="rounded-[18px] bg-white px-3 py-2 ring-1 ring-black/8">Invités</div>
-              <div className="rounded-[18px] bg-white px-3 py-2 ring-1 ring-black/8">Prestataires</div>
-              <div className="rounded-[18px] bg-white px-3 py-2 ring-1 ring-black/8">Point Zéro</div>
-            </div>
+          <div className="grid grid-cols-2 gap-2 text-sm text-zinc-700">
+            <div className="rounded-[18px] bg-[#fbfaf8] px-3 py-2 ring-1 ring-black/8">Espace couple</div>
+            <div className="rounded-[18px] bg-[#fbfaf8] px-3 py-2 ring-1 ring-black/8">Invités</div>
+            <div className="rounded-[18px] bg-[#fbfaf8] px-3 py-2 ring-1 ring-black/8">Prestataires</div>
+            <div className="rounded-[18px] bg-[#fbfaf8] px-3 py-2 ring-1 ring-black/8">Point Zéro</div>
           </div>
           <div className="rounded-[22px] bg-[#fbfaf8] p-4 ring-1 ring-black/8 text-sm text-zinc-700 leading-relaxed">
             {coordinationLabel} · cérémonie {ceremonyLabel.toLowerCase()} · {guestBadges.length ? guestBadges.join(" · ") : "aucune contrainte particulière"}.
@@ -353,16 +365,12 @@ function SummaryPanel({
 
       <section className="aime-card-light rounded-[32px] overflow-hidden">
         <div className="px-5 md:px-6 py-5 border-b border-black/8">
-          <div className="aime-label text-zinc-500 mb-3">Action suivante</div>
-          <div className="text-lg font-semibold text-zinc-950">Enregistrez puis continuez.</div>
+          <div className="aime-label text-zinc-500 mb-3">Continuer</div>
+          <div className="text-lg font-semibold text-zinc-950">Enregistrez puis ouvrez le bon espace.</div>
         </div>
         <div className="p-5 md:p-6 space-y-3">
-          <button type="submit" className="w-full rounded-full bg-black px-5 py-3.5 text-sm font-medium text-white inline-flex items-center justify-center gap-2 hover:bg-zinc-800">
-            <Save className="w-4 h-4" />
-            Enregistrer le mariage
-          </button>
           {configured ? (
-            <Link to={requestedPath} className="w-full rounded-full bg-[#f5f3f0] px-5 py-3.5 text-sm text-zinc-800 inline-flex items-center justify-center gap-2">
+            <Link to={requestedPath} className="w-full rounded-full bg-black px-5 py-3.5 text-sm text-white inline-flex items-center justify-center gap-2 hover:bg-zinc-800">
               Continuer vers {continueLabel}
             </Link>
           ) : (
@@ -381,6 +389,7 @@ export default function WeddingSetup() {
   const [searchParams] = useSearchParams();
   const [state, setState] = useState(() => readWeddingState());
   const [form, setForm] = useState(() => createFormState(readWeddingState()));
+  const [activeStep, setActiveStep] = useState("cadre");
 
   const requestedPath = searchParams.get("from") || "/couple";
   const continueLabel = labelForPath(requestedPath);
@@ -395,7 +404,6 @@ export default function WeddingSetup() {
     venue: form.venue.trim() || "Lieu à renseigner",
     city: form.city.trim() || "Ville à renseigner",
     guests: Number(form.guests || 0),
-    budget: Number(form.budgetEnvelope || 0),
     budgetLabel: new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number(form.budgetEnvelope || 0)),
     children: Number(form.guestsProfile.children || 0),
     pmr: Number(form.guestsProfile.pmr || 0),
@@ -538,178 +546,195 @@ export default function WeddingSetup() {
     navigate(requestedPath, { replace: true });
   };
 
+  const renderActiveStep = () => {
+    if (activeStep === "cadre") {
+      return (
+        <SectionCard
+          title="Le cadre du mariage"
+          eyebrow="Étape 01"
+          intro="Commencez par le couple, la date, le lieu, la ville, le volume invités et le budget. C’est la base qui structure tout le reste."
+        >
+          <div className="grid md:grid-cols-2 gap-4">
+            <Field label="Couple" hint="Le nom affiché dans l’espace couple et les exports.">
+              <Input type="text" value={form.couple} onChange={(event) => updateField("couple", event.target.value)} placeholder="Ex : Iris & Noam" />
+            </Field>
+            <Field label="Date" hint="La date de référence pour le compte à rebours et le Jour J.">
+              <Input type="date" value={form.date} onChange={(event) => updateField("date", event.target.value)} />
+            </Field>
+            <Field label="Lieu" hint="Le lieu principal du mariage.">
+              <Input type="text" value={form.venue} onChange={(event) => updateField("venue", event.target.value)} placeholder="Ex : Château de la Lys" />
+            </Field>
+            <Field label="Ville" hint="La ville utilisée dans les fiches, les transports et les exports.">
+              <Input type="text" value={form.city} onChange={(event) => updateField("city", event.target.value)} placeholder="Ex : Lille" />
+            </Field>
+            <Field label="Nombre d’invités" hint="Le volume réellement pris en compte pour l’organisation.">
+              <Input type="number" min="0" value={form.guests} onChange={(event) => updateField("guests", event.target.value)} placeholder="124" />
+            </Field>
+            <Field label="Budget global" hint="Le montant qui nourrit la vue budget et les arbitrages.">
+              <Input type="number" min="0" step="100" value={form.budgetEnvelope} onChange={(event) => updateField("budgetEnvelope", event.target.value)} placeholder="28400" />
+            </Field>
+          </div>
+        </SectionCard>
+      );
+    }
+
+    if (activeStep === "invites") {
+      return (
+        <SectionCard
+          title="Le profil des invités"
+          eyebrow="Étape 02"
+          intro="On ne vous demande pas tout. Seulement les informations qui changent vraiment la logistique, le service et le rythme de la journée."
+        >
+          <div className="grid md:grid-cols-2 gap-4">
+            <Field label="Enfants" hint="Pour anticiper les assises, le rythme du dîner et la logistique famille.">
+              <Input type="number" min="0" value={form.guestsProfile.children} onChange={(event) => updateGuestsProfile("children", event.target.value)} placeholder="0" />
+            </Field>
+            <Field label="Invités PMR" hint="Pour intégrer accessibilité, circulation et accueil dès le départ.">
+              <Input type="number" min="0" value={form.guestsProfile.pmr} onChange={(event) => updateGuestsProfile("pmr", event.target.value)} placeholder="0" />
+            </Field>
+            <Field label="Repas spéciaux" hint="Pour sécuriser les échanges avec le traiteur et les plans de table.">
+              <Input type="number" min="0" value={form.guestsProfile.specialMeals} onChange={(event) => updateGuestsProfile("specialMeals", event.target.value)} placeholder="0" />
+            </Field>
+            <Field label="Discours prévus" hint="Pour absorber correctement le tempo du dîner et de la soirée.">
+              <Input type="number" min="0" value={form.guestsProfile.speeches} onChange={(event) => updateGuestsProfile("speeches", event.target.value)} placeholder="0" />
+            </Field>
+          </div>
+        </SectionCard>
+      );
+    }
+
+    if (activeStep === "coordination") {
+      return (
+        <SectionCard
+          title="La coordination de base"
+          eyebrow="Étape 03"
+          intro="Posez ici le niveau d’accompagnement souhaité, le type de cérémonie et les besoins qui pèsent vraiment sur l’organisation."
+        >
+          <div className="space-y-6">
+            <div>
+              <div className="text-sm font-semibold text-zinc-950 mb-3">Mode de coordination</div>
+              <div className="grid md:grid-cols-3 gap-3">
+                {COORDINATION_MODE_OPTIONS.map((option) => (
+                  <ChoiceCard
+                    key={option.id}
+                    active={form.orchestration.coordinationMode === option.id}
+                    label={option.label}
+                    description={option.description}
+                    onClick={() => updateOrchestration("coordinationMode", option.id)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="text-sm font-semibold text-zinc-950 mb-3">Format de cérémonie</div>
+              <div className="grid md:grid-cols-2 gap-3">
+                {CEREMONY_FORMAT_OPTIONS.map((option) => (
+                  <ChoiceCard
+                    key={option.id}
+                    active={form.orchestration.ceremonyFormat === option.id}
+                    label={option.label}
+                    description={option.description}
+                    onClick={() => updateOrchestration("ceremonyFormat", option.id)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-3">
+              <ToggleCard
+                active={form.orchestration.planBWeatherReady}
+                label="Plan B météo prêt"
+                description="Un scénario de repli existe déjà et peut être diffusé sans repartir de zéro."
+                onClick={() => updateOrchestration("planBWeatherReady", !form.orchestration.planBWeatherReady)}
+              />
+              <ToggleCard
+                active={form.orchestration.shuttleNeeded}
+                label="Navettes à coordonner"
+                description="Les trajets invités doivent être cadrés dans le planning et les contacts utiles."
+                onClick={() => updateOrchestration("shuttleNeeded", !form.orchestration.shuttleNeeded)}
+              />
+              <ToggleCard
+                active={form.orchestration.accommodationNeeded}
+                label="Hébergements à suivre"
+                description="Des chambres ou check-ins invités doivent être pilotés avec le reste du mariage."
+                onClick={() => updateOrchestration("accommodationNeeded", !form.orchestration.accommodationNeeded)}
+              />
+            </div>
+          </div>
+        </SectionCard>
+      );
+    }
+
+    if (activeStep === "contacts") {
+      return (
+        <SectionCard
+          title="Les contacts qui comptent"
+          eyebrow="Étape 04"
+          intro="Renseignez d’abord les personnes qui devront être appelées vite ou valider quelque chose. Le reste pourra venir ensuite."
+        >
+          <div className="space-y-4">
+            {CONTACT_FIELDS.map((field) => (
+              <ContactRow
+                key={field.id}
+                label={field.label}
+                hint={field.hint}
+                value={form.contacts[field.id]}
+                onChange={(key, value) => updateContact(field.id, key, value)}
+              />
+            ))}
+          </div>
+        </SectionCard>
+      );
+    }
+
+    return (
+      <SectionCard
+        title="Les documents de départ"
+        eyebrow="Étape 05"
+        intro="Choisissez seulement la base crédible dès aujourd’hui. Le reste pourra apparaître plus tard, quand il deviendra réellement utile."
+        action={
+          <div className="flex flex-wrap items-center gap-2 justify-end">
+            {recommendedDocIds.length > 0 && (
+              <button type="button" onClick={selectRecommendedDocs} className="rounded-full bg-[#f5f3f0] px-4 py-2 text-sm text-zinc-800">
+                Ajouter les documents suggérés
+              </button>
+            )}
+            <span className="text-sm text-zinc-500">{selectedDocs} sélectionné(s)</span>
+          </div>
+        }
+      >
+        <div className="space-y-3">
+          {SETUP_DOCUMENT_OPTIONS.map((doc) => (
+            <DocCard
+              key={doc.id}
+              active={form.starterDocs.includes(doc.id)}
+              label={doc.label}
+              description={doc.description}
+              badge={recommendedDocIds.includes(doc.id) ? "Suggéré" : STARTER_DOCUMENT_OPTIONS.some((item) => item.id === doc.id) ? "Essentiel" : null}
+              onClick={() => toggleDoc(doc.id)}
+            />
+          ))}
+        </div>
+      </SectionCard>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-warm-white)] text-[var(--color-text-primary)] overflow-x-hidden">
       <SetupHero
-        countdownDays={countdownDays}
+        activeStep={activeStep}
+        onStepSelect={setActiveStep}
         configured={configured}
+        countdownDays={countdownDays}
         activeContacts={activeContacts}
         selectedDocs={selectedDocs}
-        requestedPath={requestedPath}
-        continueLabel={continueLabel}
       />
 
-      <main id="setup-form" className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 -mt-8 md:-mt-10 relative z-10 pb-16 md:pb-20">
-        <form onSubmit={handleSubmit} className="grid gap-4 xl:grid-cols-[1.04fr_0.96fr] items-start">
+      <main id="setup-form" className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-8 md:py-10 pb-16 md:pb-20">
+        <form id="wedding-setup-form" onSubmit={handleSubmit} className="grid gap-4 xl:grid-cols-[1.04fr_0.96fr] items-start">
           <div className="space-y-4">
-            <SectionCard
-              id="cadre"
-              index="01"
-              title="Le cadre du mariage"
-              intro="Commencez par le couple, la date, le lieu, la ville, le volume invités et le budget. C’est la base qui structure tout le reste."
-            >
-              <div className="grid md:grid-cols-2 gap-4">
-                <Field label="Couple" hint="Le nom affiché dans l’espace couple et les exports.">
-                  <Input type="text" value={form.couple} onChange={(event) => updateField("couple", event.target.value)} placeholder="Ex : Iris & Noam" />
-                </Field>
-                <Field label="Date" hint="La date de référence pour le compte à rebours et le Jour J.">
-                  <Input type="date" value={form.date} onChange={(event) => updateField("date", event.target.value)} />
-                </Field>
-                <Field label="Lieu" hint="Le lieu principal du mariage.">
-                  <Input type="text" value={form.venue} onChange={(event) => updateField("venue", event.target.value)} placeholder="Ex : Château de la Lys" />
-                </Field>
-                <Field label="Ville" hint="La ville utilisée dans les fiches, les transports et les exports.">
-                  <Input type="text" value={form.city} onChange={(event) => updateField("city", event.target.value)} placeholder="Ex : Lille" />
-                </Field>
-                <Field label="Nombre d’invités" hint="Le volume réellement pris en compte pour l’organisation.">
-                  <Input type="number" min="0" value={form.guests} onChange={(event) => updateField("guests", event.target.value)} placeholder="124" />
-                </Field>
-                <Field label="Budget global" hint="Le montant qui nourrit la vue budget et les arbitrages.">
-                  <Input type="number" min="0" step="100" value={form.budgetEnvelope} onChange={(event) => updateField("budgetEnvelope", event.target.value)} placeholder="28400" />
-                </Field>
-              </div>
-            </SectionCard>
-
-            <SectionCard
-              id="invites"
-              index="02"
-              title="Le profil des invités"
-              intro="On ne vous demande pas tout. Seulement les informations qui changent vraiment la logistique, le service et le rythme de la journée."
-            >
-              <div className="grid md:grid-cols-2 gap-4">
-                <Field label="Enfants" hint="Pour anticiper les assises, le rythme du dîner et la logistique famille.">
-                  <Input type="number" min="0" value={form.guestsProfile.children} onChange={(event) => updateGuestsProfile("children", event.target.value)} placeholder="0" />
-                </Field>
-                <Field label="Invités PMR" hint="Pour intégrer accessibilité, circulation et accueil dès le départ.">
-                  <Input type="number" min="0" value={form.guestsProfile.pmr} onChange={(event) => updateGuestsProfile("pmr", event.target.value)} placeholder="0" />
-                </Field>
-                <Field label="Repas spéciaux" hint="Pour sécuriser les échanges avec le traiteur et les plans de table.">
-                  <Input type="number" min="0" value={form.guestsProfile.specialMeals} onChange={(event) => updateGuestsProfile("specialMeals", event.target.value)} placeholder="0" />
-                </Field>
-                <Field label="Discours prévus" hint="Pour absorber correctement le tempo du dîner et de la soirée.">
-                  <Input type="number" min="0" value={form.guestsProfile.speeches} onChange={(event) => updateGuestsProfile("speeches", event.target.value)} placeholder="0" />
-                </Field>
-              </div>
-            </SectionCard>
-
-            <SectionCard
-              id="coordination"
-              index="03"
-              title="La coordination de base"
-              intro="Posez ici le niveau d’accompagnement souhaité, le type de cérémonie et les besoins qui pèsent vraiment sur l’organisation."
-            >
-              <div className="space-y-6">
-                <div>
-                  <div className="text-sm font-semibold text-zinc-950 mb-3">Mode de coordination</div>
-                  <div className="grid md:grid-cols-3 gap-3">
-                    {COORDINATION_MODE_OPTIONS.map((option) => (
-                      <ChoiceCard
-                        key={option.id}
-                        active={form.orchestration.coordinationMode === option.id}
-                        label={option.label}
-                        description={option.description}
-                        onClick={() => updateOrchestration("coordinationMode", option.id)}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="text-sm font-semibold text-zinc-950 mb-3">Format de cérémonie</div>
-                  <div className="grid md:grid-cols-2 gap-3">
-                    {CEREMONY_FORMAT_OPTIONS.map((option) => (
-                      <ChoiceCard
-                        key={option.id}
-                        active={form.orchestration.ceremonyFormat === option.id}
-                        label={option.label}
-                        description={option.description}
-                        onClick={() => updateOrchestration("ceremonyFormat", option.id)}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-3">
-                  <ToggleCard
-                    active={form.orchestration.planBWeatherReady}
-                    label="Plan B météo prêt"
-                    description="Un scénario de repli existe déjà et peut être diffusé sans repartir de zéro."
-                    onClick={() => updateOrchestration("planBWeatherReady", !form.orchestration.planBWeatherReady)}
-                  />
-                  <ToggleCard
-                    active={form.orchestration.shuttleNeeded}
-                    label="Navettes à coordonner"
-                    description="Les trajets invités doivent être cadrés dans le planning et les contacts utiles."
-                    onClick={() => updateOrchestration("shuttleNeeded", !form.orchestration.shuttleNeeded)}
-                  />
-                  <ToggleCard
-                    active={form.orchestration.accommodationNeeded}
-                    label="Hébergements à suivre"
-                    description="Des chambres ou check-ins invités doivent être pilotés avec le reste du mariage."
-                    onClick={() => updateOrchestration("accommodationNeeded", !form.orchestration.accommodationNeeded)}
-                  />
-                </div>
-              </div>
-            </SectionCard>
-
-            <SectionCard
-              id="contacts"
-              index="04"
-              title="Les contacts qui comptent"
-              intro="Renseignez d’abord les personnes qui devront être appelées vite ou valider quelque chose. Le reste pourra venir ensuite."
-            >
-              <div className="space-y-4">
-                {CONTACT_FIELDS.map((field) => (
-                  <ContactRow
-                    key={field.id}
-                    label={field.label}
-                    hint={field.hint}
-                    value={form.contacts[field.id]}
-                    onChange={(key, value) => updateContact(field.id, key, value)}
-                  />
-                ))}
-              </div>
-            </SectionCard>
-
-            <SectionCard
-              id="documents"
-              index="05"
-              title="Les documents de départ"
-              intro="Choisissez seulement la base crédible dès aujourd’hui. Le reste pourra apparaître plus tard, quand il deviendra réellement utile."
-              action={
-                <div className="flex flex-wrap items-center gap-2 justify-end">
-                  {recommendedDocIds.length > 0 && (
-                    <button type="button" onClick={selectRecommendedDocs} className="rounded-full bg-[#f5f3f0] px-4 py-2 text-sm text-zinc-800">
-                      Ajouter les documents suggérés
-                    </button>
-                  )}
-                  <span className="text-sm text-zinc-500">{selectedDocs} sélectionné(s)</span>
-                </div>
-              }
-            >
-              <div className="space-y-3">
-                {SETUP_DOCUMENT_OPTIONS.map((doc) => (
-                  <DocCard
-                    key={doc.id}
-                    active={form.starterDocs.includes(doc.id)}
-                    label={doc.label}
-                    description={doc.description}
-                    badge={recommendedDocIds.includes(doc.id) ? "Suggéré" : STARTER_DOCUMENT_OPTIONS.some((item) => item.id === doc.id) ? "Essentiel" : null}
-                    onClick={() => toggleDoc(doc.id)}
-                  />
-                ))}
-              </div>
-            </SectionCard>
+            {renderActiveStep()}
           </div>
 
           <SummaryPanel
