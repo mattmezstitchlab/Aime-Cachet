@@ -154,11 +154,14 @@ export default function WeddingTopCapsule() {
                 <Link to="/point-zero?role=planner" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
                   Planner
                 </Link>
+                <Link to="/design-system" className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
+                  Design System
+                </Link>
               </nav>
 
               <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
-                <Link to="/prestataires" className="hidden sm:inline-flex rounded-full border border-black/8 bg-white px-4 py-2.5 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
-                  Registre
+                <Link to="/design-system" className="hidden md:inline-flex rounded-full border border-black/8 bg-white px-4 py-2.5 text-sm text-zinc-700 hover:bg-black/[0.03] transition-colors">
+                  Design System
                 </Link>
                 <Link to="/setup" className="inline-flex rounded-full bg-black px-4 py-2.5 text-sm text-white hover:bg-zinc-800 transition-colors">
                   Créer mon mariage

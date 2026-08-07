@@ -17,6 +17,7 @@ import WeddingExports from "@/pages/WeddingExports";
 import WeddingBudget from "@/pages/WeddingBudget";
 import WeddingCommunication from "@/pages/WeddingCommunication";
 import WeddingSetup from "@/pages/WeddingSetup";
+import DesignSystem from "@/pages/DesignSystem";
 import { isWeddingSetupComplete, readWeddingState } from "@/lib/aimeWeddingCore";
 
 function RequireWeddingSetup({ children }) {
@@ -35,7 +36,10 @@ function RequireWeddingSetup({ children }) {
 function AppShell() {
   const location = useLocation();
   const weddingReady = isWeddingSetupComplete(readWeddingState());
-  const showDock = weddingReady && location.pathname !== "/" && location.pathname !== "/setup";
+  const showDock = weddingReady
+    && location.pathname !== "/"
+    && location.pathname !== "/setup"
+    && location.pathname !== "/design-system";
 
   return (
     <>
@@ -43,6 +47,7 @@ function AppShell() {
       <div className={`${showDock ? "pb-28 md:pb-32" : ""} pt-20 md:pt-24`}>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/design-system" element={<DesignSystem />} />
           <Route path="/setup" element={<WeddingSetup />} />
           <Route path="/point-zero" element={<RequireWeddingSetup><PointZero /></RequireWeddingSetup>} />
           <Route path="/documents" element={<RequireWeddingSetup><WeddingDocs /></RequireWeddingSetup>} />
