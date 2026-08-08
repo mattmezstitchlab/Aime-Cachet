@@ -254,10 +254,16 @@ function buildUniversePageData(state, universe) {
   const flowerVendor = allVendors.find((vendor) => vendor.category === "flowers-decor") || null;
   const photoVendor = allVendors.find((vendor) => vendor.category === "photo-video") || null;
   const beautyVendor = allVendors.find((vendor) => vendor.category === "beauty") || null;
+  const venueVendor = allVendors.find((vendor) => vendor.category === "venue") || null;
+  const cateringVendor = allVendors.find((vendor) => vendor.category === "catering") || null;
+  const transportVendor = allVendors.find((vendor) => vendor.category === "transport") || null;
   const planSalleDoc = docsPlanner.find((doc) => doc.id === "plan_salle") || null;
   const planBDoc = docsPlanner.find((doc) => doc.id === "plan_b_meteo") || null;
   const programmeDoc = docsPlanner.find((doc) => doc.id === "programme_jourj") || null;
   const ceremonieDoc = docsPlanner.find((doc) => doc.id === "ceremonie_cortege") || null;
+  const accueilDoc = docsPlanner.find((doc) => doc.id === "accueil_accessibilite") || null;
+  const hebergementsDoc = docsPlanner.find((doc) => doc.id === "hebergements_navettes") || null;
+  const repasDoc = docsPlanner.find((doc) => doc.id === "repas_speciaux_allergies") || null;
   const imageMoments = timelinePlanner.filter((item) => ["habillage-ceremonie", "ceremonie", "cocktail-photos", "ouverture-bal"].includes(item.id));
   const docsPending = docsPlanner.filter((doc) => !["prêt", "partagé", "complet"].includes(doc.status));
   const nextStep = timelinePlanner.find((item) => item.status !== "done");
@@ -662,6 +668,190 @@ function buildUniversePageData(state, universe) {
         ...commonFooter,
         primary: { to: "/prestataires?category=photo-video", label: "Équipe image" },
         secondary: { to: "/jour-j?role=planner", label: "Voir la timeline" },
+      },
+    };
+  }
+
+  if (universe.id === "artemis") {
+    return {
+      heroStats: [
+        { label: "Lieu", value: venueVendor?.status || "—", detail: venueVendor?.name || meta.venue || "À confirmer" },
+        { label: "Hébergements", value: (guestPortal.accommodations || []).length, detail: `${(guestPortal.shuttles || []).length} navettes` },
+        { label: "Plan B", value: planBDoc?.status || "—", detail: planBDoc?.version || "Document lié" },
+        { label: "Capacité", value: guestSummary.total, detail: `${guestSummary.pmr} PMR identifiés` },
+      ],
+      heroCtas: [
+        { to: "/prestataires?category=venue", label: "Ouvrir Artémis" },
+        { to: "/espace-invites", label: "Voir venir & séjourner" },
+        { to: "/documents?role=planner", label: "Voir les docs accès" },
+      ],
+      intro: {
+        title: "Artémis tient le lieu dans son usage réel.",
+        text: "Le lieu n’est pas un décor fixe. Artémis s’occupe de la manière dont le mariage s’y déploie vraiment : accès, flux, circulation, hébergements, navettes, plan B météo, PMR, accueil, repli, respiration des espaces et capacité du site à absorber le réel.",
+      },
+      statRail: [
+        { label: "Lieu actif", value: meta.venue || "—", detail: meta.city || "Ville" },
+        { label: "Parking", value: guestPortal.travel?.parking ? "Prévu" : "—", detail: guestPortal.travel?.parking ? "Signalé aux invités" : "À documenter" },
+        { label: "Accueil", value: accueilDoc?.version || "—", detail: accueilDoc?.status || "—" },
+        { label: "Navettes", value: hebergementsDoc?.version || "—", detail: hebergementsDoc?.status || "—" },
+      ],
+      focus: {
+        eyebrow: "Métier principal",
+        title: "Ce qu’Artémis rend praticable",
+        description: "Artémis relie le lieu rêvé au lieu habité. C’est ici que se décident les flux réels, l’expérience de venue, les points d’arrivée, les trajectoires PMR, les couchages, les reconfigurations météo et la capacité du site à rester fluide avant, pendant et après les temps forts du mariage.",
+        bullets: [
+          "Un beau lieu qui ne respire pas correctement devient une source de friction invisible.",
+          "Les accès et les hébergements sont des composantes de l’accueil, pas des sujets annexes.",
+          "Le plan B météo fait partie de l’intelligence spatiale du mariage, pas d’un simple secours technique.",
+        ],
+        cta: { to: "/prestataires?category=venue", label: "Ouvrir les lieux" },
+      },
+      focusItemsTitle: "Ce qu’Artémis tient maintenant",
+      focusItems: [
+        {
+          title: venueVendor?.name || meta.venue || "Lieu principal",
+          detail: venueVendor ? `${venueVendor.summary} ${venueVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(venueVendor.nextTouchpointAt)}.` : ""}` : "Le lieu principal n’est pas encore sécurisé.",
+          tone: venueVendor?.status === "confirmé" ? "calm" : "warning",
+          to: "/prestataires?category=venue",
+          meta: venueVendor?.paymentStatus,
+        },
+        {
+          title: accueilDoc?.title || "Accueil invités & accessibilité",
+          detail: accueilDoc ? `${compactText(accueilDoc.summary, 118)} ${compactText(accueilDoc.note, 54)}` : "Le document d’accueil n’est pas encore structuré.",
+          tone: accueilDoc?.status === "brouillon" ? "warning" : "neutral",
+          to: "/documents?role=planner",
+          meta: accueilDoc?.version,
+        },
+        {
+          title: hebergementsDoc?.title || "Hébergements & navettes",
+          detail: hebergementsDoc ? `${compactText(hebergementsDoc.summary, 118)} ${(guestPortal.accommodations || []).length} hébergements et ${(guestPortal.shuttles || []).length} navettes visibles.` : "Les hébergements et navettes ne sont pas encore documentés.",
+          tone: hebergementsDoc?.status === "brouillon" ? "warning" : "neutral",
+          to: "/espace-invites",
+          meta: hebergementsDoc?.version,
+        },
+        {
+          title: planBDoc?.title || "Plan B météo",
+          detail: planBDoc ? `${compactText(planBDoc.summary, 120)} ${compactText(planBDoc.note, 52)}` : "Le plan B météo n’est pas encore cadré.",
+          tone: planBDoc?.status === "prêt" ? "calm" : "warning",
+          to: "/documents?role=planner",
+          meta: planBDoc?.version,
+        },
+      ],
+      tools: {
+        eyebrow: "Outils liés",
+        title: "Les prolongements naturels d’Artémis",
+        items: [
+          { eyebrow: "Hestia", title: "Venir & séjourner", detail: "Le portail invités traduit les accès, couchages et navettes dans une lecture douce et claire.", to: "/espace-invites" },
+          { eyebrow: "Arès", title: "Terrain & circulation", detail: "Quand les espaces doivent devenir implantation, flux et séquences réelles du Jour J.", to: "/univers/ares" },
+          { eyebrow: "Aphrodite", title: "Scénographie du lieu", detail: "L’usage réel du site encadre aussi la cohérence esthétique et les bascules visuelles.", to: "/univers/aphrodite" },
+          { eyebrow: "Héphaïstos", title: "Plans & supports", detail: "Plans de salle, accueils, signalétique et documents d’accès prolongent Artémis proprement.", to: "/univers/hephaistos" },
+        ],
+      },
+      integrations: {
+        eyebrow: "Intégrations",
+        title: "Résumés connectés",
+        items: [
+          { title: "Hestia", detail: `${(guestPortal.accommodations || []).length} hébergements · ${(guestPortal.shuttles || []).length} navettes · ${guestSummary.pmr} PMR.`, tone: guestSummary.pmr > 0 ? "warning" : "neutral", to: "/univers/hestia" },
+          { title: "Arès", detail: `${timelinePlanner.filter((step) => ["arrivee-technique", "accueil-invites", "ceremonie"].includes(step.id)).length} séquences terrain dépendent directement du lieu et des accès.`, tone: "warning", to: "/jour-j?role=planner" },
+          { title: "Déméter", detail: `${guestSummary.total} invités et ${tables.length} tables conditionnent aussi la charge réelle du site.`, tone: "neutral", to: "/univers/demeter" },
+          { title: "Zeus", detail: `${warningSignals} signal${warningSignals > 1 ? "aux" : ""} peuvent encore déplacer les arbitrages d’espace, d’accès ou de repli.`, tone: warningSignals > 0 ? "warning" : "neutral", to: "/point-zero" },
+        ],
+      },
+      footer: {
+        ...commonFooter,
+        primary: { to: "/prestataires?category=venue", label: "Ouvrir Artémis" },
+        secondary: { to: "/espace-invites", label: "Voir venir & séjourner" },
+      },
+    };
+  }
+
+  if (universe.id === "demeter") {
+    return {
+      heroStats: [
+        { label: "Budget engagé", value: formatMoney(budgetSummary.current), detail: formatMoney(budgetSummary.remaining) + " restants" },
+        { label: "Traiteur", value: cateringVendor?.status || "—", detail: cateringVendor?.name || "À confirmer" },
+        { label: "Repas spéciaux", value: guestSummary.allergies + guestSummary.vegetarian + guestSummary.children, detail: "à absorber au service" },
+        { label: "Paiements dus", value: formatMoney(vendorPaymentSummary.due), detail: `${vendorPaymentSummary.openCount} ouverts` },
+      ],
+      heroCtas: [
+        { to: "/budget", label: "Ouvrir Déméter" },
+        { to: "/invites?role=planner", label: "Voir tables & invités" },
+        { to: "/prestataires?category=catering", label: "Voir le traiteur" },
+      ],
+      intro: {
+        title: "Déméter tient la réception comme un système vivant.",
+        text: "Le dîner, le service, les régimes spéciaux, les tables, les volumes et les arbitrages budgétaires ne doivent jamais être traités comme des sujets séparés. Déméter maintient leur cohérence, pour que l’expérience de table reste fluide sans casser le budget ni le rythme du mariage.",
+      },
+      statRail: [
+        { label: "Enveloppe", value: formatMoney(budgetSummary.envelope), detail: `${formatMoney(budgetSummary.pending)} à arbitrer` },
+        { label: "Tables", value: tables.length, detail: `${guestSummary.confirmed} confirmés` },
+        { label: "Repas spéciaux", value: repasDoc?.version || "—", detail: repasDoc?.status || "—" },
+        { label: "Solde traiteur", value: cateringVendor?.paymentStatus || "—", detail: cateringVendor?.nextTouchpointAt ? formatShortDate(cateringVendor.nextTouchpointAt) : "" },
+      ],
+      focus: {
+        eyebrow: "Métier principal",
+        title: "Ce que Déméter aligne vraiment",
+        description: "Déméter ne sert pas seulement à lire des montants. Elle aligne le nombre réel d’invités, le service, les repas spéciaux, le plan de table, le budget vivant et la capacité du dîner à rester fluide sans dégrader la soirée ni l’accueil.",
+        bullets: [
+          "Le budget ne vaut que s’il reste relié à ce qui se passe réellement à table.",
+          "Les allergies, végétariens et repas enfants sont des données d’expérience, pas seulement des lignes de coût.",
+          "Le dîner doit préserver le rythme global du mariage autant que la qualité de service.",
+        ],
+        cta: { to: "/budget", label: "Ouvrir le budget vivant" },
+      },
+      focusItemsTitle: "Ce que Déméter tient maintenant",
+      focusItems: [
+        {
+          title: cateringVendor?.name || "Traiteur principal",
+          detail: cateringVendor ? `${cateringVendor.summary} ${cateringVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(cateringVendor.nextTouchpointAt)}.` : ""}` : "Le traiteur principal n’est pas encore sécurisé.",
+          tone: cateringVendor?.paymentStatus?.includes("sécuriser") ? "warning" : "calm",
+          to: "/prestataires?category=catering",
+          meta: cateringVendor?.paymentStatus,
+        },
+        {
+          title: repasDoc?.title || "Repas spéciaux & allergies",
+          detail: repasDoc ? `${compactText(repasDoc.summary, 118)} ${compactText(repasDoc.note, 58)}` : "Le document de service des repas spéciaux n’est pas encore stabilisé.",
+          tone: repasDoc?.status === "brouillon" ? "warning" : "neutral",
+          to: "/documents?role=planner",
+          meta: repasDoc?.version,
+        },
+        {
+          title: "Plan de table",
+          detail: `${tables.length} tables pour ${guestSummary.confirmed} confirmés. ${guestSummary.allergies + guestSummary.vegetarian} régimes spéciaux et ${guestSummary.children} repas enfants.`,
+          tone: guestSummary.pending > 0 ? "warning" : "calm",
+          to: "/invites?role=planner",
+        },
+        {
+          title: "Budget vivant",
+          detail: `${formatMoney(budgetSummary.current)} engagés · ${formatMoney(budgetSummary.remaining)} restants · ${formatMoney(budgetSummary.pending)} à arbitrer.`,
+          tone: budgetSummary.pending > 0 ? "warning" : "calm",
+          to: "/budget",
+        },
+      ],
+      tools: {
+        eyebrow: "Outils liés",
+        title: "Les prolongements naturels de Déméter",
+        items: [
+          { eyebrow: "Hestia", title: "Foyers & tables", detail: "Les nombres, régimes et places vivent d’abord dans la maison invités avant d’impacter le service.", to: "/univers/hestia" },
+          { eyebrow: "Arès", title: "Service & rythme", detail: "Le dîner doit dialoguer avec la timeline, les discours et l’ouverture de bal sur le terrain réel.", to: "/univers/ares" },
+          { eyebrow: "Artémis", title: "Lieu & capacité", detail: "Les espaces et circulations du site conditionnent aussi la réception et la fluidité du repas.", to: "/univers/artemis" },
+          { eyebrow: "Zeus", title: "Arbitrages globaux", detail: "Quand un choix de budget ou de volume table devient une décision structurante du mariage.", to: "/univers/zeus" },
+        ],
+      },
+      integrations: {
+        eyebrow: "Intégrations",
+        title: "Résumés connectés",
+        items: [
+          { title: "Hestia", detail: `${guestSummary.pending} RSVP attente · ${tables.length} tables · ${guestSummary.pmr} PMR influencent aussi la réception.`, tone: guestSummary.pending > 0 ? "warning" : "neutral", to: "/invites?role=planner" },
+          { title: "Budget", detail: `${formatMoney(vendorPaymentSummary.due)} dus dont le traiteur et ${formatMoney(budgetSummary.pending)} encore à arbitrer.`, tone: "warning", to: "/budget" },
+          { title: "Arès", detail: `${timelinePlanner.filter((step) => ["cocktail-photos", "diner-discours", "ouverture-bal"].includes(step.id)).length} séquences dépendent directement du rythme du dîner.`, tone: "warning", to: "/jour-j?role=planner" },
+          { title: "Artémis", detail: `${meta.venue || "Le lieu"} doit absorber ${guestSummary.confirmed} confirmés, le service et les circulations de réception.`, tone: "neutral", to: "/univers/artemis" },
+        ],
+      },
+      footer: {
+        ...commonFooter,
+        primary: { to: "/budget", label: "Ouvrir Déméter" },
+        secondary: { to: "/prestataires?category=catering", label: "Voir le traiteur" },
       },
     };
   }
