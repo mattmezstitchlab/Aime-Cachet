@@ -238,21 +238,6 @@ export default function WeddingTopCapsule() {
                     </div>
                   </div>
                   <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-                    <div className="rounded-[18px] bg-[var(--color-warm-white)] px-3 py-3">
-                      <div className="flex flex-col gap-3 md:flex-row md:items-center">
-                        <Link
-                          to="/"
-                          onClick={() => setOpenUniverse(false)}
-                          className="inline-flex items-center justify-center rounded-full bg-black px-4 py-2.5 text-sm font-semibold italic text-white md:min-w-[126px]"
-                        >
-                          Accueil
-                        </Link>
-                        <div className="flex flex-wrap gap-2">
-                          <Link to="/#registre" onClick={() => setOpenUniverse(false)} className="rounded-full border border-black/8 bg-white px-3 py-2 text-xs text-zinc-700 hover:bg-black/[0.03]">Registre</Link>
-                          <Link to="/#pillars" onClick={() => setOpenUniverse(false)} className="rounded-full border border-black/8 bg-white px-3 py-2 text-xs text-zinc-700 hover:bg-black/[0.03]">12 univers</Link>
-                        </div>
-                      </div>
-                    </div>
                     {activeClusters.map((cluster) => (
                       <UniverseCluster key={`${menuMode}-${cluster.id}`} cluster={cluster} mode={menuMode} onSelect={() => setOpenUniverse(false)} />
                     ))}
