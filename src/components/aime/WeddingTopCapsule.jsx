@@ -48,7 +48,7 @@ const MODE_CLUSTERS = {
 
 const ACCESS_ITEMS = [
   { id: "couple", label: "Créer mon mariage", to: "/setup" },
-  { id: "vendor", label: "Rejoindre le registre", to: "/prestataires" },
+  { id: "vendor", label: "Rejoindre le registre", to: "/prestataires/registre" },
   { id: "guest", label: "Accéder à un mariage", to: "/espace-invites" },
   { id: "planner", label: "Accès planner", to: "/point-zero?role=planner" },
 ];
@@ -64,6 +64,7 @@ function getCurrentUniverse(pathname = "/") {
   if (pathname === "/" || pathname === "/design-system") return null;
   const universeMatch = /^\/univers\/([^/]+)/.exec(pathname);
   if (universeMatch) return universeMatch[1];
+  if (pathname.startsWith("/prestataires/registre")) return null;
   if (pathname.startsWith("/point-zero")) return "zeus";
   if (pathname.startsWith("/notifications")) return "athena";
   if (pathname.startsWith("/communication")) return "hermes";

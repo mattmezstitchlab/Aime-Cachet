@@ -497,7 +497,7 @@ function buildUniversePageData(state, universe) {
         { label: "Scéno", value: planSalleDoc?.version || "—", detail: planSalleDoc?.status || "à structurer" },
       ],
       heroCtas: [
-        { to: "/prestataires?category=flowers-decor", label: "Ouvrir Aphrodite" },
+        { to: "/prestataires/registre?category=flowers-decor", label: "Ouvrir Aphrodite" },
         { to: "/documents?role=planner", label: "Voir les docs" },
         { to: "/jour-j?role=planner", label: "Voir le terrain" },
       ],
@@ -520,7 +520,7 @@ function buildUniversePageData(state, universe) {
           "Le plan B météo fait partie de la direction artistique, pas d’un simple protocole de secours.",
           "Le beau doit pointer vers Artémis, Arès et Héphaïstos dès qu’il devient implantable, imprimable ou exécutable.",
         ],
-        cta: { to: "/prestataires?category=flowers-decor", label: "Ouvrir les prestataires déco" },
+        cta: { to: "/prestataires/registre?category=flowers-decor", label: "Ouvrir les prestataires déco" },
       },
       focusItemsTitle: "Ce qu’Aphrodite tient maintenant",
       focusItems: [
@@ -530,7 +530,7 @@ function buildUniversePageData(state, universe) {
             ? `${flowerVendor.summary} ${flowerVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(flowerVendor.nextTouchpointAt)}.` : ""}`
             : "La couche décor n’est pas encore sécurisée.",
           tone: flowerVendor?.status === "à confirmer" ? "warning" : "calm",
-          to: "/prestataires?category=flowers-decor",
+          to: "/prestataires/registre?category=flowers-decor",
           meta: flowerVendor?.paymentStatus,
         },
         {
@@ -575,7 +575,7 @@ function buildUniversePageData(state, universe) {
       },
       footer: {
         ...commonFooter,
-        primary: { to: "/prestataires?category=flowers-decor", label: "Prestataires déco" },
+        primary: { to: "/prestataires/registre?category=flowers-decor", label: "Prestataires déco" },
         secondary: { to: "/documents?role=planner", label: "Voir les documents liés" },
       },
     };
@@ -590,7 +590,7 @@ function buildUniversePageData(state, universe) {
         { label: "Invités captés", value: guestSummary.confirmed, detail: "confirmés" },
       ],
       heroCtas: [
-        { to: "/prestataires?category=photo-video", label: "Ouvrir Apollon" },
+        { to: "/prestataires/registre?category=photo-video", label: "Ouvrir Apollon" },
         { to: "/jour-j?role=planner", label: "Voir la timeline" },
         { to: "/espace-invites", label: "Portail invités" },
       ],
@@ -613,7 +613,7 @@ function buildUniversePageData(state, universe) {
           "Le fil image dépend autant d’Arès et d’Athéna que du prestataire lui-même.",
           "La mémoire visuelle doit dialoguer avec l’esthétique tenue par Aphrodite.",
         ],
-        cta: { to: "/prestataires?category=photo-video", label: "Ouvrir l’équipe image" },
+        cta: { to: "/prestataires/registre?category=photo-video", label: "Ouvrir l’équipe image" },
       },
       focusItemsTitle: "Ce qu’Apollon protège maintenant",
       focusItems: [
@@ -621,7 +621,7 @@ function buildUniversePageData(state, universe) {
           title: photoVendor?.name || "Équipe image à confirmer",
           detail: photoVendor ? `${photoVendor.summary} ${photoVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(photoVendor.nextTouchpointAt)}.` : ""}` : "Le bloc photo / vidéo n’est pas encore sécurisé.",
           tone: photoVendor?.paymentStatus?.includes("attente") ? "warning" : "calm",
-          to: "/prestataires?category=photo-video",
+          to: "/prestataires/registre?category=photo-video",
           meta: photoVendor?.paymentStatus,
         },
         {
@@ -667,7 +667,7 @@ function buildUniversePageData(state, universe) {
       },
       footer: {
         ...commonFooter,
-        primary: { to: "/prestataires?category=photo-video", label: "Équipe image" },
+        primary: { to: "/prestataires/registre?category=photo-video", label: "Équipe image" },
         secondary: { to: "/jour-j?role=planner", label: "Voir la timeline" },
       },
     };
@@ -682,7 +682,7 @@ function buildUniversePageData(state, universe) {
         { label: "Capacité", value: guestSummary.total, detail: `${guestSummary.pmr} PMR identifiés` },
       ],
       heroCtas: [
-        { to: "/prestataires?category=venue", label: "Ouvrir Artémis" },
+        { to: "/prestataires/registre?category=venue", label: "Ouvrir Artémis" },
         { to: "/espace-invites", label: "Voir venir & séjourner" },
         { to: "/documents?role=planner", label: "Voir les docs accès" },
       ],
@@ -705,7 +705,7 @@ function buildUniversePageData(state, universe) {
           "Les accès et les hébergements sont des composantes de l’accueil, pas des sujets annexes.",
           "Le plan B météo fait partie de l’intelligence spatiale du mariage, pas d’un simple secours technique.",
         ],
-        cta: { to: "/prestataires?category=venue", label: "Ouvrir les lieux" },
+        cta: { to: "/prestataires/registre?category=venue", label: "Ouvrir les lieux" },
       },
       focusItemsTitle: "Ce qu’Artémis tient maintenant",
       focusItems: [
@@ -713,7 +713,7 @@ function buildUniversePageData(state, universe) {
           title: venueVendor?.name || meta.venue || "Lieu principal",
           detail: venueVendor ? `${venueVendor.summary} ${venueVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(venueVendor.nextTouchpointAt)}.` : ""}` : "Le lieu principal n’est pas encore sécurisé.",
           tone: venueVendor?.status === "confirmé" ? "calm" : "warning",
-          to: "/prestataires?category=venue",
+          to: "/prestataires/registre?category=venue",
           meta: venueVendor?.paymentStatus,
         },
         {
@@ -760,7 +760,7 @@ function buildUniversePageData(state, universe) {
       },
       footer: {
         ...commonFooter,
-        primary: { to: "/prestataires?category=venue", label: "Ouvrir Artémis" },
+        primary: { to: "/prestataires/registre?category=venue", label: "Ouvrir Artémis" },
         secondary: { to: "/espace-invites", label: "Voir venir & séjourner" },
       },
     };
@@ -777,7 +777,7 @@ function buildUniversePageData(state, universe) {
       heroCtas: [
         { to: "/budget", label: "Ouvrir Déméter" },
         { to: "/invites?role=planner", label: "Voir tables & invités" },
-        { to: "/prestataires?category=catering", label: "Voir le traiteur" },
+        { to: "/prestataires/registre?category=catering", label: "Voir le traiteur" },
       ],
       intro: {
         title: "Déméter tient la réception comme un système vivant.",
@@ -806,7 +806,7 @@ function buildUniversePageData(state, universe) {
           title: cateringVendor?.name || "Traiteur principal",
           detail: cateringVendor ? `${cateringVendor.summary} ${cateringVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(cateringVendor.nextTouchpointAt)}.` : ""}` : "Le traiteur principal n’est pas encore sécurisé.",
           tone: cateringVendor?.paymentStatus?.includes("sécuriser") ? "warning" : "calm",
-          to: "/prestataires?category=catering",
+          to: "/prestataires/registre?category=catering",
           meta: cateringVendor?.paymentStatus,
         },
         {
@@ -852,7 +852,7 @@ function buildUniversePageData(state, universe) {
       footer: {
         ...commonFooter,
         primary: { to: "/budget", label: "Ouvrir Déméter" },
-        secondary: { to: "/prestataires?category=catering", label: "Voir le traiteur" },
+        secondary: { to: "/prestataires/registre?category=catering", label: "Voir le traiteur" },
       },
     };
   }
@@ -869,7 +869,7 @@ function buildUniversePageData(state, universe) {
       ],
       heroCtas: [
         { to: "/jour-j?role=planner", label: "Voir la soirée live" },
-        { to: "/prestataires?category=music", label: "Voir le DJ / son" },
+        { to: "/prestataires/registre?category=music", label: "Voir le DJ / son" },
         { to: "/espace-invites", label: "Voir les retours invités" },
       ],
       intro: {
@@ -891,7 +891,7 @@ function buildUniversePageData(state, universe) {
           "L’ouverture de bal est une transition, pas un bloc isolé.",
           "Le retour des invités et la fatigue terrain font partie de la qualité de la nuit.",
         ],
-        cta: { to: "/prestataires?category=music", label: "Ouvrir la mission musique" },
+        cta: { to: "/prestataires/registre?category=music", label: "Ouvrir la mission musique" },
       },
       focusItemsTitle: "Ce que Dionysos tient maintenant",
       focusItems: [
@@ -899,7 +899,7 @@ function buildUniversePageData(state, universe) {
           title: musicVendor?.name || "DJ / son principal",
           detail: musicVendor ? `${musicVendor.summary} ${musicVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(musicVendor.nextTouchpointAt)}.` : ""}` : "Le bloc son / DJ n’est pas encore sécurisé.",
           tone: musicVendor?.paymentStatus?.includes("venir") ? "warning" : "calm",
-          to: "/prestataires?category=music",
+          to: "/prestataires/registre?category=music",
           meta: musicVendor?.paymentStatus,
         },
         {
@@ -944,7 +944,7 @@ function buildUniversePageData(state, universe) {
       },
       footer: {
         ...commonFooter,
-        primary: { to: "/prestataires?category=music", label: "Ouvrir la mission musique" },
+        primary: { to: "/prestataires/registre?category=music", label: "Ouvrir la mission musique" },
         secondary: { to: "/jour-j?role=planner", label: "Voir la timeline de soirée" },
       },
     };
@@ -961,7 +961,7 @@ function buildUniversePageData(state, universe) {
         { label: "Soirée", value: soundSteps.find((step) => step.id === "ouverture-bal")?.time || "21:45", detail: "bascule piste" },
       ],
       heroCtas: [
-        { to: "/prestataires?category=music", label: "Ouvrir Poséidon" },
+        { to: "/prestataires/registre?category=music", label: "Ouvrir Poséidon" },
         { to: "/jour-j?role=planner", label: "Voir les séquences" },
         { to: "/documents?role=planner", label: "Voir les docs son" },
       ],
@@ -984,7 +984,7 @@ function buildUniversePageData(state, universe) {
           "Une cérémonie mal sonorisée ou des discours illisibles cassent immédiatement l’expérience collective.",
           "La couche sonore doit rester raccord avec le terrain, le rythme et la captation image.",
         ],
-        cta: { to: "/prestataires?category=music", label: "Ouvrir le bloc son" },
+        cta: { to: "/prestataires/registre?category=music", label: "Ouvrir le bloc son" },
       },
       focusItemsTitle: "Ce que Poséidon tient maintenant",
       focusItems: [
@@ -992,7 +992,7 @@ function buildUniversePageData(state, universe) {
           title: musicVendor?.name || "Bloc son principal",
           detail: musicVendor ? `${musicVendor.summary} ${musicVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(musicVendor.nextTouchpointAt)}.` : ""}` : "Le bloc sonore n’est pas encore sécurisé.",
           tone: musicVendor?.paymentStatus?.includes("venir") ? "warning" : "calm",
-          to: "/prestataires?category=music",
+          to: "/prestataires/registre?category=music",
           meta: musicVendor?.paymentStatus,
         },
         {
@@ -1037,7 +1037,7 @@ function buildUniversePageData(state, universe) {
       },
       footer: {
         ...commonFooter,
-        primary: { to: "/prestataires?category=music", label: "Ouvrir Poséidon" },
+        primary: { to: "/prestataires/registre?category=music", label: "Ouvrir Poséidon" },
         secondary: { to: "/jour-j?role=planner", label: "Voir les séquences son" },
       },
     };

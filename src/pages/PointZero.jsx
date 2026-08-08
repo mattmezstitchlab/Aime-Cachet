@@ -400,8 +400,8 @@ export default function PointZero() {
               ]}
             >
               <HouseLink universeId="aphrodite" label="Aphrodite" title="Scénographie & esthétique" detail="Palette, fleurs, matières et plan B restent cohérents sans se disperser." to="/univers/aphrodite" />
-              <HouseLink universeId="apollon" label="Apollon" title="Photo, vidéo & mémoire" detail="Fenêtres image, captation et moments forts restent sécurisés dans le déroulé." to="/prestataires?category=photo-video" />
-              <HouseLink universeId="poseidon" label="Poséidon" title="Son & ambiance" detail="Micros, musique, transitions et montée émotionnelle restent sous contrôle." to="/prestataires?category=music" />
+              <HouseLink universeId="apollon" label="Apollon" title="Photo, vidéo & mémoire" detail="Fenêtres image, captation et moments forts restent sécurisés dans le déroulé." to="/prestataires/registre?category=photo-video" />
+              <HouseLink universeId="poseidon" label="Poséidon" title="Son & ambiance" detail="Micros, musique, transitions et montée émotionnelle restent sous contrôle." to="/prestataires/registre?category=music" />
             </ClusterCard>
 
             <ClusterCard
@@ -416,7 +416,7 @@ export default function PointZero() {
               ]}
             >
               <HouseLink universeId="ares" label="Arès" title="Jour J & exécution" detail="Le cœur terrain : implantation, séquences, incidents et tenue du rythme." to="/jour-j?role=planner" />
-              <HouseLink universeId="artemis" label="Artémis" title="Lieux & accès" detail="Lieu, circulation, hébergements, parking et repli météo restent lisibles." to="/prestataires?category=venue" />
+              <HouseLink universeId="artemis" label="Artémis" title="Lieux & accès" detail="Lieu, circulation, hébergements, parking et repli météo restent lisibles." to="/prestataires/registre?category=venue" />
               <HouseLink universeId="demeter" label="Déméter" title="Dîner & ressources" detail="Traiteur, tables, régimes, service et coûts vivent dans le même raisonnement." to="/budget" />
               <HouseLink universeId="dionysos" label="Dionysos" title="Soirée & énergie" detail="Ouverture de bal, soirée, tempo et fatigue terrain restent absorbés proprement." to="/univers/dionysos" />
             </ClusterCard>

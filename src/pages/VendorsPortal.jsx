@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { UNIVERSE_GRADIENTS } from "@/lib/aimeUniverses";
+import { getVendorVisual } from "@/lib/aimeVendorVisuals";
 import {
   filterDocumentsByRole,
   filterTimelineByRole,
@@ -199,45 +200,56 @@ function CommitmentItem({ item, vendor }) {
 
 function VendorCard({ vendor }) {
   const categoryLabel = VENDOR_TAXONOMY.find((item) => item.id === vendor.category)?.label || vendor.category;
+  const image = getVendorVisual(vendor);
 
   return (
     <Link
       to={`/prestataires/${vendor.id}`}
-      className="group block rounded-[26px] border border-black/8 bg-white p-4 transition-colors hover:bg-black/[0.02]"
+      className="group block overflow-hidden rounded-[26px] border border-black/8 bg-white transition-colors hover:bg-black/[0.02]"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="text-sm font-semibold text-zinc-950">{vendor.name}</div>
-          <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-zinc-500">{categoryLabel} · {vendor.city}</div>
-        </div>
-        <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-zinc-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-      </div>
-
-      <p className="mt-3 text-sm text-zinc-600 leading-relaxed">{compactText(vendor.summary, 108)}</p>
-
-      <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
-        <div>
-          <div className="aime-label text-zinc-500 mb-1">Prix</div>
-          <div className="text-zinc-900">{formatMoney(vendor.priceFrom)}</div>
-        </div>
-        <div>
-          <div className="aime-label text-zinc-500 mb-1">Réponse</div>
-          <div className="text-zinc-900">{vendor.responseTime}</div>
-        </div>
-        <div>
-          <div className="aime-label text-zinc-500 mb-1">Avis</div>
-          <div className="inline-flex items-center gap-1 text-zinc-900"><Star className="h-3.5 w-3.5" />{vendor.rating}</div>
+      <div className="relative h-44 overflow-hidden bg-[var(--color-warm-gray-100)]">
+        <img src={image} alt={vendor.name} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(0,0,0,0.24))]" aria-hidden="true" />
+        <div className="absolute left-3 top-3 rounded-full bg-white/92 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-zinc-600 backdrop-blur-xl">
+          {categoryLabel}
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <span className="rounded-full border border-black/8 bg-[var(--color-warm-white)] px-3 py-1.5 text-[12px] text-zinc-700">
-          {VENDOR_BOOKING_STAGES[vendor.bookingStage]?.label || vendor.bookingStage}
-        </span>
-        <span className="rounded-full border border-black/8 bg-[var(--color-warm-white)] px-3 py-1.5 text-[12px] text-zinc-700 inline-flex items-center gap-2">
-          <CreditCard className="h-3.5 w-3.5" />
-          {vendor.paymentStatus}
-        </span>
+      <div className="p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-sm font-semibold text-zinc-950">{vendor.name}</div>
+            <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-zinc-500">{vendor.city}</div>
+          </div>
+          <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-zinc-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        </div>
+
+        <p className="mt-3 text-sm text-zinc-600 leading-relaxed">{compactText(vendor.summary, 108)}</p>
+
+        <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
+          <div>
+            <div className="aime-label text-zinc-500 mb-1">Prix</div>
+            <div className="text-zinc-900">{formatMoney(vendor.priceFrom)}</div>
+          </div>
+          <div>
+            <div className="aime-label text-zinc-500 mb-1">Réponse</div>
+            <div className="text-zinc-900">{vendor.responseTime}</div>
+          </div>
+          <div>
+            <div className="aime-label text-zinc-500 mb-1">Avis</div>
+            <div className="inline-flex items-center gap-1 text-zinc-900"><Star className="h-3.5 w-3.5" />{vendor.rating}</div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="rounded-full border border-black/8 bg-[var(--color-warm-white)] px-3 py-1.5 text-[12px] text-zinc-700">
+            {VENDOR_BOOKING_STAGES[vendor.bookingStage]?.label || vendor.bookingStage}
+          </span>
+          <span className="rounded-full border border-black/8 bg-[var(--color-warm-white)] px-3 py-1.5 text-[12px] text-zinc-700 inline-flex items-center gap-2">
+            <CreditCard className="h-3.5 w-3.5" />
+            {vendor.paymentStatus}
+          </span>
+        </div>
       </div>
     </Link>
   );
@@ -372,9 +384,9 @@ export default function VendorsPortal() {
               </div>
 
               <div className="mt-7 flex flex-wrap gap-2.5">
-                <Link to="/documents?role=vendors" className="aime-button-primary rounded-full px-5 py-3 text-sm font-medium inline-flex items-center gap-2">
+                <Link to="/prestataires/registre" className="aime-button-primary rounded-full px-5 py-3 text-sm font-medium inline-flex items-center gap-2">
                   <FileText className="h-4 w-4" />
-                  Ouvrir les docs
+                  Ouvrir le registre
                 </Link>
                 <Link to="/jour-j?role=vendors" className="rounded-full border border-white/14 bg-white/[0.04] px-5 py-3 text-sm text-white/88 hover:bg-white/[0.08] inline-flex items-center gap-2 transition-colors">
                   <CalendarDays className="h-4 w-4" />
@@ -512,9 +524,9 @@ export default function VendorsPortal() {
                 `${paymentSummary.openCount} règlement${paymentSummary.openCount > 1 ? "s" : ""}`,
               ]}
             >
-              <HouseLink universeId="aphrodite" label="Aphrodite" title="Scénographie & déco" detail="Tenir les intentions esthétiques, les matières et les adaptations de dernière minute." to="/prestataires?category=flowers-decor" />
-              <HouseLink universeId="apollon" label="Apollon" title="Image & captation" detail="Photo, vidéo et fenêtres fortes du mariage restent coordonnées." to="/prestataires?category=photo-video" />
-              <HouseLink universeId="poseidon" label="Poséidon" title="Son & ambiance" detail="Micros, musique, transitions et immersion restent lisibles pour l’équipe." to="/prestataires?category=music" />
+              <HouseLink universeId="aphrodite" label="Aphrodite" title="Scénographie & déco" detail="Tenir les intentions esthétiques, les matières et les adaptations de dernière minute." to="/prestataires/registre?category=flowers-decor" />
+              <HouseLink universeId="apollon" label="Apollon" title="Image & captation" detail="Photo, vidéo et fenêtres fortes du mariage restent coordonnées." to="/prestataires/registre?category=photo-video" />
+              <HouseLink universeId="poseidon" label="Poséidon" title="Son & ambiance" detail="Micros, musique, transitions et immersion restent lisibles pour l’équipe." to="/prestataires/registre?category=music" />
             </ClusterCard>
 
             <ClusterCard
@@ -529,8 +541,8 @@ export default function VendorsPortal() {
               ]}
             >
               <HouseLink universeId="ares" label="Arès" title="Jour J & exécution" detail="Le déroulé utile pour agir au bon moment, sans porter toute la charge mentale." to="/jour-j?role=vendors" />
-              <HouseLink universeId="artemis" label="Artémis" title="Lieu & accès" detail="Accès techniques, circulation, stationnement et repli restent clairs." to="/prestataires?category=venue" />
-              <HouseLink universeId="demeter" label="Déméter" title="Dîner & ressources" detail="Traiteur, service et besoins invités restent reliés aux bonnes données sources." to="/prestataires?category=catering" />
+              <HouseLink universeId="artemis" label="Artémis" title="Lieu & accès" detail="Accès techniques, circulation, stationnement et repli restent clairs." to="/prestataires/registre?category=venue" />
+              <HouseLink universeId="demeter" label="Déméter" title="Dîner & ressources" detail="Traiteur, service et besoins invités restent reliés aux bonnes données sources." to="/prestataires/registre?category=catering" />
             </ClusterCard>
 
             <ClusterCard

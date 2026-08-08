@@ -13,6 +13,7 @@ import WeddingGuestPortal from "@/pages/WeddingGuestPortal";
 import CoupleHome from "@/pages/CoupleHome";
 import VendorProfile from "@/pages/VendorProfile";
 import VendorsPortal from "@/pages/VendorsPortal";
+import VendorsRegistry from "@/pages/VendorsRegistry";
 import WeddingExports from "@/pages/WeddingExports";
 import WeddingBudget from "@/pages/WeddingBudget";
 import WeddingCommunication from "@/pages/WeddingCommunication";
@@ -78,6 +79,7 @@ function AppShell() {
           <Route path="/invites" element={<RequireWeddingSetup><WeddingGuests /></RequireWeddingSetup>} />
           <Route path="/espace-invites" element={<WeddingGuestPortal />} />
           <Route path="/prestataires" element={<VendorsPortal />} />
+          <Route path="/prestataires/registre" element={<VendorsRegistry />} />
           <Route path="/prestataires/:vendorId" element={<VendorProfile />} />
           <Route path="/exports" element={<RequireWeddingSetup><WeddingExports /></RequireWeddingSetup>} />
           <Route path="/budget" element={<RequireWeddingSetup><WeddingBudget /></RequireWeddingSetup>} />

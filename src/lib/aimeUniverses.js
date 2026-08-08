@@ -64,7 +64,7 @@ export const UNIVERSES = [
     ],
     image: "/landing/poseidon.jpg",
     route: "/univers/poseidon",
-    moduleRoute: "/prestataires?category=music",
+    moduleRoute: "/prestataires/registre?category=music",
     menuByMode: {
       couple: [
         { label: "Ambiance", to: "/univers/poseidon" },
@@ -76,12 +76,12 @@ export const UNIVERSES = [
         { label: "Soirée", to: "/espace-invites" },
       ],
       vendors: [
-        { label: "DJ / son", to: "/prestataires?category=music" },
+        { label: "DJ / son", to: "/prestataires/registre?category=music" },
         { label: "Jour J", to: "/jour-j?role=vendors" },
         { label: "Paiements", to: "/budget" },
       ],
       planner: [
-        { label: "Son", to: "/prestataires?category=music" },
+        { label: "Son", to: "/prestataires/registre?category=music" },
         { label: "Cocktail", to: "/jour-j?role=planner" },
         { label: "After", to: "/univers/dionysos" },
       ],
@@ -143,7 +143,7 @@ export const UNIVERSES = [
         { label: "Dress code", to: "/espace-invites" },
       ],
       vendors: [
-        { label: "Fleurs & déco", to: "/prestataires?category=flowers-decor" },
+        { label: "Fleurs & déco", to: "/prestataires/registre?category=flowers-decor" },
         { label: "Documents", to: "/documents?role=vendors" },
         { label: "Plan salle", to: "/documents" },
       ],
@@ -171,19 +171,19 @@ export const UNIVERSES = [
     menuByMode: {
       couple: [
         { label: "Souvenirs", to: "/univers/apollon" },
-        { label: "Photo / vidéo", to: "/prestataires?category=photo-video" },
+        { label: "Photo / vidéo", to: "/prestataires/registre?category=photo-video" },
       ],
       guests: [
         { label: "Galerie", to: "/espace-invites" },
         { label: "Accès invité", to: "/espace-invites" },
       ],
       vendors: [
-        { label: "Équipes image", to: "/prestataires?category=photo-video" },
+        { label: "Équipes image", to: "/prestataires/registre?category=photo-video" },
         { label: "Planning", to: "/jour-j?role=vendors" },
         { label: "Documents", to: "/documents?role=vendors" },
       ],
       planner: [
-        { label: "Photo / vidéo", to: "/prestataires?category=photo-video" },
+        { label: "Photo / vidéo", to: "/prestataires/registre?category=photo-video" },
         { label: "Timeline", to: "/jour-j?role=planner" },
         { label: "Galerie", to: "/univers/apollon" },
       ],
@@ -284,7 +284,7 @@ export const UNIVERSES = [
         { label: "Hébergements", to: "/espace-invites" },
       ],
       vendors: [
-        { label: "Traiteur", to: "/prestataires?category=catering" },
+        { label: "Traiteur", to: "/prestataires/registre?category=catering" },
         { label: "Paiements", to: "/budget" },
         { label: "Invités", to: "/invites?role=vendors" },
       ],
@@ -308,10 +308,10 @@ export const UNIVERSES = [
     ],
     image: "/landing/artemis.jpg",
     route: "/univers/artemis",
-    moduleRoute: "/prestataires?category=venue",
+    moduleRoute: "/prestataires/registre?category=venue",
     menuByMode: {
       couple: [
-        { label: "Lieux", to: "/prestataires?category=venue" },
+        { label: "Lieux", to: "/prestataires/registre?category=venue" },
         { label: "Setup", to: "/setup" },
         { label: "Plan B", to: "/documents" },
       ],
@@ -321,13 +321,13 @@ export const UNIVERSES = [
         { label: "Navettes", to: "/espace-invites" },
       ],
       vendors: [
-        { label: "Lieux", to: "/prestataires?category=venue" },
+        { label: "Lieux", to: "/prestataires/registre?category=venue" },
         { label: "Registre", to: "/prestataires" },
         { label: "Accès", to: "/documents?role=vendors" },
       ],
       planner: [
         { label: "Registre", to: "/prestataires" },
-        { label: "Lieux", to: "/prestataires?category=venue" },
+        { label: "Lieux", to: "/prestataires/registre?category=venue" },
         { label: "Setup", to: "/setup" },
       ],
     },
@@ -380,7 +380,7 @@ export const UNIVERSES = [
     ],
     image: "/landing/dionysos.jpg",
     route: "/univers/dionysos",
-    moduleRoute: "/prestataires?category=music",
+    moduleRoute: "/prestataires/registre?category=music",
     menuByMode: {
       couple: [
         { label: "Soirée", to: "/univers/dionysos" },
@@ -391,14 +391,14 @@ export const UNIVERSES = [
         { label: "Retour", to: "/espace-invites" },
       ],
       vendors: [
-        { label: "DJ / son", to: "/prestataires?category=music" },
+        { label: "DJ / son", to: "/prestataires/registre?category=music" },
         { label: "Jour J", to: "/jour-j?role=vendors" },
         { label: "Paiements", to: "/budget" },
       ],
       planner: [
         { label: "Soirée", to: "/univers/dionysos" },
         { label: "Jour J", to: "/jour-j?role=planner" },
-        { label: "Animations", to: "/prestataires?category=music" },
+        { label: "Animations", to: "/prestataires/registre?category=music" },
       ],
     },
   },

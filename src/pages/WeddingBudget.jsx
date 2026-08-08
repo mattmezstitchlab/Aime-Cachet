@@ -145,7 +145,7 @@ export default function WeddingBudget() {
               { label: "Factures dues", value: fmtMoney(commitmentSummary.dueAmount), detail: "immédiates" },
             ]}
             actions={[
-              { to: "/prestataires?category=catering", label: "Voir le traiteur" },
+              { to: "/prestataires/registre?category=catering", label: "Voir le traiteur" },
               { to: "/invites?role=planner", label: "Tables & invités" },
               { to: "/documents?role=planner", label: "Documents liés" },
             ]}

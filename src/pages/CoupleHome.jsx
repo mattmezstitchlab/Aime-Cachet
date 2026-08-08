@@ -471,7 +471,7 @@ export default function CoupleHome() {
                 label="Artémis"
                 title="Lieux & accès"
                 detail="Lieu, circulation, hébergements et lecture terrain restent synchronisés avec la réalité du site."
-                to="/prestataires?category=venue"
+                to="/prestataires/registre?category=venue"
               />
               <HouseLink
                 universeId="ares"

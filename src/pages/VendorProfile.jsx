@@ -9,6 +9,7 @@ import {
 import { toast } from "sonner";
 import ContactAvatarMenu from "@/components/aime/ContactAvatarMenu";
 import WeddingPageHero from "@/components/aime/WeddingPageHero";
+import { getVendorVisual } from "@/lib/aimeVendorVisuals";
 import {
   filterDocumentsByRole,
   filterTimelineByRole,
@@ -108,6 +109,7 @@ export default function VendorProfile() {
   }, [state.timeline?.steps, vendor]);
   const payments = useMemo(() => (state.vendors?.payments || []).filter((payment) => payment.vendorId === vendorId), [state.vendors?.payments, vendorId]);
   const commitments = useMemo(() => getVendorCommitments(state, vendorId), [state, vendorId]);
+  const vendorVisual = vendor ? getVendorVisual(vendor) : "/landing/hero-aime-wedding.jpg";
 
   const toggleShortlist = () => {
     if (!vendor) return;
@@ -168,8 +170,8 @@ export default function VendorProfile() {
       <div className="min-h-screen bg-[var(--color-warm-white)] px-5 py-12 text-zinc-900">
         <div className="max-w-[960px] mx-auto rounded-[32px] border border-black/8 bg-white p-8 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
           <div className="font-display text-4xl">Prestataire introuvable.</div>
-          <Link to="/prestataires" className="inline-flex mt-6 rounded-full border border-black/8 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-black/[0.03]">
-            Retour marketplace
+          <Link to="/prestataires/registre" className="inline-flex mt-6 rounded-full border border-black/8 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-black/[0.03]">
+            Retour registre
           </Link>
         </div>
       </div>
@@ -184,7 +186,7 @@ export default function VendorProfile() {
             eyebrow="Prestataire · fiche détaillée"
             title={vendor.name}
             description={compactText(vendor.summary, 120)}
-            image="/landing/ares.jpg"
+            image={vendorVisual}
             stats={[
               { label: "Catégorie", value: VENDOR_TAXONOMY.find((item) => item.id === vendor.category)?.label || vendor.category, hint: vendor.city },
               { label: "Prix", value: fmtMoney(vendor.priceFrom), hint: "à partir de" },

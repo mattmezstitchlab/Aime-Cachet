@@ -6,6 +6,7 @@ import {
   readWeddingState,
   VENDOR_TAXONOMY,
 } from "@/lib/aimeWeddingCore";
+import { getVendorVisual } from "@/lib/aimeVendorVisuals";
 
 const HERO_BG = "/landing/hero-aime-wedding.jpg";
 
@@ -20,7 +21,7 @@ const ENTRY_POINTS = [
   {
     id: "prestataire",
     title: "Prestataire",
-    cta: "Rejoindre le registre",
+    cta: "Entrer côté prestataire",
     href: "/prestataires",
     image: "/landing/apollon.jpg",
   },
@@ -39,17 +40,6 @@ const ENTRY_POINTS = [
     image: "/landing/athena.jpg",
   },
 ];
-
-const VENDOR_VISUALS = {
-  planner_maison: "/landing/athena.jpg",
-  venue_lys: "/landing/artemis.jpg",
-  photo_sillage: "/landing/apollon.jpg",
-  catering_aurore: "/landing/demeter.jpg",
-  music_sonore: "/landing/dionysos.jpg",
-  flowers_ligne: "/landing/aphrodite.jpg",
-  transport_nuit: "/landing/hermes.jpg",
-  beauty_aube: "/landing/hestia.jpg",
-};
 
 const PILLAR_BADGE_STYLES = {
   zeus: "linear-gradient(135deg, #7C6CFF 0%, #4A56C6 100%)",
@@ -408,7 +398,7 @@ function FilterChip({ active, children, onClick }) {
 
 function RegistryCard({ vendor }) {
   const categoryLabel = VENDOR_TAXONOMY.find((item) => item.id === vendor.category)?.label || vendor.category;
-  const image = VENDOR_VISUALS[vendor.id] || HERO_BG;
+  const image = getVendorVisual(vendor);
 
   return (
     <Link
@@ -574,7 +564,7 @@ export default function Landing() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/prestataires" className="rounded-full bg-black px-5 py-3 text-sm font-medium text-white hover:bg-zinc-800 inline-flex items-center gap-2">
+            <Link to="/prestataires/registre" className="rounded-full bg-black px-5 py-3 text-sm font-medium text-white hover:bg-zinc-800 inline-flex items-center gap-2">
               Ouvrir le registre complet
               <ArrowRight className="w-4 h-4" />
             </Link>
@@ -613,7 +603,7 @@ export default function Landing() {
                 <Link to="/setup" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black inline-flex items-center gap-2 shadow-[0_12px_28px_rgba(0,0,0,0.18)]">
                   Créer mon mariage
                 </Link>
-                <Link to="/prestataires" className="rounded-full bg-black px-5 py-3 text-sm text-white hover:bg-zinc-900 inline-flex items-center gap-2">
+                <Link to="/prestataires/registre" className="rounded-full bg-black px-5 py-3 text-sm text-white hover:bg-zinc-900 inline-flex items-center gap-2">
                   Voir le registre
                 </Link>
               </div>
