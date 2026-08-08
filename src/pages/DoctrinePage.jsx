@@ -6,7 +6,7 @@ import { UNIVERSES } from "@/lib/aimeUniverses";
 const RULES = [
   ["01", "Une information, une maison", "Aucune donnée n'est dupliquée. Un prestataire appartient à l'univers Hermès, le plan de table s'y réfère sans recréer de fiche."],
   ["02", "Contexte, pas copie", "Si un outil a besoin d'une information extérieure, il l'affiche dynamiquement en lecture seule sans possibilité d'édition directe."],
-  ["03", "Timeline transversale", "Chaque action datée dans n'importe quel univers se synchronise automatiquement dans la timeline centrale d'Athéna."],
+  ["03", "Timeline transversale", "Chaque action datée dans n'importe quel univers (ex: dégustation Déméter) se synchronise automatiquement dans la timeline centrale d'Athéna."],
   ["04", "3 clics maximum", "Aucun écran utile ne doit nécessiter plus de 3 clics depuis l'Olympe (tableau de bord central)."],
   ["05", "Pas de pages orphelines", "Chaque écran appartient obligatoirement à l'un des 12 univers fonctionnels."],
 ];

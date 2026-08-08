@@ -52,9 +52,9 @@ export default function HelpCenterPage() {
 
   return (
     <MarketingShell>
-      <section className="px-6 md:px-10 lg:px-16 py-16 md:py-24 text-center">
-        <h1 className="font-display text-[3.6rem] md:text-[5.4rem] leading-[0.94] text-zinc-950">Centre d'aide</h1>
-        <p className="mt-6 text-[19px] md:text-[22px] text-zinc-600">Trouvez rapidement la réponse à votre question</p>
+      <section className="px-6 md:px-10 lg:px-16 py-18 md:py-24 text-center">
+        <h1 className="font-display text-[3.8rem] md:text-[5.6rem] leading-[0.94] text-zinc-950">Centre d'aide</h1>
+        <p className="mt-6 text-[20px] md:text-[22px] text-zinc-600">Trouvez rapidement la réponse à votre question</p>
         <div className="mt-10 max-w-[760px] mx-auto rounded-full border border-black/8 bg-white px-6 py-4 shadow-[0_10px_28px_rgba(12,12,12,0.03)]">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Rechercher dans l'aide..." className="w-full bg-transparent text-[17px] text-zinc-900 outline-none placeholder:text-zinc-400" />
         </div>
@@ -74,10 +74,10 @@ export default function HelpCenterPage() {
         ))}
       </section>
 
-      <section className="px-6 md:px-10 lg:px-16 py-16 bg-[#f6f0e4] text-center border-t border-black/6">
+      <section className="px-6 md:px-10 lg:px-16 py-18 bg-[#f6f0e4] text-center border-t border-black/6">
         <h2 className="font-display text-[3rem] md:text-[4rem] text-zinc-950">Une question non résolue ?</h2>
         <p className="mt-5 text-[18px] text-zinc-600">Notre support haut de gamme vous répond sous 2 heures.</p>
-        <div className="mt-8 text-[2rem] font-display text-[#b59c73]">support@aimewedding.com</div>
+        <div className="mt-8 text-[2.4rem] font-display text-[#b59c73]">support@aimewedding.com</div>
         <button className="mt-8 rounded-full bg-black px-6 py-4 text-sm uppercase tracking-[0.08em] text-white hover:bg-zinc-800">Envoyer un message →</button>
       </section>
     </MarketingShell>
