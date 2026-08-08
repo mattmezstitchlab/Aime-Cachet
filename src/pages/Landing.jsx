@@ -15,7 +15,7 @@ const ENTRY_POINTS = [
     id: "couple",
     title: "Couple",
     cta: "Créer mon mariage",
-    href: "/setup",
+    href: "/compte/maries",
     image: "/landing/hestia.jpg",
   },
   {

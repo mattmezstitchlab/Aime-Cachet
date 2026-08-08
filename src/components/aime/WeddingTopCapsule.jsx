@@ -47,10 +47,10 @@ const MODE_CLUSTERS = {
 };
 
 const ACCESS_ITEMS = [
-  { id: "couple", label: "Créer mon mariage", to: "/setup" },
-  { id: "vendor", label: "Rejoindre le registre", to: "/prestataires/registre" },
-  { id: "guest", label: "Accéder à un mariage", to: "/espace-invites" },
-  { id: "planner", label: "Accès planner", to: "/point-zero?role=planner" },
+  { id: "couple", label: "Créer mon mariage", to: "/compte/maries" },
+  { id: "vendor", label: "Rejoindre le registre", to: "/compte/prestataires" },
+  { id: "guest", label: "Accéder à un mariage", to: "/compte/invites" },
+  { id: "planner", label: "Accès planner", to: "/compte/planner" },
 ];
 
 const AIME_MENU_ITEMS = [

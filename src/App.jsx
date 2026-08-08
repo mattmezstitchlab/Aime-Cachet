@@ -30,6 +30,10 @@ function RequireWeddingSetup({ children }) {
     return children;
   }
 
+  if (location.pathname !== "/couple") {
+    return children;
+  }
+
   const params = new URLSearchParams();
   params.set("from", `${location.pathname}${location.search}`);
   return <Navigate to={`/setup?${params.toString()}`} replace />;
