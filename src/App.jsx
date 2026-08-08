@@ -3,31 +3,19 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClientInstance } from "@/lib/query-client";
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import PageNotFound from "./lib/PageNotFound";
 import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import UserNotRegisteredError from "@/components/UserNotRegisteredError";
-import FicheView from "@/pages/FicheView";
-import Verify from "@/pages/Verify";
-import Recherche from "@/pages/Recherche";
-import Notifications from "@/pages/Notifications";
-import Aide from "@/pages/Aide";
-import Landing from "@/pages/Landing";
-import ScreensBoard from "@/pages/ScreensBoard";
-import PageInventory from "@/pages/PageInventory";
-import PrestationsHub from "@/pages/PrestationsHub";
-import Espace from "@/pages/Espace";
 import BottomActionBar from "@/components/aime/BottomActionBar";
 import { AssistantProvider } from "@/components/aime/assistant/AssistantProvider";
 import { applyUserPrefs } from "@/lib/applyPrefs";
+import AimeCachet from "@/pages/AimeCachet";
+import Espace from "@/pages/Espace";
+import FicheView from "@/pages/FicheView";
+import Verify from "@/pages/Verify";
 
-function LegacyAppRedirect() {
+function RedirectWithSearch({ to }) {
   const location = useLocation();
-  const search = location.search || "";
-  return <Navigate to={`/prestations${search}`} replace />;
-}
-
-function LegacySectionRedirect({ hash = "" }) {
-  return <Navigate to={`/espace${hash}`} replace />;
+  return <Navigate to={`${to}${location.search || ""}`} replace />;
 }
 
 const AuthenticatedApp = () => {
@@ -57,23 +45,26 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/espace" replace />} />
-      <Route path="/landing-archive" element={<Landing />} />
-      <Route path="/screens" element={<ScreensBoard />} />
-      <Route path="/cartographie" element={<PageInventory />} />
-      <Route path="/app" element={<LegacyAppRedirect />} />
-      <Route path="/prestations" element={<PrestationsHub />} />
-      <Route path="/fiches" element={<LegacySectionRedirect hash="#wallets" />} />
+      <Route path="/" element={<Navigate to="/prestations" replace />} />
+      <Route path="/app" element={<RedirectWithSearch to="/prestations" />} />
+      <Route path="/prestations" element={<AimeCachet />} />
       <Route path="/espace" element={<Espace />} />
-      <Route path="/507" element={<LegacySectionRedirect hash="#pilotage507" />} />
-      <Route path="/profil" element={<LegacySectionRedirect hash="#identite" />} />
-      <Route path="/parametres" element={<LegacySectionRedirect hash="#preferences" />} />
       <Route path="/fiche/:id" element={<FicheView />} />
       <Route path="/verify/:cachetCode" element={<Verify />} />
-      <Route path="/recherche" element={<Recherche />} />
-      <Route path="/notifications" element={<Notifications />} />
-      <Route path="/aide" element={<Aide />} />
-      <Route path="*" element={<PageNotFound />} />
+
+      <Route path="/fiches" element={<Navigate to="/espace#wallets" replace />} />
+      <Route path="/507" element={<Navigate to="/espace#pilotage507" replace />} />
+      <Route path="/profil" element={<Navigate to="/espace#identite" replace />} />
+      <Route path="/parametres" element={<Navigate to="/espace#preferences" replace />} />
+
+      <Route path="/recherche" element={<Navigate to="/prestations" replace />} />
+      <Route path="/notifications" element={<Navigate to="/prestations" replace />} />
+      <Route path="/aide" element={<Navigate to="/espace" replace />} />
+      <Route path="/screens" element={<Navigate to="/espace" replace />} />
+      <Route path="/cartographie" element={<Navigate to="/espace" replace />} />
+      <Route path="/landing-archive" element={<Navigate to="/prestations" replace />} />
+
+      <Route path="*" element={<Navigate to="/prestations" replace />} />
     </Routes>
   );
 };

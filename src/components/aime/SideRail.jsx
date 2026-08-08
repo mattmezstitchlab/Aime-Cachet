@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ArrowRight, FileText, Files, Sparkles, User } from "lucide-react";
+import { User } from "lucide-react";
 import { useAssistant } from "@/components/aime/assistant/AssistantProvider";
 
 function FichePlusIcon() {
@@ -42,97 +42,18 @@ function AppRailButton({ icon: Icon, customIcon, label, onClick, active, href })
   return <button onClick={onClick} className={className} aria-label={label}>{content}</button>;
 }
 
-function LandingRailButton({ icon, label, href, onClick, active = false, cta = false }) {
-  const content = (
-    <>
-      <span className={`flex h-10 w-10 items-center justify-center rounded-2xl border ${cta ? "border-aime-red/30 bg-aime-red text-white" : active ? "border-white/20 bg-white text-zinc-950" : "border-white/10 bg-white/[0.04] text-white/85"}`}>
-        {icon}
-      </span>
-      <span className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${cta ? "text-white" : active ? "text-white" : "text-white/70"}`}>
-        {label}
-      </span>
-    </>
-  );
-
-  if (href) {
-    const className = "group flex flex-col items-center gap-2 rounded-2xl px-2 py-2 text-center transition-colors hover:bg-white/6";
-    if (href.startsWith("/")) {
-      return <Link to={href} className={className}>{content}</Link>;
-    }
-    return <a href={href} className={className}>{content}</a>;
-  }
-
-  return (
-    <button type="button" onClick={onClick} className="group flex w-full flex-col items-center gap-2 rounded-2xl px-2 py-2 text-center transition-colors hover:bg-white/6">
-      {content}
-    </button>
-  );
-}
-
-export default function SideRail({ onCreate, onScrollTo, mode = "app" }) {
-  const { pathname, search, hash } = useLocation();
+export default function SideRail({ onCreate }) {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { openAssistant } = useAssistant();
-  const params = new URLSearchParams(search);
-
-  const isGridPrestations = params.get("view") === "grid" || params.has("status") || params.has("filter") || params.has("wallet") || params.has("smart");
-  const isTimelineHome = pathname === "/prestations" && !isGridPrestations;
-  const isSpaceArea = pathname === "/profil" || pathname === "/parametres" || pathname === "/507";
 
   const handleCreate = onCreate || (() => navigate("/prestations?new=1"));
-
-  const goTimeline = () => {
-    if (isTimelineHome) {
-      const el = document.getElementById("prestations");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      navigate("/prestations");
-    }
-    onScrollTo?.("prestations");
-  };
-
-  if (mode === "landing") {
-    const items = [
-      { label: "Vision", href: "#hero", icon: <Sparkles className="w-4 h-4" /> },
-      { label: "Timeline", href: "#timeline", icon: <TimelineIcon className="w-4 h-4" /> },
-      { label: "Studio", href: "#studio", icon: <FileText className="w-4 h-4" /> },
-      {
-        label: "Agent 507",
-        onClick: openAssistant,
-        active: hash === "#assistant",
-        icon: <span className="font-display text-[12px] font-black tracking-tight">5<span className="text-aime-red">♥</span>7</span>,
-      },
-      { label: "Entrer", href: "/prestations", cta: true, icon: <ArrowRight className="w-4 h-4" /> },
-    ];
-
-    return (
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 z-40 w-24 bg-aime-black/96 backdrop-blur-xl border-r border-white/5 flex-col items-center px-3 py-5">
-        <a href="#hero" className="flex flex-col items-center gap-1 mb-6 text-center">
-          <span className="font-display font-black text-lg tracking-tight text-white leading-none">
-            AIME<span className="text-aime-red">®</span>
-          </span>
-          <span className="text-[8px] uppercase tracking-[0.26em] text-aime-red font-semibold">Intermittence</span>
-        </a>
-
-        <div className="flex flex-col gap-1.5 w-full">
-          {items.map((item) => (
-            <LandingRailButton key={item.label} {...item} />
-          ))}
-        </div>
-
-        <div className="mt-auto rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-center">
-          <div className="text-[9px] uppercase tracking-[0.22em] text-aime-red font-semibold">France</div>
-          <p className="mt-2 text-[11px] leading-relaxed text-white/75">
-            Un cockpit documentaire pensé pour les intermittents du spectacle.
-          </p>
-        </div>
-      </aside>
-    );
-  }
+  const isTimelineHome = pathname === "/prestations";
+  const isSpaceArea = pathname === "/espace" || pathname === "/profil" || pathname === "/parametres" || pathname === "/507" || pathname === "/fiches";
 
   return (
     <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 z-30 w-16 bg-aime-black border-r border-white/5 flex-col items-center py-4 gap-1">
-      <Link to="/" className="flex flex-col items-center mb-4 group transition-all text-center">
+      <Link to="/prestations" className="flex flex-col items-center mb-4 group transition-all text-center">
         <span className="text-white font-display font-black text-[11px] tracking-wider leading-none mb-1">
           AIME<span className="text-aime-red">®</span>
         </span>
@@ -144,16 +65,15 @@ export default function SideRail({ onCreate, onScrollTo, mode = "app" }) {
           </span>
         </span>
         <span className="mt-1 text-[8px] tracking-[0.18em] text-zinc-500 font-semibold leading-none">
-          TIMELINE
+          APP
         </span>
       </Link>
 
       <div className="w-8 h-px bg-white/10 my-2" />
 
-      <AppRailButton customIcon={<TimelineIcon />} label="Timeline" onClick={goTimeline} active={isTimelineHome} />
+      <AppRailButton customIcon={<TimelineIcon />} label="Timeline" onClick={() => navigate("/prestations")} active={isTimelineHome} />
       <AppRailButton customIcon={<FichePlusIcon />} label="Nouvelle fiche" onClick={handleCreate} />
       <AppRailButton icon={User} label="Mon espace" href="/espace" active={isSpaceArea} />
-      <AppRailButton icon={Files} label="Mes fiches" href="/fiches" active={pathname === "/fiches" || isGridPrestations} />
 
       <div className="flex-1" />
 
@@ -169,7 +89,7 @@ export default function SideRail({ onCreate, onScrollTo, mode = "app" }) {
           <span>7</span>
         </span>
         <span className="absolute left-full ml-3 px-2 py-1 bg-white text-aime-black text-[11px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-lg">
-          Agent 507
+          Assistant
         </span>
       </button>
     </aside>

@@ -21,8 +21,8 @@ export default function AimeHeader({ onPrepare, minimal = false, simulator = nul
   return (
     <header className="sticky top-0 z-40">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-5 md:px-10 h-16 flex items-center gap-4 md:gap-6">
-        {/* Logo → retour landing */}
-        <Link to="/" className="flex items-baseline gap-1 leading-none rounded-sm shrink-0 hover:opacity-80 transition-opacity" aria-label="Retour à l'accueil">
+        {/* Logo → retour timeline */}
+        <Link to="/prestations" className="flex items-baseline gap-1 leading-none rounded-sm shrink-0 hover:opacity-80 transition-opacity" aria-label="Retour à la timeline">
           <span className="font-display text-xl tracking-tight text-zinc-900">AIME</span>
           <span className="text-[10px] text-aime-red font-semibold align-super">®</span>
         </Link>
