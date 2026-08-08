@@ -262,11 +262,7 @@ export default function Espace() {
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-<<<<<<< HEAD
                   <Link to="/prestations" className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black">
-=======
-                  <Link to="/app" className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black">
->>>>>>> 63b792b (Redirect home to espace and merge wallets into espace)
                     <Sparkles className="h-4 w-4" />
                     Ouvrir la timeline
                   </Link>
