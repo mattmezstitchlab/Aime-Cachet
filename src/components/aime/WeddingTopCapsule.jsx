@@ -55,9 +55,9 @@ const ACCESS_ITEMS = [
 
 const AIME_MENU_ITEMS = [
   { id: "home", label: "Accueil", to: "/" },
-  { id: "about", label: "En savoir plus", to: "/#pillars" },
-  { id: "guide", label: "Mode d’emploi", to: "/design-system" },
-  { id: "help", label: "Aide", to: "/design-system" },
+  { id: "about", label: "À propos", to: "/a-propos" },
+  { id: "guide", label: "Mode d’emploi", to: "/mode-emploi" },
+  { id: "help", label: "Aide", to: "/aide" },
 ];
 
 function getCurrentUniverse(pathname = "/") {
