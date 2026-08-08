@@ -1,341 +1,356 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Zap, FileCheck, LayoutGrid, Files, Gauge, Sparkles } from "lucide-react";
-import LandingAssistantDemo from "@/components/landing/LandingAssistantDemo";
-import MiniMachine from "@/components/landing/MiniMachine";
-import RuneyShowcase from "@/components/landing/RuneyShowcase";
+import { ArrowRight, ChartColumnBig, FileText, Gauge, MessageCircleMore, Sparkles } from "lucide-react";
 import SideRail from "@/components/aime/SideRail";
+import { FICHE_BACKGROUNDS } from "@/lib/docTemplates";
+import { SCREEN_SECTIONS } from "@/components/landing/landingShots";
 
-const HERO_BG = "https://media.base44.com/images/public/6a0dd8978ba6b186fc2a32c5/14b7e1600_image.png";
-const FEATURES_BG = "https://media.base44.com/images/public/6a0dd8978ba6b186fc2a32c5/cb0ccb64a_pexels-cottonbro-7170696.jpg";
-import {
-  SHOTS_ASSISTANT,
-  SHOTS_TIMELINE,
-  SHOTS_FICHES,
-  SHOTS_COCKPIT,
-} from "@/components/landing/landingShots";
+const STUDIO_BG =
+  FICHE_BACKGROUNDS.find((item) => item.id === "recording-studio")?.url
+  || FICHE_BACKGROUNDS.find((item) => item.id === "stage-concert")?.url
+  || "https://media.base44.com/images/public/6a0dd8978ba6b186fc2a32c5/14b7e1600_image.png";
+
+const PILLARS = [
+  {
+    title: "Timeline vivante",
+    text: "Voir l'activité, reprendre une prestation, relire les statuts et garder un axe central clair.",
+    icon: ChartColumnBig,
+    href: "/prestations",
+  },
+  {
+    title: "Fiche + Studio",
+    text: "Préparer le document, personnaliser l'apparence, poser un tampon, signer, générer un PDF et garder une trace technique.",
+    icon: FileText,
+    href: "/fiches",
+  },
+  {
+    title: "Mon espace + Wallets",
+    text: "Fusionner identité, réglages, pilotage 507 et organisation des fiches dans un seul espace de travail.",
+    icon: Gauge,
+    href: "/espace",
+  },
+  {
+    title: "Agent IA 507",
+    text: "Un copilote conversationnel toujours disponible pour guider, retrouver, résumer et préparer la prochaine action.",
+    icon: MessageCircleMore,
+    href: "/prestations",
+  },
+];
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-white text-zinc-900 font-sans antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#F6F2EC] text-zinc-900 font-sans antialiased overflow-x-hidden">
       <SideRail mode="landing" />
 
       <div className="lg:pl-24">
-      {/* NAV — plus claire, logo agrandi */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-zinc-100">
-        <div className="max-w-6xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
-          <Link to="/" className="flex items-baseline gap-2 group">
-            <span className="font-display font-black text-3xl md:text-[34px] tracking-tight text-zinc-900">
-              AIME<span className="text-aime-red">®</span>
-            </span>
-            <span className="text-[11px] tracking-[0.28em] text-zinc-400 font-semibold group-hover:text-zinc-600 transition-colors">
-              507
-            </span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <Link
-              to="/cartographie"
-              className="inline-flex items-center gap-1.5 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-900 text-sm font-medium px-4 py-2 rounded-full transition-colors"
-            >
-              Toutes les pages
+        <header className="sticky top-0 z-40 border-b border-black/5 bg-[#F6F2EC]/90 backdrop-blur-md">
+          <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-5 md:px-8">
+            <Link to="/" className="flex items-baseline gap-2 group">
+              <span className="font-display text-3xl font-black tracking-tight text-zinc-950">
+                AIME<span className="text-aime-red">®</span>
+              </span>
+              <span className="text-[11px] font-semibold tracking-[0.28em] text-zinc-400 transition-colors group-hover:text-zinc-600">
+                507
+              </span>
             </Link>
-            <Link
-              to="/screens"
-              className="inline-flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 text-sm font-medium px-4 py-2 rounded-full transition-colors"
-            >
-              Tous les écrans
-            </Link>
-            <Link
-              to="/prestations"
-              className="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-black text-white text-sm font-medium px-4 py-2 rounded-full transition-colors"
-            >
-              Entrer dans l'app
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
-      </header>
 
-      {/* BLOC PARALLAX : Hero + Showcase sur fond image fixe */}
-      <div className="relative">
-        {/* Fond fixe parallax */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('${HERO_BG}')`,
-            backgroundAttachment: "fixed",
-          }}
-          aria-hidden="true"
-        />
-        {/* Voile sombre léger pour lisibilité du texte blanc */}
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/65"
-          aria-hidden="true"
-        />
-
-        <div className="relative">
-      {/* HERO — texte centré, astronaute visible en fond */}
-      <section id="hero" className="scroll-mt-24 max-w-3xl mx-auto px-5 md:px-8 pt-16 md:pt-28 pb-20 md:pb-28 text-center">
-        <div>
-          <div className="inline-block text-[10px] tracking-[0.22em] text-aime-red font-semibold mb-4">
-            POUR INTERMITTENTS DU SPECTACLE
-          </div>
-          <h1 className="font-display font-black text-4xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight mb-5 text-white drop-shadow-lg">
-            Vos 507 heures,<br />
-            <span className="text-aime-red">en clair.</span>
-          </h1>
-          <p className="text-base md:text-lg text-white/90 leading-relaxed mb-8 max-w-xl mx-auto drop-shadow">
-            AIME prépare vos fiches cachet, suit votre progression vers les
-            507h, et garde une trace technique scellée de chaque prestation.
-            Outil préparatoire — les organismes restent seuls compétents.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link
-              to="/prestations"
-              className="inline-flex items-center gap-2 bg-aime-red hover:bg-aime-red/90 text-white font-medium px-5 py-3 rounded-full transition-colors"
-            >
-              Commencer gratuitement
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              to="/espace#pilotage507"
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/30 text-white font-medium px-5 py-3 rounded-full transition-colors"
-            >
-              Voir le pilotage 507
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* VITRINE PRINCIPALE — style Runey, en haut */}
-      <div id="timeline" className="scroll-mt-24" />
-      <RuneyShowcase
-        eyebrow="FICHES · DEVIS · TAMPONS"
-        title={<>Tout votre intermittence,<br />au même endroit.</>}
-        subtitle="Créez des fiches cachet et devis impeccables, personnalisez tampons et apparence, suivez vos 507 heures et gardez une trace technique sceellée de chaque prestation."
-        cta={
-          <>
-            <Link
-              to="/prestations"
-              className="inline-flex items-center gap-2 bg-zinc-900 hover:bg-black text-white font-medium px-5 py-3 rounded-full transition-colors"
-            >
-              Commencer gratuitement
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              to="/espace#pilotage507"
-              className="inline-flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 font-medium px-5 py-3 rounded-full transition-colors"
-            >
-              Voir le pilotage 507
-            </Link>
-          </>
-        }
-        tabs={[
-          { key: "fiches", label: "Fiches & Devis", shots: SHOTS_FICHES },
-          { key: "timeline", label: "Timeline", shots: SHOTS_TIMELINE },
-          { key: "cockpit", label: "Cockpit 507", shots: SHOTS_COCKPIT },
-          { key: "assistant", label: "Assistant", shots: SHOTS_ASSISTANT },
-        ]}
-        sideExtra={
-          <MiniMachine
-            headline="412 / 507h"
-            caption="Annexe 8 · Artiste"
-            note="80% atteints, 95h restantes."
-          />
-        }
-        transparent
-      />
-        </div>
-      </div>
-      {/* /BLOC PARALLAX */}
-
-      <section className="border-t border-zinc-100 bg-[#F6F4F1]">
-        <div className="max-w-6xl mx-auto px-5 md:px-8 py-10 md:py-12 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-          <div>
-            <div className="text-[10px] tracking-[0.22em] text-aime-red font-semibold mb-2">
-              BOARD PRODUIT
+            <div className="flex items-center gap-2">
+              <Link
+                to="/cartographie"
+                className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50"
+              >
+                Toutes les pages
+              </Link>
+              <Link
+                to="/screens"
+                className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-200"
+              >
+                Tous les écrans
+              </Link>
+              <Link
+                to="/prestations"
+                className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black"
+              >
+                Entrer dans l'app
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
-            <h2 className="font-display font-black text-2xl md:text-3xl tracking-tight">
-              Une vue type Figma pour revoir tous les écrans.
-            </h2>
-            <p className="mt-2 text-sm md:text-base text-zinc-600 max-w-2xl leading-relaxed">
-              Pratique pour faire le tri, repérer les doublons et valider ce qui doit rester sur la landing.
-            </p>
           </div>
-          <Link
-            to="/screens"
-            className="inline-flex items-center gap-2 self-start md:self-auto bg-zinc-900 hover:bg-black text-white font-medium px-5 py-3 rounded-full transition-colors"
+        </header>
+
+        <main>
+          <section
+            id="hero"
+            className="relative min-h-[100svh] overflow-hidden border-b border-black/5"
           >
-            Ouvrir le board
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url('${STUDIO_BG}')` }}
+              aria-hidden="true"
+            />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_38%),linear-gradient(135deg,rgba(10,10,10,0.76),rgba(10,10,10,0.55)_45%,rgba(10,10,10,0.78))]" aria-hidden="true" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.06),transparent_18%,transparent_82%,rgba(0,0,0,0.22))]" aria-hidden="true" />
 
-      {/* DÉMO ASSISTANT — clone interactif */}
-      <section id="assistant" className="scroll-mt-24">
-        <LandingAssistantDemo />
-      </section>
+            <div className="relative mx-auto grid min-h-[100svh] max-w-7xl items-center gap-10 px-5 py-12 md:px-8 lg:grid-cols-[440px_minmax(0,1fr)] lg:gap-14 lg:py-16">
+              <div className="max-w-xl text-white">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-aime-red backdrop-blur-sm">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Innovation intermittents du spectacle
+                </div>
 
-      {/* FEATURES — sur fond visuel astronautes */}
-      <section id="studio" className="relative overflow-hidden scroll-mt-24">
-        {/* Fond visuel astronautes parallax */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('${FEATURES_BG}')`,
-            backgroundAttachment: "fixed",
-          }}
-          aria-hidden="true"
-        />
-        {/* Voile sombre pour lisibilité */}
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"
-          aria-hidden="true"
-        />
-        <div className="relative max-w-6xl mx-auto px-5 md:px-8 py-16 md:py-20">
-          <div className="text-center mb-12">
-            <div className="text-[10px] tracking-[0.22em] text-aime-red font-semibold mb-3 drop-shadow">
-              CE QUE FAIT AIME
+                <h1 className="mt-6 font-display text-5xl font-black leading-[0.96] tracking-tight md:text-7xl">
+                  L'atelier
+                  <br />
+                  conversationnel
+                  <br />
+                  des 507h.
+                </h1>
+
+                <p className="mt-6 max-w-lg text-base leading-relaxed text-white/82 md:text-lg">
+                  AIME assemble la fiche, la timeline, les wallets, le pilotage 507 et l'agent IA dans un même cockpit documentaire. Une approche pensée pour les intermittents du spectacle.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link
+                    to="/prestations"
+                    className="inline-flex items-center gap-2 rounded-full bg-aime-red px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-aime-red/90"
+                  >
+                    Ouvrir la timeline
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    to="/cartographie"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/15"
+                  >
+                    Valider les pages
+                  </Link>
+                </div>
+
+                <div className="mt-10 grid gap-3 sm:grid-cols-3">
+                  <GlassMetric value="4" label="univers produit" />
+                  <GlassMetric value="507h" label="pilotage préparatoire" />
+                  <GlassMetric value="1" label="agent IA transversal" />
+                </div>
+              </div>
+
+              <LandingShowcase />
             </div>
-            <h2 className="font-display font-black text-3xl md:text-4xl tracking-tight text-white drop-shadow-lg">
-              Préparer. Suivre. Archiver.
-            </h2>
-          </div>
+          </section>
 
-          <div className="grid md:grid-cols-3 gap-5">
-            <Feature
-              icon={FileCheck}
-              title="Fiches cachet"
-              text="Génération PDF prête à transmettre, code unique AIME-CCH, signature et tampon."
-            />
-            <Feature
-              icon={Zap}
-              title="Suivi 507h en direct"
-              text="Heures validées, en cours, restantes. Projection sur 12 mois glissants."
-            />
-            <Feature
-              icon={Shield}
-              title="Scellement technique"
-              text="Empreinte SHA-256 + horodatage. Vérifiable via QR code par tiers."
-            />
-          </div>
-        </div>
-      </section>
+          <section className="border-b border-black/5 bg-[#F6F2EC]">
+            <div className="mx-auto max-w-7xl px-5 py-14 md:px-8 md:py-16">
+              <div className="max-w-2xl">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-aime-red">
+                  Les pages à vraiment garder
+                </div>
+                <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-zinc-950 md:text-5xl">
+                  Voir, produire, piloter, dialoguer.
+                </h2>
+                <p className="mt-4 text-sm leading-relaxed text-zinc-600 md:text-base">
+                  La V2 s'éclaircit autour de quelques pages fortes. Le but n'est plus d'empiler des vues, mais de garder les bons piliers pour ensuite travailler en profondeur.
+                </p>
+              </div>
 
-      <section className="bg-white border-t border-zinc-100">
-        <div className="max-w-6xl mx-auto px-5 md:px-8 py-14 md:py-16">
-          <div className="max-w-2xl mb-8">
-            <div className="text-[10px] tracking-[0.22em] text-aime-red font-semibold mb-3">
-              RACCOURCIS
+              <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                {PILLARS.map((item) => (
+                  <Link
+                    key={item.title}
+                    to={item.href}
+                    className="group rounded-[28px] border border-black/5 bg-white/85 p-5 shadow-[0_18px_45px_-30px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-transform hover:-translate-y-0.5"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-zinc-200 bg-zinc-50 text-aime-red">
+                      <item.icon className="h-5 w-5" strokeWidth={1.8} />
+                    </div>
+                    <h3 className="mt-5 font-display text-2xl font-black tracking-tight text-zinc-950">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-zinc-600">
+                      {item.text}
+                    </p>
+                    <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-zinc-900">
+                      Ouvrir
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-            <h2 className="font-display font-black text-3xl md:text-4xl tracking-tight text-zinc-900">
-              Une landing qui peut se suffire à elle-même.
-            </h2>
-            <p className="mt-3 text-zinc-600 leading-relaxed">
-              Si quelqu'un ne veut pas tout explorer tout de suite, il peut déjà comprendre les grands blocs du produit et entrer directement là où il a besoin.
-            </p>
-          </div>
+          </section>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <ShortcutCard
-              to="/prestations"
-              icon={Sparkles}
-              title="Timeline"
-              text="Entrée principale pour voir, reprendre et suivre vos prestations au quotidien."
-              cta="Ouvrir"
-            />
-            <ShortcutCard
-              to="/fiches"
-              icon={Files}
-              title="Mes fiches"
-              text="Accès direct au rangement, aux statuts et aux documents en cours."
-              cta="Voir les fiches"
-            />
-            <ShortcutCard
-              to="/espace#pilotage507"
-              icon={Gauge}
-              title="Pilotage 507"
-              text="Vue synthétique des heures, du reste à faire et des projections dans Mon espace."
-              cta="Voir le pilotage"
-            />
-            <ShortcutCard
-              to="/screens"
-              icon={LayoutGrid}
-              title="Board écrans"
-              text="Planche visuelle pour auditer l'existant et repérer les doublons."
-              cta="Ouvrir le board"
-            />
-          </div>
-        </div>
-      </section>
+          <section className="bg-white">
+            <div className="mx-auto max-w-7xl px-5 py-14 md:px-8 md:py-16">
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+                <div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-aime-red">
+                    Pour voir clair maintenant
+                  </div>
+                  <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-zinc-950 md:text-4xl">
+                    On valide les pages, puis on travaille les bonnes.
+                  </h2>
+                  <p className="mt-4 max-w-3xl text-sm leading-relaxed text-zinc-600 md:text-base">
+                    La cartographie sert à décider ce qu'on garde, ce qu'on fusionne et ce qu'on supprime. Le board écrans sert à revoir visuellement les vues existantes. Ensuite seulement, on affine la landing et les pages finales.
+                  </p>
+                </div>
 
-      {/* CTA FINAL */}
-      <section className="bg-black text-white">
-        <div className="max-w-4xl mx-auto px-5 md:px-8 py-16 md:py-20 text-center">
-          <h2 className="font-display font-black text-3xl md:text-5xl tracking-tight mb-4">
-            Prêt à reprendre la main<br />sur vos 507 heures ?
-          </h2>
-          <p className="text-zinc-400 mb-7 max-w-xl mx-auto">
-            Gratuit pour démarrer. Aucune donnée transmise aux organismes.
-          </p>
-          <Link
-            to="/prestations"
-            className="inline-flex items-center gap-2 bg-aime-red hover:bg-aime-red/90 text-white font-medium px-6 py-3 rounded-full transition-colors"
-          >
-            Ouvrir AIME
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-zinc-100 py-10">
-        <div className="max-w-6xl mx-auto px-5 md:px-8 text-center text-xs text-zinc-500 leading-relaxed">
-          AIME® est un outil préparatoire privé. Les organismes officiels (GUSO,
-          France Travail, Audiens, Urssaf, Unédic) restent seuls compétents pour
-          confirmer droits, déclarations et validations.
-          <div className="mt-2 text-zinc-400">
-            © {new Date().getFullYear()} AIME — Tous droits réservés.
-          </div>
-        </div>
-      </footer>
+                <div className="rounded-[28px] border border-black/5 bg-[#F6F2EC] p-5">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">
+                    Outils de nettoyage
+                  </div>
+                  <div className="mt-4 space-y-3">
+                    <QuickLink to="/cartographie" title="Cartographie de l'app" text="Toutes les pages, leurs rôles et les décisions à prendre." />
+                    <QuickLink to="/screens" title="Board des écrans" text="Les copies d'écran existantes classées par univers." />
+                    <QuickLink to="/espace" title="Mon espace" text="Le point de fusion actuel entre profil, réglages, 507 et bientôt wallets." />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
     </div>
   );
 }
 
-function Feature({ icon: Icon, title, text }) {
+function LandingShowcase() {
+  const sections = SCREEN_SECTIONS.map((section) => ({
+    ...section,
+    tabLabel:
+      section.key === "fiches" ? "Fiches"
+        : section.key === "cockpit" ? "Cockpit"
+          : section.label,
+  }));
+
+  const [tabIdx, setTabIdx] = useState(0);
+  const [shotIdx, setShotIdx] = useState(0);
+
+  const activeSection = sections[tabIdx] || sections[0];
+  const shots = activeSection?.shots || [];
+
+  useEffect(() => {
+    setShotIdx(0);
+  }, [tabIdx]);
+
+  useEffect(() => {
+    if (shots.length <= 1) return undefined;
+    const timer = window.setInterval(() => {
+      setShotIdx((current) => (current + 1) % shots.length);
+    }, 3400);
+    return () => window.clearInterval(timer);
+  }, [shots.length, tabIdx]);
+
+  const currentShot = shots[shotIdx] || shots[0];
+  const prevShot = shots[(shotIdx - 1 + shots.length) % shots.length] || currentShot;
+  const nextShot = shots[(shotIdx + 1) % shots.length] || currentShot;
+
+  const thumbShots = useMemo(() => shots.slice(0, 5), [shots]);
+
   return (
-    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
-      <div className="text-white mb-4">
-        <Icon className="w-7 h-7" strokeWidth={1.5} />
+    <div className="relative">
+      <div className="absolute -left-5 top-10 hidden h-40 w-40 rounded-full bg-aime-red/20 blur-3xl xl:block" aria-hidden="true" />
+      <div className="absolute -right-6 bottom-10 hidden h-48 w-48 rounded-full bg-white/10 blur-3xl xl:block" aria-hidden="true" />
+
+      <div className="relative overflow-hidden rounded-[32px] border border-white/12 bg-black/25 p-4 shadow-[0_50px_120px_-45px_rgba(0,0,0,0.9)] backdrop-blur-xl md:p-5">
+        <div className="mb-4 flex flex-wrap gap-2">
+          {sections.map((section, index) => (
+            <button
+              key={section.key}
+              type="button"
+              onClick={() => setTabIdx(index)}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                index === tabIdx
+                  ? "bg-white text-zinc-950"
+                  : "bg-white/8 text-white/75 hover:bg-white/12 hover:text-white"
+              }`}
+            >
+              {section.tabLabel}
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-[28px] border border-white/10 bg-white p-3 shadow-[0_25px_80px_-40px_rgba(0,0,0,0.55)]">
+          <div className="flex items-center gap-1.5 border-b border-zinc-200 bg-white px-3 py-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+            <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+            <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
+            <span className="ml-3 text-[10px] tracking-wider text-zinc-400">aime.app / {activeSection.tabLabel.toLowerCase()}</span>
+          </div>
+
+          <div className="relative aspect-[16/10] overflow-hidden rounded-[22px] bg-zinc-50">
+            {shots.map((shot, index) => (
+              <img
+                key={shot.url}
+                src={shot.url}
+                alt={shot.label}
+                className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ${index === shotIdx ? "opacity-100" : "opacity-0"}`}
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            ))}
+
+            <div className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-3">
+              <div className="rounded-full bg-black/72 px-3 py-1.5 text-xs text-white backdrop-blur-sm">
+                {currentShot?.label}
+              </div>
+              <div className="rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-zinc-700">
+                {shotIdx + 1}/{Math.max(1, shots.length)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <FloatingPreview label="précédent" shot={prevShot} />
+          <div className="hidden rounded-[24px] border border-white/10 bg-white/6 p-3 text-white/80 sm:block">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-aime-red">Catégorie active</div>
+            <div className="mt-2 font-display text-2xl font-black tracking-tight text-white">{activeSection.tabLabel}</div>
+            <p className="mt-2 text-sm leading-relaxed text-white/70">{activeSection.description}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {thumbShots.map((shot, index) => (
+                <button
+                  key={shot.url}
+                  type="button"
+                  onClick={() => setShotIdx(index)}
+                  className={`h-2 rounded-full transition-all ${index === shotIdx ? "w-8 bg-aime-red" : "w-2 bg-white/25 hover:bg-white/45"}`}
+                  aria-label={`Aller à la slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+          <FloatingPreview label="suivant" shot={nextShot} reverse />
+        </div>
       </div>
-      <h3 className="font-display font-bold text-lg mb-2 text-white">{title}</h3>
-      <p className="text-sm text-white/80 leading-relaxed">{text}</p>
     </div>
   );
 }
 
-function ShortcutCard({ to, icon: Icon, title, text, cta }) {
+function FloatingPreview({ label, shot, reverse = false }) {
   return (
-    <Link
-      to={to}
-      className="group rounded-3xl border border-zinc-200 bg-zinc-50 p-5 hover:bg-white hover:border-zinc-300 transition-colors"
-    >
-      <div className="w-11 h-11 rounded-2xl bg-white border border-zinc-200 flex items-center justify-center text-aime-red mb-4 group-hover:border-zinc-300 transition-colors">
-        <Icon className="w-5 h-5" strokeWidth={1.8} />
+    <div className="overflow-hidden rounded-[24px] border border-white/10 bg-white/6 p-3 backdrop-blur-sm">
+      <div className={`mb-2 flex items-center justify-between gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] ${reverse ? "text-white/70" : "text-aime-red"}`}>
+        <span>{label}</span>
+        <span className="text-white/45">aperçu</span>
       </div>
-      <h3 className="font-display font-bold text-xl tracking-tight text-zinc-900">
-        {title}
-      </h3>
-      <p className="mt-2 text-sm text-zinc-600 leading-relaxed min-h-[66px]">
-        {text}
-      </p>
-      <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-zinc-900">
-        {cta}
-        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+      <div className="overflow-hidden rounded-[18px] border border-white/10 bg-black/20">
+        <img src={shot?.url} alt={shot?.label} className="aspect-[16/10] h-full w-full object-cover object-top opacity-90" loading="lazy" />
       </div>
+      <div className="mt-2 text-xs leading-relaxed text-white/70">{shot?.label}</div>
+    </div>
+  );
+}
+
+function GlassMetric({ value, label }) {
+  return (
+    <div className="rounded-[24px] border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-sm">
+      <div className="font-display text-3xl font-black tracking-tight text-white">{value}</div>
+      <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/65">{label}</div>
+    </div>
+  );
+}
+
+function QuickLink({ to, title, text }) {
+  return (
+    <Link to={to} className="block rounded-2xl border border-zinc-200 bg-white px-4 py-3 transition-colors hover:bg-zinc-50">
+      <div className="text-sm font-medium text-zinc-900">{title}</div>
+      <div className="mt-1 text-xs leading-relaxed text-zinc-600">{text}</div>
     </Link>
   );
 }

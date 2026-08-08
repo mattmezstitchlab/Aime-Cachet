@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { User, Palette, Bell, Gauge, FileText, Save, Sparkles } from "lucide-react";
+import { FolderOpen, Palette, Bell, Gauge, FileText, Save, Sparkles, User } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import PageShell from "@/components/aime/PageShell";
 import LegalDisclaimer from "@/components/aime/LegalDisclaimer";
@@ -10,6 +10,8 @@ import AnnexeBreakdown from "@/components/aime/dashboard/AnnexeBreakdown";
 import AnniversaryCard from "@/components/aime/dashboard/AnniversaryCard";
 import HoursHeatmap from "@/components/aime/dashboard/HoursHeatmap";
 import { buildDashboard507 } from "@/lib/intermittent507";
+import WalletIcon from "@/components/aime/wallets/WalletIcon";
+import { SMART_WALLETS } from "@/lib/wallets";
 import { getUserPrefs, saveUserPrefs } from "@/lib/userPrefs";
 import { applyUserPrefs } from "@/lib/applyPrefs";
 import { toast, Toaster } from "sonner";
@@ -18,18 +20,21 @@ export default function Espace() {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [prestations, setPrestations] = useState([]);
+  const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [prefs, setPrefs] = useState(getUserPrefs());
   const [draft, setDraft] = useState(getUserPrefs());
 
   useEffect(() => {
     (async () => {
-      const [me, pres] = await Promise.all([
+      const [me, pres, walletRows] = await Promise.all([
         base44.auth.me().catch(() => null),
         base44.entities.Prestation.list("-updated_date", 500),
+        base44.entities.Wallet.list("order", 100).catch(() => []),
       ]);
       setUser(me);
       setPrestations(pres || []);
+      setWallets(walletRows || []);
       setLoading(false);
     })();
   }, []);
@@ -86,6 +91,7 @@ export default function Espace() {
     >
       <div className="flex flex-wrap gap-2 mb-8">
         <AnchorPill href="#identite" label="Identité" icon={User} />
+        <AnchorPill href="#wallets" label="Wallets" icon={FolderOpen} />
         <AnchorPill href="#preferences" label="Préférences" icon={Palette} />
         <AnchorPill href="#pilotage507" label="Pilotage 507" icon={Gauge} />
       </div>
@@ -187,6 +193,64 @@ export default function Espace() {
                   <Link to="/fiches" className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100">
                     <FileText className="h-4 w-4" />
                     Voir mes fiches
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="wallets" className="scroll-mt-28 space-y-6">
+            <SectionHeader
+              eyebrow="Wallets"
+              title="Rangement personnel et filtres intelligents"
+              text="Mon espace peut aussi devenir votre porte d'entrée pour voir vos dossiers, vos catégories automatiques et vos wallets personnels."
+            />
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+              <div className="rounded-3xl border border-zinc-200 bg-white p-6">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {SMART_WALLETS.slice(0, 6).map((wallet) => (
+                    <WalletSummaryCard
+                      key={wallet.id}
+                      icon={wallet.icon}
+                      title={wallet.name}
+                      value={prestations.filter(wallet.match).length}
+                      note="rangement intelligent"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-zinc-200 bg-white p-6">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-500">Mes wallets</div>
+                <div className="mt-4 space-y-2">
+                  {wallets.length === 0 ? (
+                    <div className="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 px-4 py-5 text-sm leading-relaxed text-zinc-500">
+                      Aucun wallet personnel pour l'instant. Vous pouvez les gérer depuis la vue Mes fiches.
+                    </div>
+                  ) : (
+                    wallets.map((wallet) => (
+                      <div key={wallet.id} className="flex items-center gap-3 rounded-2xl border border-zinc-100 bg-zinc-50 px-4 py-3">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-zinc-600 ring-1 ring-zinc-200">
+                          <WalletIcon name={wallet.icon || "Folder"} className="h-4 w-4" />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-medium text-zinc-900">{wallet.name}</div>
+                          <div className="text-xs text-zinc-500">{prestations.filter((item) => item.wallet_id === wallet.id).length} fiche(s)</div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Link to="/fiches" className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black">
+                    <FolderOpen className="h-4 w-4" />
+                    Gérer mes wallets
+                  </Link>
+                  <Link to="/prestations" className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100">
+                    <Sparkles className="h-4 w-4" />
+                    Retour timeline
                   </Link>
                 </div>
               </div>
@@ -422,6 +486,19 @@ function MetricPanel({ label, value, accent = "default" }) {
     <div className="rounded-2xl bg-zinc-50 p-4">
       <div className={`font-display text-3xl tracking-tight ${color}`}>{value}</div>
       <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">{label}</div>
+    </div>
+  );
+}
+
+function WalletSummaryCard({ icon, title, value, note }) {
+  return (
+    <div className="rounded-2xl border border-zinc-100 bg-zinc-50 p-4">
+      <div className="flex items-center gap-2 text-zinc-600">
+        <WalletIcon name={icon} className="h-4 w-4" />
+        <span className="text-sm font-medium text-zinc-900">{title}</span>
+      </div>
+      <div className="mt-4 font-display text-3xl tracking-tight text-zinc-900">{value}</div>
+      <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">{note}</div>
     </div>
   );
 }
