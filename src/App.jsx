@@ -13,6 +13,7 @@ import Notifications from '@/pages/Notifications';
 import Aide from '@/pages/Aide';
 import Landing from '@/pages/Landing';
 import ScreensBoard from '@/pages/ScreensBoard';
+import PageInventory from '@/pages/PageInventory';
 import PrestationsHub from '@/pages/PrestationsHub';
 import Espace from '@/pages/Espace';
 import BottomActionBar from '@/components/aime/BottomActionBar';
@@ -64,6 +65,7 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/screens" element={<ScreensBoard />} />
+      <Route path="/cartographie" element={<PageInventory />} />
       <Route path="/app" element={<LegacyAppRedirect />} />
       <Route path="/prestations" element={<PrestationsHub />} />
       <Route path="/fiches" element={<MesPrestations />} />

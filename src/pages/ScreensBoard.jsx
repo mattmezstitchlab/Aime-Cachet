@@ -28,7 +28,13 @@ export default function ScreensBoard() {
               Landing
             </Link>
             <Link
-              to="/app"
+              to="/cartographie"
+              className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-medium hover:bg-zinc-50 transition-colors"
+            >
+              Toutes les pages
+            </Link>
+            <Link
+              to="/prestations"
               className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-black transition-colors"
             >
               Ouvrir l'app

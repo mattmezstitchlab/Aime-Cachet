@@ -34,6 +34,12 @@ export default function Landing() {
           </Link>
           <div className="flex items-center gap-2">
             <Link
+              to="/cartographie"
+              className="inline-flex items-center gap-1.5 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-900 text-sm font-medium px-4 py-2 rounded-full transition-colors"
+            >
+              Toutes les pages
+            </Link>
+            <Link
               to="/screens"
               className="inline-flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 text-sm font-medium px-4 py-2 rounded-full transition-colors"
             >
