@@ -64,6 +64,9 @@ function AppShell() {
     || location.pathname === "/login"
     || location.pathname === "/404"
     || location.pathname === "/notifications"
+    || location.pathname === "/univers/zeus/budget"
+    || location.pathname === "/univers/hestia/plan-de-table"
+    || location.pathname === "/univers/hestia/rsvp"
     || location.pathname.startsWith("/invitation/");
   const showDock = weddingReady
     && location.pathname !== "/"
