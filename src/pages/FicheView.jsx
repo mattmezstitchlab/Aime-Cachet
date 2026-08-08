@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Pencil, Check } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-import { generateFichePDF } from "@/lib/ficheGenerator";
 import { generateCachetCode, formatTimestampFR } from "@/lib/cachetCode";
 import { logEvent } from "@/lib/historyLog";
 import { FICHE_BACKGROUNDS } from "@/lib/docTemplates";
@@ -22,7 +21,6 @@ import GusoPaper from "@/components/aime/fiche/GusoPaper";
 import CddUPaper from "@/components/aime/fiche/CddUPaper";
 import CessionDroitsPaper from "@/components/aime/fiche/CessionDroitsPaper";
 import AvenantPaper from "@/components/aime/fiche/AvenantPaper";
-import ToolPalette from "@/components/aime/fiche/ToolPalette";
 import StampDialog from "@/components/aime/fiche/StampDialog";
 import SignaturePad from "@/components/aime/fiche/SignaturePad";
 import StudioPanel from "@/components/aime/fiche/studio/StudioPanel";
@@ -140,7 +138,7 @@ export default function FicheView() {
   const formatConfig = PAPER_FORMATS.find((p) => p.id === paperFormat) || PAPER_FORMATS[0];
   const watermarkConfig = WATERMARK_PRESETS.find((w) => w.id === watermark) || WATERMARK_PRESETS[0];
 
-  const handleStampClick = () => setStampDialogOpen(true);
+  const handleStampClick = useCallback(() => setStampDialogOpen(true), []);
 
   const handleApplyStampConfig = (config) => {
     const now = new Date();
@@ -172,13 +170,6 @@ export default function FicheView() {
     setStampMode(false);
     setPendingStamp(null);
     toast.success("Tampon apposé", { description: `${formatTimestampFR(now)} · ${cachetCode}` });
-  };
-
-  const handleResetStamp = () => {
-    setStamp(null);
-    setStampPosition(null);
-    setStampMode(false);
-    setPendingStamp(null);
   };
 
   const handleApplySignature = async (dataUrl) => {
@@ -214,20 +205,7 @@ export default function FicheView() {
     return () => clearTimeout(t);
   }, [customNotes, prestation]);
 
-  const handleDownload = async () => {
-    if (!prestation) return;
-    const verifyUrl = cachetCode ? `${window.location.origin}/verify/${cachetCode}` : null;
-    generateFichePDF(prestation, { cachetCode, stamp, docType, verifyUrl });
-    await logEvent({
-      kind: "document_generated",
-      text: `${docType} téléchargé — ${prestation.employer || "fiche vierge"} (${cachetCode})`,
-      prestation_id: prestation.id,
-      accent: "white",
-    });
-    toast.success("Document téléchargé");
-  };
-
-  const handleCloud = async () => {
+  const handleCloud = useCallback(async () => {
     if (!prestation) return;
     await logEvent({
       kind: "document_generated",
@@ -235,7 +213,24 @@ export default function FicheView() {
       prestation_id: prestation.id,
       accent: "red",
     });
-  };
+    toast.success("Brouillon sauvegardé dans Cloud AIME", { description: "Retrouvez-le dans Mes fiches." });
+  }, [prestation, docType, cachetCode]);
+
+  useEffect(() => {
+    const onCloud = () => { handleCloud(); };
+    const onEdit = () => setStudioOpen(true);
+    const onStamp = () => handleStampClick();
+
+    window.addEventListener("aime:dock-cloud", onCloud);
+    window.addEventListener("aime:dock-edit", onEdit);
+    window.addEventListener("aime:dock-stamp", onStamp);
+
+    return () => {
+      window.removeEventListener("aime:dock-cloud", onCloud);
+      window.removeEventListener("aime:dock-edit", onEdit);
+      window.removeEventListener("aime:dock-stamp", onStamp);
+    };
+  }, [handleCloud, handleStampClick]);
 
   if (loading) {
     return (
@@ -391,20 +386,6 @@ export default function FicheView() {
           </div>
         </div>
       </div>
-
-      <ToolPalette
-        onDownload={handleDownload}
-        onCloud={handleCloud}
-        onEdit={() => setStudioOpen(true)}
-        onSign={() => setSignaturePadOpen(true)}
-        onStamp={handleStampClick}
-        onResetStamp={handleResetStamp}
-        hasStamp={!!stamp}
-        stampMode={stampMode}
-        editMode={studioOpen || textEditable}
-        prestation={prestation}
-        cachetCode={cachetCode}
-      />
 
       <StampDialog open={stampDialogOpen} onClose={() => setStampDialogOpen(false)} onApply={handleApplyStampConfig} />
       <SignaturePad open={signaturePadOpen} onClose={() => setSignaturePadOpen(false)} onApply={handleApplySignature} />

@@ -15,7 +15,7 @@ import Landing from '@/pages/Landing';
 import ScreensBoard from '@/pages/ScreensBoard';
 import PrestationsHub from '@/pages/PrestationsHub';
 import Espace from '@/pages/Espace';
-import AssistantFloatingButton from '@/components/aime/assistant/AssistantFloatingButton';
+import BottomActionBar from '@/components/aime/BottomActionBar';
 import { AssistantProvider } from '@/components/aime/assistant/AssistantProvider';
 import { applyUserPrefs } from '@/lib/applyPrefs';
 import { useEffect } from 'react';
@@ -89,7 +89,7 @@ function App() {
         <Router>
           <AssistantProvider>
             <AuthenticatedApp />
-            <AssistantFloatingButton />
+            <BottomActionBar />
           </AssistantProvider>
         </Router>
         <Toaster />
