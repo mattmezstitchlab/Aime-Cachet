@@ -1,0 +1,30 @@
+{
+  "name": "Wallet",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nom du wallet"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Nom de l'ic\u00f4ne Lucide",
+      "default": "Folder"
+    },
+    "color": {
+      "type": "string",
+      "description": "Couleur hex du wallet",
+      "default": "#71717a"
+    },
+    "description": {
+      "type": "string"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

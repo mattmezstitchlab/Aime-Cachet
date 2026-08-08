@@ -1,0 +1,49 @@
+{
+  "name": "AssistantReminder",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Texte court du rappel"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Justification du rappel propos\u00e9 par l'assistant"
+    },
+    "target": {
+      "type": "string",
+      "description": "Route interne cibl\u00e9e (ex: /fiche/abc, /507)"
+    },
+    "prestation_id": {
+      "type": "string",
+      "description": "ID de la prestation concern\u00e9e si applicable"
+    },
+    "cachet_code": {
+      "type": "string",
+      "description": "Code Cachet associ\u00e9 si applicable"
+    },
+    "due_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date / heure planifi\u00e9e du rappel (locale, interne)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "done",
+        "snoozed",
+        "dismissed"
+      ],
+      "default": "pending"
+    },
+    "source": {
+      "type": "string",
+      "default": "assistant",
+      "description": "Origine du rappel (assistant, manuel, etc.)"
+    }
+  },
+  "required": [
+    "label"
+  ]
+}
