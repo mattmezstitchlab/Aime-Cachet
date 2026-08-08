@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import {
   Building2,
   Check,
@@ -94,6 +94,7 @@ function ActionTile({ to, title, text }) {
 
 export default function AccountModePage() {
   const { modeId } = useParams();
+  const navigate = useNavigate();
   const state = useMemo(() => readWeddingState(), []);
   const [fields, setFields] = useState({
     name: "",
@@ -171,6 +172,7 @@ export default function AccountModePage() {
         { title: "Maison Hestia", text: "La logique source des foyers, RSVP, accueil et transmission du mariage.", to: "/univers/hestia" },
       ],
       submitLabel: "Accéder à mon mariage",
+      spaceRoute: "/espace-invites/compte",
     },
     prestataires: {
       universeId: "artemis",
@@ -250,8 +252,9 @@ export default function AccountModePage() {
 
   const submit = () => {
     toast.success(page.submitLabel, {
-      description: "Le flux d’accès est maintenant identifié dans l’architecture. Le back/auth viendra ensuite.",
+      description: "Prototype local : ouverture directe de l’espace compte correspondant.",
     });
+    navigate(page.spaceRoute);
   };
 
   return (

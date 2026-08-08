@@ -20,6 +20,8 @@ import WeddingCommunication from "@/pages/WeddingCommunication";
 import WeddingSetup from "@/pages/WeddingSetup";
 import DesignSystem from "@/pages/DesignSystem";
 import UniversePage from "@/pages/UniversePage";
+import AccountModePage from "@/pages/AccountModePage";
+import AccountSpacePage from "@/pages/AccountSpacePage";
 import { isWeddingSetupComplete, readWeddingState } from "@/lib/aimeWeddingCore";
 
 function RequireWeddingSetup({ children }) {
@@ -42,10 +44,15 @@ function RequireWeddingSetup({ children }) {
 function AppShell() {
   const location = useLocation();
   const weddingReady = isWeddingSetupComplete(readWeddingState());
+  const isStandaloneAccountSpace = location.pathname === "/espace-maries"
+    || location.pathname === "/espace-prestataires"
+    || location.pathname === "/espace-planner"
+    || location.pathname === "/espace-invites/compte";
   const showDock = weddingReady
     && location.pathname !== "/"
     && location.pathname !== "/setup"
-    && location.pathname !== "/design-system";
+    && location.pathname !== "/design-system"
+    && !isStandaloneAccountSpace;
   const fullBleedTop = location.pathname === "/setup";
 
   useEffect(() => {
@@ -74,6 +81,11 @@ function AppShell() {
           <Route path="/" element={<Landing />} />
           <Route path="/design-system" element={<DesignSystem />} />
           <Route path="/univers/:universeId" element={<UniversePage />} />
+          <Route path="/compte/:modeId" element={<AccountModePage />} />
+          <Route path="/espace-maries" element={<RequireWeddingSetup><AccountSpacePage modeId="maries" /></RequireWeddingSetup>} />
+          <Route path="/espace-invites/compte" element={<AccountSpacePage modeId="invites" />} />
+          <Route path="/espace-prestataires" element={<AccountSpacePage modeId="prestataires" />} />
+          <Route path="/espace-planner" element={<AccountSpacePage modeId="planner" />} />
           <Route path="/setup" element={<WeddingSetup />} />
           <Route path="/point-zero" element={<RequireWeddingSetup><PointZero /></RequireWeddingSetup>} />
           <Route path="/documents" element={<RequireWeddingSetup><WeddingDocs /></RequireWeddingSetup>} />
