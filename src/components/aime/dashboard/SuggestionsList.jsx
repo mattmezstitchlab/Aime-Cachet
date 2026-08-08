@@ -36,7 +36,7 @@ export default function SuggestionsList({ suggestions = [] }) {
                 }`}>
                   <Icon className="w-4 h-4" />
                 </span>
-                {/* eslint-disable-next-line no-unused-vars */}
+                { }
                 <div className="flex-1 min-w-0">
                   <div className={`text-[13px] font-semibold tracking-tight ${isOk ? "text-emerald-900" : "text-zinc-900"}`}>
                     {s.title}
