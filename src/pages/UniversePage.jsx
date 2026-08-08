@@ -257,6 +257,7 @@ function buildUniversePageData(state, universe) {
   const venueVendor = allVendors.find((vendor) => vendor.category === "venue") || null;
   const cateringVendor = allVendors.find((vendor) => vendor.category === "catering") || null;
   const transportVendor = allVendors.find((vendor) => vendor.category === "transport") || null;
+  const musicVendor = allVendors.find((vendor) => vendor.category === "music") || null;
   const planSalleDoc = docsPlanner.find((doc) => doc.id === "plan_salle") || null;
   const planBDoc = docsPlanner.find((doc) => doc.id === "plan_b_meteo") || null;
   const programmeDoc = docsPlanner.find((doc) => doc.id === "programme_jourj") || null;
@@ -852,6 +853,192 @@ function buildUniversePageData(state, universe) {
         ...commonFooter,
         primary: { to: "/budget", label: "Ouvrir Déméter" },
         secondary: { to: "/prestataires?category=catering", label: "Voir le traiteur" },
+      },
+    };
+  }
+
+  if (universe.id === "dionysos") {
+    const partySteps = timelinePlanner.filter((step) => ["diner-discours", "ouverture-bal", "dancefloor"].includes(step.id));
+
+    return {
+      heroStats: [
+        { label: "Soirée", value: partySteps.length, detail: "séquences clés" },
+        { label: "Ouverture", value: partySteps.find((step) => step.id === "ouverture-bal")?.time || "21:45", detail: "de bal" },
+        { label: "DJ / son", value: musicVendor?.status || "—", detail: musicVendor?.name || "À confirmer" },
+        { label: "Retour nuit", value: transportVendor ? "prévu" : "—", detail: transportVendor?.name || "Navettes" },
+      ],
+      heroCtas: [
+        { to: "/jour-j?role=planner", label: "Voir la soirée live" },
+        { to: "/prestataires?category=music", label: "Voir le DJ / son" },
+        { to: "/espace-invites", label: "Voir les retours invités" },
+      ],
+      intro: {
+        title: "Dionysos tient l’énergie de la nuit.",
+        text: "La fête n’est pas un bouton final qu’on active après le dîner. Dionysos maintient l’intensité, le tempo, les transitions, l’ouverture de bal, la bascule piste, la fatigue terrain et la lisibilité émotionnelle de la soirée pour qu’elle monte sans casser ce qui précède.",
+      },
+      statRail: [
+        { label: "Programme soirée", value: programmeDoc?.version || "—", detail: programmeDoc?.status || "—" },
+        { label: "Paiement musique", value: musicVendor?.paymentStatus || "—", detail: musicVendor?.nextTouchpointAt ? formatShortDate(musicVendor.nextTouchpointAt) : "" },
+        { label: "Navette retour", value: transportVendor?.status || "—", detail: transportVendor?.paymentStatus || "—" },
+        { label: "Rythme dîner", value: partySteps.find((step) => step.id === "diner-discours")?.time || "19:30", detail: "fenêtre critique" },
+      ],
+      focus: {
+        eyebrow: "Métier principal",
+        title: "Ce que Dionysos rend possible",
+        description: "Dionysos ne sert pas seulement à parler de soirée. Il absorbe la fin du dîner, les discours, la montée musicale, l’ouverture de bal, la respiration du couple, les retours invités et la façon dont l’énergie reste belle sans basculer dans le chaos ou la fatigue mal gérée.",
+        bullets: [
+          "La fête dépend du rythme tenu avant elle, pas seulement de la playlist.",
+          "L’ouverture de bal est une transition, pas un bloc isolé.",
+          "Le retour des invités et la fatigue terrain font partie de la qualité de la nuit.",
+        ],
+        cta: { to: "/prestataires?category=music", label: "Ouvrir la mission musique" },
+      },
+      focusItemsTitle: "Ce que Dionysos tient maintenant",
+      focusItems: [
+        {
+          title: musicVendor?.name || "DJ / son principal",
+          detail: musicVendor ? `${musicVendor.summary} ${musicVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(musicVendor.nextTouchpointAt)}.` : ""}` : "Le bloc son / DJ n’est pas encore sécurisé.",
+          tone: musicVendor?.paymentStatus?.includes("venir") ? "warning" : "calm",
+          to: "/prestataires?category=music",
+          meta: musicVendor?.paymentStatus,
+        },
+        {
+          title: partySteps.find((step) => step.id === "diner-discours") ? `${partySteps.find((step) => step.id === "diner-discours").time} · ${partySteps.find((step) => step.id === "diner-discours").title}` : "Dîner & discours",
+          detail: partySteps.find((step) => step.id === "diner-discours") ? compactText(partySteps.find((step) => step.id === "diner-discours").note || partySteps.find((step) => step.id === "diner-discours").detail, 126) : "La transition dîner / soirée n’est pas encore documentée.",
+          tone: "warning",
+          to: "/jour-j?role=planner",
+        },
+        {
+          title: partySteps.find((step) => step.id === "ouverture-bal") ? `${partySteps.find((step) => step.id === "ouverture-bal").time} · ${partySteps.find((step) => step.id === "ouverture-bal").title}` : "Ouverture de bal",
+          detail: partySteps.find((step) => step.id === "ouverture-bal") ? compactText(partySteps.find((step) => step.id === "ouverture-bal").note || partySteps.find((step) => step.id === "ouverture-bal").detail, 124) : "L’ouverture de bal n’est pas encore calée.",
+          tone: "calm",
+          to: "/jour-j?role=planner",
+        },
+        {
+          title: transportVendor?.name || "Retours de nuit",
+          detail: transportVendor ? `${transportVendor.summary} ${transportVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(transportVendor.nextTouchpointAt)}.` : ""}` : "La couche transport retour n’est pas encore visible.",
+          tone: transportVendor ? "calm" : "neutral",
+          to: "/espace-invites",
+          meta: transportVendor?.paymentStatus,
+        },
+      ],
+      tools: {
+        eyebrow: "Outils liés",
+        title: "Les prolongements naturels de Dionysos",
+        items: [
+          { eyebrow: "Poséidon", title: "Son & ambiance", detail: "La fête s’appuie sur une matière sonore, des micros et des transitions tenues en amont.", to: "/univers/poseidon" },
+          { eyebrow: "Arès", title: "Terrain & transitions", detail: "La soirée n’existe proprement que si les bascules dîner, bal et piste tiennent sur le terrain réel.", to: "/univers/ares" },
+          { eyebrow: "Hestia", title: "Retours invités", detail: "Le confort des retours, navettes et derniers flux invités prolonge aussi la qualité de la nuit.", to: "/univers/hestia" },
+          { eyebrow: "Apollon", title: "Image de la soirée", detail: "Ouverture de bal, piste et énergie doivent rester captables sans casser le rythme.", to: "/univers/apollon" },
+        ],
+      },
+      integrations: {
+        eyebrow: "Intégrations",
+        title: "Résumés connectés",
+        items: [
+          { title: "Poséidon", detail: `${musicVendor?.name || "Le son"} tient les micros, l’ouverture et les transitions de soirée.`, tone: "neutral", to: "/univers/poseidon" },
+          { title: "Arès", detail: `${partySteps.length} séquences de fin de journée dépendent d’une exécution très propre.`, tone: "warning", to: "/jour-j?role=planner" },
+          { title: "Hestia", detail: `${(guestPortal.shuttles || []).length} navettes visibles pour les retours et ${guestSummary.confirmed} invités confirmés à absorber jusqu’au bout.`, tone: "neutral", to: "/espace-invites" },
+          { title: "Déméter", detail: `${partySteps.find((step) => step.id === "diner-discours") ? "Le dîner reste la bascule principale de la soirée." : "Le rythme dîner / soirée doit encore être stabilisé."}`, tone: "warning", to: "/univers/demeter" },
+        ],
+      },
+      footer: {
+        ...commonFooter,
+        primary: { to: "/prestataires?category=music", label: "Ouvrir la mission musique" },
+        secondary: { to: "/jour-j?role=planner", label: "Voir la timeline de soirée" },
+      },
+    };
+  }
+
+  if (universe.id === "poseidon") {
+    const soundSteps = timelinePlanner.filter((step) => ["ceremonie", "diner-discours", "ouverture-bal", "dancefloor"].includes(step.id));
+
+    return {
+      heroStats: [
+        { label: "Son", value: musicVendor ? 1 : 0, detail: musicVendor?.name || "À confirmer" },
+        { label: "Moments audio", value: soundSteps.length, detail: "séquences concernées" },
+        { label: "Micros", value: "actifs", detail: "cérémonie & discours" },
+        { label: "Soirée", value: soundSteps.find((step) => step.id === "ouverture-bal")?.time || "21:45", detail: "bascule piste" },
+      ],
+      heroCtas: [
+        { to: "/prestataires?category=music", label: "Ouvrir Poséidon" },
+        { to: "/jour-j?role=planner", label: "Voir les séquences" },
+        { to: "/documents?role=planner", label: "Voir les docs son" },
+      ],
+      intro: {
+        title: "Poséidon tient la matière sonore et l’ambiance du mariage.",
+        text: "Le son, les micros, les transitions, les montées, les silences utiles et la continuité émotionnelle du mariage forment une couche à part entière. Poséidon relie cérémonie, cocktail, dîner, discours, ouverture de bal et soirée pour que l’expérience reste fluide et tenue.",
+      },
+      statRail: [
+        { label: "DJ / son", value: musicVendor?.status || "—", detail: musicVendor?.paymentStatus || "—" },
+        { label: "Programme audio", value: programmeDoc?.version || "—", detail: programmeDoc?.status || "—" },
+        { label: "Plan B", value: planBDoc?.status || "—", detail: "impact lumière / micros" },
+        { label: "Retours son", value: communications.length > 0 ? "synchronisés" : "—", detail: "diffusion équipe" },
+      ],
+      focus: {
+        eyebrow: "Métier principal",
+        title: "Ce que Poséidon règle vraiment",
+        description: "Poséidon ne s’occupe pas seulement d’un DJ. Il règle l’enveloppe sensorielle du mariage : clarté des prises de parole, qualité des transitions, intelligibilité des moments symboliques et continuité émotionnelle entre les grands temps du jour et de la nuit.",
+        bullets: [
+          "Le son sert le mariage entier, pas seulement la fête finale.",
+          "Une cérémonie mal sonorisée ou des discours illisibles cassent immédiatement l’expérience collective.",
+          "La couche sonore doit rester raccord avec le terrain, le rythme et la captation image.",
+        ],
+        cta: { to: "/prestataires?category=music", label: "Ouvrir le bloc son" },
+      },
+      focusItemsTitle: "Ce que Poséidon tient maintenant",
+      focusItems: [
+        {
+          title: musicVendor?.name || "Bloc son principal",
+          detail: musicVendor ? `${musicVendor.summary} ${musicVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(musicVendor.nextTouchpointAt)}.` : ""}` : "Le bloc sonore n’est pas encore sécurisé.",
+          tone: musicVendor?.paymentStatus?.includes("venir") ? "warning" : "calm",
+          to: "/prestataires?category=music",
+          meta: musicVendor?.paymentStatus,
+        },
+        {
+          title: programmeDoc?.title || "Programme Jour J",
+          detail: programmeDoc ? `${compactText(programmeDoc.summary, 118)} ${compactText(programmeDoc.note, 54)}` : "Le fil sonore du mariage n’est pas encore documenté.",
+          tone: programmeDoc?.status === "en cours" ? "warning" : "neutral",
+          to: "/documents?role=planner",
+          meta: programmeDoc?.version,
+        },
+        {
+          title: soundSteps.find((step) => step.id === "ceremonie") ? `${soundSteps.find((step) => step.id === "ceremonie").time} · ${soundSteps.find((step) => step.id === "ceremonie").title}` : "Cérémonie",
+          detail: soundSteps.find((step) => step.id === "ceremonie") ? compactText(soundSteps.find((step) => step.id === "ceremonie").note || soundSteps.find((step) => step.id === "ceremonie").detail, 124) : "La séquence cérémonie n’est pas encore cadrée côté son.",
+          tone: "neutral",
+          to: "/jour-j?role=planner",
+        },
+        {
+          title: soundSteps.find((step) => step.id === "ouverture-bal") ? `${soundSteps.find((step) => step.id === "ouverture-bal").time} · ${soundSteps.find((step) => step.id === "ouverture-bal").title}` : "Ouverture de bal",
+          detail: soundSteps.find((step) => step.id === "ouverture-bal") ? compactText(soundSteps.find((step) => step.id === "ouverture-bal").note || soundSteps.find((step) => step.id === "ouverture-bal").detail, 124) : "La bascule piste n’est pas encore calée.",
+          tone: "warning",
+          to: "/jour-j?role=planner",
+        },
+      ],
+      tools: {
+        eyebrow: "Outils liés",
+        title: "Les prolongements naturels de Poséidon",
+        items: [
+          { eyebrow: "Dionysos", title: "Fête & soirée", detail: "Quand la matière sonore doit devenir énergie de nuit et montée de piste.", to: "/univers/dionysos" },
+          { eyebrow: "Apollon", title: "Image & captation", detail: "Les transitions sonores doivent rester cohérentes avec les fenêtres de captation et les moments visuels.", to: "/univers/apollon" },
+          { eyebrow: "Athéna", title: "Anticipation", detail: "Un retard ou un débordement discours impacte immédiatement la couche sonore du mariage.", to: "/univers/athena" },
+          { eyebrow: "Arès", title: "Exécution terrain", detail: "Câblage, micros, bascules et tempo ne tiennent que si le terrain reste clair.", to: "/univers/ares" },
+        ],
+      },
+      integrations: {
+        eyebrow: "Intégrations",
+        title: "Résumés connectés",
+        items: [
+          { title: "Dionysos", detail: `${soundSteps.filter((step) => ["ouverture-bal", "dancefloor"].includes(step.id)).length} séquences sonores pilotent directement la nuit.`, tone: "warning", to: "/univers/dionysos" },
+          { title: "Apollon", detail: `${photoVendor ? photoVendor.name : "La captation"} dépend de transitions audio et prises de parole propres.`, tone: "neutral", to: "/univers/apollon" },
+          { title: "Athéna", detail: `${warningSignals} signal${warningSignals > 1 ? "aux" : ""} peuvent encore déplacer musique, micros ou discours.`, tone: warningSignals > 0 ? "warning" : "neutral", to: "/univers/athena" },
+          { title: "Hermès", detail: communications[0] ? `${communications[0].title} a déjà synchronisé une partie des consignes techniques.` : "Les consignes son partiront via Hermès.", tone: communications[0] ? "calm" : "neutral", to: "/univers/hermes" },
+        ],
+      },
+      footer: {
+        ...commonFooter,
+        primary: { to: "/prestataires?category=music", label: "Ouvrir Poséidon" },
+        secondary: { to: "/jour-j?role=planner", label: "Voir les séquences son" },
       },
     };
   }
