@@ -59,7 +59,12 @@ function AppShell() {
   const isStandaloneAccountSpace = location.pathname === "/espace-maries"
     || location.pathname === "/espace-prestataires"
     || location.pathname === "/espace-planner"
-    || location.pathname === "/espace-invites/compte";
+    || location.pathname === "/espace-invites/compte"
+    || location.pathname === "/onboarding"
+    || location.pathname === "/login"
+    || location.pathname === "/404"
+    || location.pathname === "/notifications"
+    || location.pathname.startsWith("/invitation/");
   const showDock = weddingReady
     && location.pathname !== "/"
     && location.pathname !== "/setup"
@@ -104,6 +109,7 @@ function AppShell() {
           <Route path="/invitation/:inviteCode" element={<GuestMiniSitePage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/404" element={<NotFoundPage />} />
           <Route path="/compte/:modeId" element={<AccountModePage />} />
           <Route path="/espace-maries" element={<RequireWeddingSetup><AccountSpacePage modeId="maries" /></RequireWeddingSetup>} />
           <Route path="/espace-invites/compte" element={<AccountSpacePage modeId="invites" />} />
@@ -123,7 +129,7 @@ function AppShell() {
           <Route path="/exports" element={<RequireWeddingSetup><WeddingExports /></RequireWeddingSetup>} />
           <Route path="/budget" element={<RequireWeddingSetup><WeddingBudget /></RequireWeddingSetup>} />
           <Route path="/communication" element={<RequireWeddingSetup><WeddingCommunication /></RequireWeddingSetup>} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
       </div>
       {showDock && <WeddingBottomDock />}

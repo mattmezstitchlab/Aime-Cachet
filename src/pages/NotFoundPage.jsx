@@ -1,17 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight, Flower2 } from "lucide-react";
 
 export default function NotFoundPage() {
   return (
-    <div className="min-h-screen bg-[var(--color-warm-white)] text-[var(--color-text-primary)] overflow-x-hidden">
-      <div className="mx-auto max-w-[1120px] px-5 py-24 md:px-8 lg:px-10">
-        <div className="rounded-[38px] overflow-hidden bg-black text-white p-8 md:p-10 shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
-          <div className="aime-kicker">404 · page introuvable</div>
-          <h1 className="mt-6 font-display text-[3rem] md:text-[4.6rem] leading-[0.92] text-white">Cette page n’existe pas dans l’univers AIME.</h1>
-          <p className="mt-5 max-w-2xl text-sm md:text-base text-white/70 leading-relaxed">La route demandée ne correspond à aucune maison visible. Revenez au point d’entrée principal ou explorez les univers.</p>
-          <div className="mt-8 flex flex-wrap gap-2.5">
-            <Link to="/" className="rounded-full bg-white px-5 py-3 text-sm text-black hover:bg-zinc-100">Retour landing</Link>
-            <Link to="/point-zero" className="rounded-full border border-white/14 bg-white/[0.06] px-5 py-3 text-sm text-white hover:bg-white/[0.1]">Aller au cockpit</Link>
+    <div className="min-h-screen bg-[#efefeb] overflow-hidden text-[var(--color-text-primary)]">
+      <div className="min-h-screen p-2 md:p-6">
+        <div className="mx-auto min-h-[calc(100vh-16px)] md:min-h-[calc(100vh-48px)] max-w-[1600px] rounded-[24px] bg-white shadow-[0_24px_70px_rgba(0,0,0,0.05)] px-6 md:px-10 lg:px-16 py-10 flex flex-col items-center justify-center text-center">
+          <div className="flex items-center gap-3">
+            <Link to="/" className="font-display text-[2rem] leading-none text-zinc-950">AIME</Link>
+            <span className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">Wedding</span>
+          </div>
+
+          <div className="mt-16 font-display text-[6rem] md:text-[9rem] leading-none text-zinc-950">404</div>
+          <h1 className="mt-6 font-display text-[2.3rem] md:text-[3.4rem] leading-[1] text-zinc-950">Cette page s'est perdue en chemin vers l'autel.</h1>
+          <p className="mt-5 max-w-2xl text-[16px] text-zinc-600 leading-relaxed">La page que vous cherchez n'existe pas ou a été déplacée.</p>
+
+          <Link to="/" className="mt-8 rounded-full bg-black px-6 py-4 text-[15px] text-white hover:bg-zinc-800 inline-flex items-center gap-2">
+            Retour à l'accueil
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+
+          <div className="mt-12 flex flex-col items-center gap-3 text-[#c3ab82]">
+            <Flower2 className="h-7 w-7" />
+            <span className="h-px w-14 bg-[#e7d9c1]" />
           </div>
         </div>
       </div>
