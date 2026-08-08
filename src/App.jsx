@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "sonner";
 import WeddingBottomDock from "@/components/aime/WeddingBottomDock";
@@ -42,6 +42,24 @@ function AppShell() {
     && location.pathname !== "/setup"
     && location.pathname !== "/design-system";
   const fullBleedTop = location.pathname === "/setup";
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const hashId = location.hash?.replace(/^#/, "");
+    const run = () => {
+      if (hashId) {
+        const target = document.getElementById(hashId);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+      }
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    };
+
+    window.requestAnimationFrame(run);
+  }, [location.pathname, location.hash]);
 
   return (
     <>

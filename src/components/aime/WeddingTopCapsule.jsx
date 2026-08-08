@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { UNIVERSES, UNIVERSE_GRADIENTS } from "@/lib/aimeUniverses";
@@ -89,14 +89,19 @@ function UniverseRow({ item, mode, onSelect }) {
   return (
     <div className="rounded-[18px] bg-[var(--color-warm-white)] px-3 py-3">
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
-        <Link
-          to={item.to}
-          onClick={onSelect}
-          className="inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold italic text-white shadow-[0_12px_24px_rgba(0,0,0,0.14)] md:min-w-[126px]"
-          style={{ background: item.gradient }}
-        >
-          {item.label}
-        </Link>
+        <div className="flex items-center gap-2.5 md:min-w-[170px]">
+          <Link
+            to={item.to}
+            onClick={onSelect}
+            className="inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold italic text-white shadow-[0_12px_24px_rgba(0,0,0,0.14)] md:min-w-[126px]"
+            style={{ background: item.gradient }}
+          >
+            {item.label}
+          </Link>
+          <span className="hidden md:inline text-[11px] uppercase tracking-[0.16em] text-zinc-500">
+            {item.subtitle}
+          </span>
+        </div>
         <div className="flex flex-wrap gap-2">
           {subItems.map((entry) => (
             <Link
@@ -133,6 +138,7 @@ function UniverseCluster({ cluster, mode, onSelect }) {
 
 export default function WeddingTopCapsule() {
   const location = useLocation();
+  const shellRef = useRef(null);
   const [openUniverse, setOpenUniverse] = useState(false);
   const [openAccess, setOpenAccess] = useState(false);
   const [openAime, setOpenAime] = useState(false);
@@ -146,12 +152,44 @@ export default function WeddingTopCapsule() {
     window.localStorage.setItem("aime_universe_menu_mode", menuMode);
   }, [menuMode]);
 
+  useEffect(() => {
+    const inferred = inferMode(location.pathname);
+    setMenuMode(inferred);
+    setOpenUniverse(false);
+    setOpenAccess(false);
+    setOpenAime(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (!shellRef.current?.contains(event.target)) {
+        setOpenUniverse(false);
+        setOpenAccess(false);
+        setOpenAime(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setOpenUniverse(false);
+        setOpenAccess(false);
+        setOpenAime(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const currentUniverseId = getCurrentUniverse(location.pathname);
   const currentUniverse = useMemo(
     () => UNIVERSE_ITEMS.find((item) => item.id === currentUniverseId) || null,
     [currentUniverseId],
   );
-  const accessLabel = location.pathname === "/" ? "Créer mon mariage" : "Accès";
 
   const centerGradient = currentUniverse
     ? currentUniverse.gradient
@@ -161,7 +199,7 @@ export default function WeddingTopCapsule() {
 
   return (
     <div className="fixed top-3 left-1/2 z-[60] -translate-x-1/2 w-[min(1440px,calc(100%-20px))] print:hidden">
-      <div className="rounded-full border border-black/8 bg-[rgba(248,248,246,0.94)] shadow-[0_16px_40px_rgba(0,0,0,0.10)] px-2.5 md:px-3 py-1.5">
+      <div ref={shellRef} className="rounded-full border border-black/8 bg-[rgba(248,248,246,0.94)] shadow-[0_16px_40px_rgba(0,0,0,0.10)] backdrop-blur-xl px-2.5 md:px-3 py-1.5">
         <div className="flex items-center justify-between gap-3 min-w-0">
           <div className="flex items-center gap-2 md:gap-3 min-w-0">
             <div className="relative shrink-0">
@@ -259,7 +297,7 @@ export default function WeddingTopCapsule() {
               }}
               className="rounded-full bg-black px-4 md:px-5 py-2.5 text-sm text-white hover:bg-zinc-800 transition-colors inline-flex items-center gap-2"
             >
-              {accessLabel}
+              Accès
               <ChevronDown className={`w-4 h-4 transition-transform ${openAccess ? "rotate-180" : ""}`} />
             </button>
 

@@ -29,8 +29,8 @@ export default function WeddingBottomDock() {
   const location = useLocation();
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 px-4 print:hidden">
-      <div className="rounded-full border border-black/8 bg-white shadow-[0_18px_42px_rgba(0,0,0,0.12)] px-2 py-1">
+    <div className="fixed left-1/2 z-50 -translate-x-1/2 px-4 print:hidden bottom-[calc(12px+env(safe-area-inset-bottom))]">
+      <div className="rounded-full border border-black/8 bg-white/98 shadow-[0_18px_42px_rgba(0,0,0,0.12)] backdrop-blur-xl px-2 py-1">
         <div className="flex items-end gap-0.5 sm:gap-1">
           {ITEMS.map((item) => {
             const Icon = item.icon;
