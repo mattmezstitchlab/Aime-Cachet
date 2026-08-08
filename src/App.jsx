@@ -67,6 +67,10 @@ function AppShell() {
     || location.pathname === "/univers/zeus/budget"
     || location.pathname === "/univers/hestia/plan-de-table"
     || location.pathname === "/univers/hestia/rsvp"
+    || location.pathname === "/univers/athena/checklist"
+    || location.pathname === "/univers/hermes/messagerie"
+    || location.pathname === "/univers/apollon/galerie"
+    || location.pathname === "/univers/demeter/menu"
     || location.pathname.startsWith("/invitation/");
   const showDock = weddingReady
     && location.pathname !== "/"
