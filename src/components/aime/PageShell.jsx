@@ -8,13 +8,13 @@ import GlobalToolbar from "@/components/aime/GlobalToolbar";
  * (recherche, notifications, profil, aide, paramètres).
  * Inclut SideRail à gauche, header sobre, container, footer.
  */
-export default function PageShell({ title, subtitle, children, eyebrow }) {
+export default function PageShell({ title, subtitle, children, eyebrow, maxWidthClass = "max-w-[1100px]" }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SideRail />
       <GlobalToolbar back="/prestations" />
       <div className="lg:pl-16">
-        <main className="max-w-[1100px] mx-auto px-4 sm:px-5 md:px-10 pt-20 md:pt-24 pb-24 md:pb-12 overflow-x-hidden">
+        <main className={`${maxWidthClass} mx-auto px-4 sm:px-5 md:px-10 pt-20 md:pt-24 pb-24 md:pb-12 overflow-x-hidden`}>
           {eyebrow && (
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-aime-red/10 text-aime-red text-[10px] tracking-[0.2em] font-semibold uppercase mb-3">
               {eyebrow}
