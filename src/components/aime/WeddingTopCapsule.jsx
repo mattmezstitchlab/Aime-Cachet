@@ -112,6 +112,7 @@ export default function WeddingTopCapsule() {
   const centerGradient = currentUniverse
     ? currentUniverse.gradient
     : "linear-gradient(135deg, #8459ff 0%, #4fd0ff 24%, #47e3b8 42%, #f4b6c8 68%, #ff9b52 100%)";
+  const universeLabel = currentUniverse ? currentUniverse.label : "Découvrir";
 
   return (
     <div className="fixed top-3 left-1/2 z-[60] -translate-x-1/2 w-[min(1440px,calc(100%-20px))] print:hidden">
@@ -168,11 +169,11 @@ export default function WeddingTopCapsule() {
                   setOpenAccess(false);
                   setOpenAime(false);
                 }}
-                className="max-w-[210px] md:max-w-none rounded-full px-4 md:px-5 py-2.5 text-sm md:text-[15px] font-semibold italic text-white inline-flex items-center gap-2 shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+                className={`max-w-[210px] md:max-w-none rounded-full px-4 md:px-5 py-2.5 text-sm md:text-[15px] font-semibold italic inline-flex items-center gap-2 shadow-[0_14px_30px_rgba(0,0,0,0.18)] ${currentUniverse ? "text-white" : "text-black"}`}
                 style={{ background: centerGradient }}
               >
-                <span className="truncate">{currentUniverse ? currentUniverse.label : "Accueil"}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${openUniverse ? "rotate-180" : ""}`} />
+                <span className="truncate">{universeLabel}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${currentUniverse ? "text-white" : "text-black"} ${openUniverse ? "rotate-180" : ""}`} />
               </button>
 
               {openUniverse && (
