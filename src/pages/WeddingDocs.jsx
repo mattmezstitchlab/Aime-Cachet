@@ -6,7 +6,7 @@ import {
   Share2,
 } from "lucide-react";
 import { toast } from "sonner";
-import WeddingPageHero from "@/components/aime/WeddingPageHero";
+import WeddingModuleHeader from "@/components/aime/WeddingModuleHeader";
 import {
   filterDocumentsByRole,
   getNotificationsForRole,
@@ -96,15 +96,20 @@ export default function WeddingDocs() {
       <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-6 md:py-8">
 
         <div className="mb-8 md:mb-10">
-          <WeddingPageHero
-            eyebrow="Documents · version claire · partage"
+          <WeddingModuleHeader
+            universeId="hephaistos"
+            eyebrow={`Héphaïstos · ${ROLE_VIEWS[roleView].label}`}
             title="Les documents du mariage, enfin lisibles."
-            description="Une version, un owner, un statut, une checklist."
-            image="/landing/hephaistos.jpg"
+            description="Une version, un owner, un statut, une checklist : juste ce qu’il faut pour partager, verrouiller et exécuter proprement."
             stats={[
-              { label: "Docs", value: visibleDocuments.length, hint: "visibles" },
-              { label: "À traiter", value: visibleDocuments.filter((doc) => !["prêt", "partagé", "complet"].includes(doc.status)).length, hint: "ouverts" },
-              { label: "Checklist", value: selectedDoc ? `${checklistDone}/${selectedDoc.checklist.length}` : "0/0", hint: "avancement" },
+              { label: "Docs", value: visibleDocuments.length, detail: "visibles dans cette vue" },
+              { label: "À traiter", value: visibleDocuments.filter((doc) => !["prêt", "partagé", "complet"].includes(doc.status)).length, detail: "encore ouverts" },
+              { label: "Checklist", value: selectedDoc ? `${checklistDone}/${selectedDoc.checklist.length}` : "0/0", detail: "avancement" },
+            ]}
+            actions={[
+              { to: "/exports?view=planner", label: "Exports" },
+              { to: `/communication?role=${roleView}`, label: "Diffusion" },
+              { to: `/jour-j?role=${roleView}`, label: "Jour J" },
             ]}
           />
         </div>

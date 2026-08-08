@@ -6,7 +6,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { toast } from "sonner";
-import WeddingPageHero from "@/components/aime/WeddingPageHero";
+import WeddingModuleHeader from "@/components/aime/WeddingModuleHeader";
 import {
   applyBudgetDecisionInState,
   getBudgetSummary,
@@ -133,16 +133,21 @@ export default function WeddingBudget() {
     <div className="min-h-screen bg-[var(--color-warm-white)] text-[var(--color-text-primary)] overflow-x-hidden">
       <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-6 md:py-8">
         <div className="mb-8 md:mb-10">
-          <WeddingPageHero
-            eyebrow="Budget · validations · règlements"
+          <WeddingModuleHeader
+            universeId="demeter"
+            eyebrow="Déméter · budget · réception"
             title="Le budget du mariage, vraiment pilotable."
-            description="Postes, validations prestataires, contrats, factures et arbitrages : tout reste lisible sur un seul écran."
-            image="/landing/demeter.jpg"
+            description="Postes, validations prestataires, contrats, factures et arbitrages : tout reste lisible sur un seul écran, relié aux vraies contraintes de réception."
             stats={[
-              { label: "Enveloppe", value: fmtMoney(summary.envelope), hint: "globale" },
-              { label: "Engagé", value: fmtMoney(summary.current), hint: "réel" },
-              { label: "Validations", value: commitmentSummary.quotesPending + commitmentSummary.contractsPending, hint: "ouvertes" },
-              { label: "Factures dues", value: fmtMoney(commitmentSummary.dueAmount), hint: "immédiates" },
+              { label: "Enveloppe", value: fmtMoney(summary.envelope), detail: "globale" },
+              { label: "Engagé", value: fmtMoney(summary.current), detail: "réel" },
+              { label: "Validations", value: commitmentSummary.quotesPending + commitmentSummary.contractsPending, detail: "ouvertes" },
+              { label: "Factures dues", value: fmtMoney(commitmentSummary.dueAmount), detail: "immédiates" },
+            ]}
+            actions={[
+              { to: "/prestataires?category=catering", label: "Voir le traiteur" },
+              { to: "/invites?role=planner", label: "Tables & invités" },
+              { to: "/documents?role=planner", label: "Documents liés" },
             ]}
           />
         </div>

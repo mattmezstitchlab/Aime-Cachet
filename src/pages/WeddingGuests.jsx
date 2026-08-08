@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import {
   LayoutGrid,
@@ -9,7 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
-import WeddingPageHero from "@/components/aime/WeddingPageHero";
+import WeddingModuleHeader from "@/components/aime/WeddingModuleHeader";
 import {
   applyGuestSeatingInState,
   getGuestSummary,
@@ -203,25 +203,22 @@ export default function WeddingGuests() {
     <div className="min-h-screen bg-[var(--color-warm-white)] text-[var(--color-text-primary)] overflow-x-hidden">
       <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-6 md:py-8">
         <div className="mb-8 md:mb-10">
-          <WeddingPageHero
-            eyebrow="Invités · RSVP · tables"
+          <WeddingModuleHeader
+            universeId="hestia"
+            eyebrow={`Hestia · ${roleView === "vendors" ? "Prestataires" : roleView === "couple" ? "Mariés" : "Planner"}`}
             title="Les invités du mariage, enfin pilotables."
-            description="Liste, réponses, repas, tables et contraintes réunis au même endroit."
-            image="/landing/hestia.jpg"
+            description="Liste, réponses, repas, foyers, tables et contraintes réunis au même endroit, sans version parallèle ni friction."
             stats={[
-              { label: "Invités", value: summary.total, hint: "totaux" },
-              { label: "Confirmés", value: summary.confirmed, hint: "présents" },
-              { label: "Invitations", value: invitationSummary.sent + invitationSummary.opened, hint: "envoyées" },
-              { label: "Tables", value: summary.tables, hint: "actives" },
+              { label: "Invités", value: summary.total, detail: "totaux" },
+              { label: "Confirmés", value: summary.confirmed, detail: "présents" },
+              { label: "Invitations", value: invitationSummary.sent + invitationSummary.opened, detail: "envoyées" },
+              { label: "Tables", value: summary.tables, detail: "actives" },
             ]}
-            actions={(
-              <>
-                <Link to="/espace-invites" className="aime-button-primary rounded-full px-5 py-3 text-sm font-medium inline-flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  Espace invités
-                </Link>
-              </>
-            )}
+            actions={[
+              { to: "/espace-invites", label: "Espace invités", icon: Mail },
+              { to: "/documents?role=planner", label: "Documents liés" },
+              { to: "/budget", label: "Repas & budget" },
+            ]}
           />
         </div>
 

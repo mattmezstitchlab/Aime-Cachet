@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import ContactAvatarMenu from "@/components/aime/ContactAvatarMenu";
-import WeddingPageHero from "@/components/aime/WeddingPageHero";
+import WeddingModuleHeader from "@/components/aime/WeddingModuleHeader";
 import {
   appendTimelineLogInState,
   filterTimelineByRole,
@@ -127,16 +127,21 @@ export default function WeddingTimeline() {
       <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-6 md:py-8">
 
         <div className="mb-8 md:mb-10">
-          <WeddingPageHero
-            eyebrow="Jour J · live · terrain"
+          <WeddingModuleHeader
+            universeId="ares"
+            eyebrow={`Arès · ${ROLE_VIEWS[roleView].label}`}
             title="La timeline live du mariage."
-            description="Qui agit, quel statut, quels documents, quelles notes terrain."
-            image="/landing/ares.jpg"
+            description="Qui agit, quel statut, quels documents, quelles notes terrain : tout le fil d’exécution sans bruit latéral."
             stats={[
-              { label: "Étapes", value: visibleSteps.length, hint: "visibles" },
-              { label: "Terminées", value: doneCount, hint: "validées" },
-              { label: "Alertes", value: watchCount, hint: "terrain" },
-              { label: "Sélection", value: selectedStep?.time || "—", hint: selectedStep?.title || "aucune" },
+              { label: "Étapes", value: visibleSteps.length, detail: "visibles" },
+              { label: "Terminées", value: doneCount, detail: "validées" },
+              { label: "Alertes", value: watchCount, detail: "terrain" },
+              { label: "Sélection", value: selectedStep?.time || "—", detail: selectedStep?.title || "aucune" },
+            ]}
+            actions={[
+              { to: `/documents?role=${roleView}`, label: "Docs liés" },
+              { to: `/notifications?role=${roleView}`, label: "Alertes" },
+              { to: `/communication?role=${roleView}`, label: "Diffusion" },
             ]}
           />
         </div>

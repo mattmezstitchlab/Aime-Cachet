@@ -7,7 +7,7 @@ import {
   FileWarning,
   Zap,
 } from "lucide-react";
-import WeddingPageHero from "@/components/aime/WeddingPageHero";
+import WeddingModuleHeader from "@/components/aime/WeddingModuleHeader";
 import { getNotificationsForRole, readWeddingState, ROLE_VIEWS } from "@/lib/aimeWeddingCore";
 
 function Card({ title, eyebrow, children, action = null }) {
@@ -75,15 +75,20 @@ export default function WeddingNotifications() {
       <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-6 md:py-8">
 
         <div className="mb-8 md:mb-10">
-          <WeddingPageHero
-            eyebrow="Notifications · alertes · priorités"
+          <WeddingModuleHeader
+            universeId="athena"
+            eyebrow={`Athéna · ${ROLE_VIEWS[roleView].label}`}
             title="Les alertes utiles, sans bruit."
-            description="Seulement ce qu'il faut voir maintenant."
-            image="/landing/athena.jpg"
+            description="Une seule lecture : ce qui mérite une décision, ce qui doit être surveillé, et vers quelle maison aller ensuite."
             stats={[
-              { label: "Total", value: notifications.length, hint: "alertes" },
-              { label: "Critiques", value: critical.length, hint: "immédiates" },
-              { label: "Surveillance", value: warning.length, hint: "à suivre" },
+              { label: "Total", value: notifications.length, detail: "alertes visibles" },
+              { label: "Critiques", value: critical.length, detail: "à arbitrer d’abord" },
+              { label: "Surveillance", value: warning.length, detail: "à absorber vite" },
+            ]}
+            actions={[
+              { to: `/point-zero${roleView !== "planner" ? `?role=${roleView}` : ""}`, label: "Cockpit" },
+              { to: `/documents?role=${roleView}`, label: "Documents liés" },
+              { to: `/jour-j?role=${roleView}`, label: "Jour J" },
             ]}
           />
         </div>

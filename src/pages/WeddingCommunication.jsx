@@ -5,7 +5,7 @@ import {
   Send,
 } from "lucide-react";
 import { toast } from "sonner";
-import WeddingPageHero from "@/components/aime/WeddingPageHero";
+import WeddingModuleHeader from "@/components/aime/WeddingModuleHeader";
 import {
   getCommunicationTemplates,
   getCommunicationsForRole,
@@ -99,15 +99,20 @@ export default function WeddingCommunication() {
       <div className="max-w-[1480px] mx-auto px-5 md:px-8 lg:px-10 py-6 md:py-8">
 
         <div className="mb-8 md:mb-10">
-          <WeddingPageHero
-            eyebrow="Communication · diffusion · historique"
+          <WeddingModuleHeader
+            universeId="hermes"
+            eyebrow={`Hermès · ${ROLE_VIEWS[roleView].label}`}
             title="Diffuser la bonne consigne, tout de suite."
-            description="Un message clair, à la bonne audience, avec un historique simple."
-            image="/landing/hermes.jpg"
+            description="Le bon message, au bon public, avec la bonne pièce et sans créer une deuxième réalité hors du système."
             stats={[
-              { label: "Templates", value: templates.length, hint: "prêts" },
-              { label: "Historique", value: messages.length, hint: "visible" },
-              { label: "Alertes", value: notifications.length, hint: "liées" },
+              { label: "Templates", value: templates.length, detail: "prêts à l’emploi" },
+              { label: "Historique", value: messages.length, detail: "diffusions visibles" },
+              { label: "Alertes", value: notifications.length, detail: "liées à la diffusion" },
+            ]}
+            actions={[
+              { to: `/documents?role=${roleView}`, label: "Voir les docs" },
+              { to: "/prestataires", label: "Portail prestataires" },
+              { to: "/espace-invites", label: "Portail invités" },
             ]}
           />
         </div>
