@@ -35,6 +35,7 @@ import MessagingHubPage from "@/pages/MessagingHubPage";
 import GalleryPage from "@/pages/GalleryPage";
 import MenuBuilderPage from "@/pages/MenuBuilderPage";
 import GuestMiniSitePage from "@/pages/GuestMiniSitePage";
+import EternityPage from "@/pages/EternityPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import ModeEmploiPage from "@/pages/ModeEmploiPage";
 import HelpCenterPage from "@/pages/HelpCenterPage";
@@ -81,6 +82,7 @@ function AppShell() {
     || location.pathname === "/univers/athena/checklist"
     || location.pathname === "/univers/hermes/messagerie"
     || location.pathname === "/univers/apollon/galerie"
+    || location.pathname === "/univers/apollon/eternite"
     || location.pathname === "/univers/demeter/menu"
     || location.pathname.startsWith("/invitation/");
   const showDock = weddingReady
@@ -123,6 +125,7 @@ function AppShell() {
           <Route path="/univers/athena/checklist" element={<RequireWeddingSetup><ChecklistBoardPage /></RequireWeddingSetup>} />
           <Route path="/univers/hermes/messagerie" element={<RequireWeddingSetup><MessagingHubPage /></RequireWeddingSetup>} />
           <Route path="/univers/apollon/galerie" element={<GalleryPage />} />
+          <Route path="/univers/apollon/eternite" element={<EternityPage />} />
           <Route path="/univers/demeter/menu" element={<RequireWeddingSetup><MenuBuilderPage /></RequireWeddingSetup>} />
           <Route path="/univers/hephaistos/liste-mariage" element={<RequireWeddingSetup><MarriageRegistryPage /></RequireWeddingSetup>} />
           <Route path="/univers/hephaistos/site-web" element={<RequireWeddingSetup><WeddingSiteBuilderPage /></RequireWeddingSetup>} />

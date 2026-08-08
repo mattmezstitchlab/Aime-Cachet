@@ -16,21 +16,18 @@ function formatMoney(value) {
 
 function StatCard({ label, value, detail }) {
   return (
-    <div className="rounded-[20px] border border-black/8 bg-white p-6 shadow-[0_10px_28px_rgba(12,12,12,0.03)]">
+    <div className="rounded-[22px] border border-black/8 bg-white p-6 shadow-[0_10px_28px_rgba(12,12,12,0.03)]">
       <div className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">{label}</div>
-      <div className="mt-6 font-display text-[2.5rem] text-zinc-950">{value}</div>
+      <div className="mt-6 font-display text-[2.6rem] text-zinc-950">{value}</div>
       <div className="mt-3 text-sm text-zinc-500">{detail}</div>
     </div>
   );
 }
 
-function ToggleRow({ label, checked, onToggle, detail = null }) {
+function ToggleRow({ label, checked, onToggle }) {
   return (
     <div className="flex items-center justify-between gap-4 py-4 border-b border-black/8 last:border-b-0">
-      <div>
-        <div className="text-[15px] text-zinc-900">{label}</div>
-        {detail && <div className="mt-1 text-sm text-zinc-500">{detail}</div>}
-      </div>
+      <div className="text-[16px] text-zinc-900">{label}</div>
       <button onClick={onToggle} className={`relative h-8 w-14 rounded-full transition-colors ${checked ? "bg-black" : "bg-[#ddd8cf]"}`}>
         <span className={`absolute top-1 h-6 w-6 rounded-full bg-white transition-transform ${checked ? "translate-x-7" : "translate-x-1"}`} />
       </button>
@@ -69,7 +66,7 @@ export default function MarriageRegistryPage() {
 
           <div className="px-6 md:px-10 lg:px-16 pt-6 md:pt-8 pb-16">
             <div className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">Héphaïstos › <span className="text-zinc-900">Liste de mariage</span></div>
-            <h1 className="mt-5 font-display text-[3.2rem] md:text-[4.8rem] leading-[0.94] text-zinc-950">Liste de mariage</h1>
+            <h1 className="mt-5 font-display text-[3.3rem] md:text-[4.9rem] leading-[0.94] text-zinc-950">Liste de mariage</h1>
             <p className="mt-4 text-[18px] text-zinc-600">Vos envies, leur générosité</p>
 
             <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -79,17 +76,17 @@ export default function MarriageRegistryPage() {
               <StatCard label="Contributeurs" value="45" detail="Proches et membres de la famille" />
             </div>
 
-            <section className="mt-10 rounded-[28px] border border-black/8 bg-white p-8 shadow-[0_12px_30px_rgba(12,12,12,0.03)]">
+            <section className="mt-10 rounded-[30px] border border-black/8 bg-white p-8 shadow-[0_12px_30px_rgba(12,12,12,0.03)]">
               <div className="flex items-start justify-between gap-6 flex-wrap">
                 <div>
-                  <div className="font-display text-[2.4rem] text-zinc-950">Cagnotte voyage de noces — Bali <span className="align-middle rounded-full bg-[#d8be6c] px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-black">Projet voyage</span></div>
+                  <div className="font-display text-[2.6rem] text-zinc-950">Cagnotte voyage de noces — Bali <span className="align-middle rounded-full bg-[#d8be6c] px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-black">Projet voyage</span></div>
                   <p className="mt-3 text-[17px] text-zinc-600">Aidez-nous à réaliser notre rêve d'exploration sous les tropiques balinais.</p>
                 </div>
                 <button className="rounded-full bg-black px-6 py-4 text-sm text-white hover:bg-zinc-800 inline-flex items-center gap-2">Partager la cagnotte</button>
               </div>
 
               <div className="mt-10 flex items-end justify-between gap-4 flex-wrap">
-                <div className="font-display text-[2.6rem] text-zinc-950">{formatMoney(fundCurrent)} <span className="text-zinc-400">/ {formatMoney(fundTarget)}</span></div>
+                <div className="font-display text-[2.8rem] text-zinc-950">{formatMoney(fundCurrent)} <span className="text-zinc-400">/ {formatMoney(fundTarget)}</span></div>
                 <div className="text-[1.4rem] font-display text-zinc-950">{progress}% complété</div>
               </div>
               <div className="mt-4 h-2 rounded-full bg-black/8 overflow-hidden"><div className="h-full bg-[linear-gradient(90deg,#c29a2e_0%,#f7e9a4_45%,#b4821b_100%)]" style={{ width: `${progress}%` }} /></div>
@@ -104,8 +101,8 @@ export default function MarriageRegistryPage() {
 
             <section className="mt-14">
               <h2 className="font-display text-[2.4rem] text-zinc-950">Vos envies de mariage</h2>
-              <div className="mt-6 rounded-[28px] overflow-hidden border border-black/8 bg-white shadow-[0_12px_30px_rgba(12,12,12,0.03)]">
-                <div className="relative h-[260px] md:h-[340px] overflow-hidden">
+              <div className="mt-6 rounded-[30px] overflow-hidden border border-black/8 bg-white shadow-[0_12px_30px_rgba(12,12,12,0.03)]">
+                <div className="relative h-[260px] md:h-[360px] overflow-hidden">
                   <img src="/landing/hephaistos.jpg" alt="Liste de mariage" className="h-full w-full object-cover" />
                 </div>
                 <div className="grid gap-6 lg:grid-cols-[1fr_1fr] p-6 md:p-8 bg-white">

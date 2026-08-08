@@ -6,6 +6,7 @@ const NAV = [
   { label: "12 Univers", to: "/mode-emploi#univers" },
   { label: "FAQ", to: "/aide" },
   { label: "À Propos", to: "/a-propos" },
+  { label: "L’Éternité", to: "/univers/apollon/eternite" },
 ];
 
 export default function MarketingShell({ children, ctaLabel = "Planifier", ctaTo = "/onboarding" }) {
