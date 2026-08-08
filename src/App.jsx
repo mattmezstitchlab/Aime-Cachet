@@ -15,6 +15,9 @@ import VendorProfile from "@/pages/VendorProfile";
 import VendorsPortal from "@/pages/VendorsPortal";
 import VendorsRegistry from "@/pages/VendorsRegistry";
 import WeddingExports from "@/pages/WeddingExports";
+import MarriageRegistryPage from "@/pages/MarriageRegistryPage";
+import WeddingSiteBuilderPage from "@/pages/WeddingSiteBuilderPage";
+import DayJLivePage from "@/pages/DayJLivePage";
 import WeddingBudget from "@/pages/WeddingBudget";
 import WeddingCommunication from "@/pages/WeddingCommunication";
 import WeddingSetup from "@/pages/WeddingSetup";
@@ -33,6 +36,10 @@ import GalleryPage from "@/pages/GalleryPage";
 import MenuBuilderPage from "@/pages/MenuBuilderPage";
 import GuestMiniSitePage from "@/pages/GuestMiniSitePage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import ModeEmploiPage from "@/pages/ModeEmploiPage";
+import HelpCenterPage from "@/pages/HelpCenterPage";
+import AboutAimePage from "@/pages/AboutAimePage";
+import DoctrinePage from "@/pages/DoctrinePage";
 import GlobalSearchOverlay from "@/components/aime/GlobalSearchOverlay";
 import { isWeddingSetupComplete, readWeddingState } from "@/lib/aimeWeddingCore";
 
@@ -117,9 +124,16 @@ function AppShell() {
           <Route path="/univers/hermes/messagerie" element={<RequireWeddingSetup><MessagingHubPage /></RequireWeddingSetup>} />
           <Route path="/univers/apollon/galerie" element={<GalleryPage />} />
           <Route path="/univers/demeter/menu" element={<RequireWeddingSetup><MenuBuilderPage /></RequireWeddingSetup>} />
+          <Route path="/univers/hephaistos/liste-mariage" element={<RequireWeddingSetup><MarriageRegistryPage /></RequireWeddingSetup>} />
+          <Route path="/univers/hephaistos/site-web" element={<RequireWeddingSetup><WeddingSiteBuilderPage /></RequireWeddingSetup>} />
+          <Route path="/jour-j-live" element={<RequireWeddingSetup><DayJLivePage /></RequireWeddingSetup>} />
           <Route path="/invitation/:inviteCode" element={<GuestMiniSitePage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/mode-emploi" element={<ModeEmploiPage />} />
+          <Route path="/aide" element={<HelpCenterPage />} />
+          <Route path="/a-propos" element={<AboutAimePage />} />
+          <Route path="/doctrine" element={<DoctrinePage />} />
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="/compte/:modeId" element={<AccountModePage />} />
           <Route path="/espace-maries" element={<RequireWeddingSetup><AccountSpacePage modeId="maries" /></RequireWeddingSetup>} />
