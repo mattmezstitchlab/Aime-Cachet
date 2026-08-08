@@ -6,7 +6,7 @@ import Timeline from "@/components/aime/Timeline";
 import SideRail from "@/components/aime/SideRail";
 import TimelineDiscoverChevron from "@/components/aime/TimelineDiscoverChevron";
 import OnboardingEmptyState from "@/components/aime/OnboardingEmptyState";
-import AimeFooter from "@/components/aime/AimeFooter";
+import TimelineWorkspacePanel from "@/components/aime/TimelineWorkspacePanel";
 import { computeSimulator } from "@/lib/aimeData";
 import { logEvent } from "@/lib/historyLog";
 import { generateCachetCode } from "@/lib/cachetCode";
@@ -19,6 +19,8 @@ export default function AimeCachet() {
   const [events, setEvents] = useState([]);
   const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPrestation, setSelectedPrestation] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const fetchAll = useCallback(async () => {
     const [pres, evts, wlts] = await Promise.all([
@@ -67,10 +69,25 @@ export default function AimeCachet() {
     }
   }, [location.search, handlePreparerCachet]);
 
+  useEffect(() => {
+    if (selectedPrestation || prestations.length === 0) return;
+    setSelectedPrestation(prestations[0]);
+  }, [prestations, selectedPrestation]);
+
   const simulator = useMemo(() => computeSimulator(prestations), [prestations]);
 
+  const handleSelectPrestation = useCallback((prestation) => {
+    setSelectedPrestation(prestation);
+    setSelectedEvent(null);
+  }, []);
+
+  const handleSelectEvent = useCallback((event) => {
+    setSelectedEvent(event);
+    setSelectedPrestation(null);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-zinc-900">
+    <div className="min-h-screen bg-[#F5F5F2] text-zinc-900">
       <SideRail onCreate={handlePreparerCachet} />
 
       <div className="lg:pl-16">
@@ -81,16 +98,28 @@ export default function AimeCachet() {
             <OnboardingEmptyState onCreate={handlePreparerCachet} />
           </section>
         ) : (
-          <Timeline
-            prestations={prestations}
-            events={events}
-            wallets={wallets}
-            onAdd={handlePreparerCachet}
-            onRefresh={fetchAll}
-          />
-        )}
+          <main className="h-[calc(100dvh-4rem)] min-h-[780px] px-3 pb-3 md:px-4 md:pb-4">
+            <div className="grid h-full min-h-0 gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(420px,0.98fr)]">
+              <Timeline
+                prestations={prestations}
+                events={events}
+                wallets={wallets}
+                onAdd={handlePreparerCachet}
+                onRefresh={fetchAll}
+                selectedPrestationId={selectedPrestation?.id || null}
+                selectedEventId={selectedEvent?.id || null}
+                onSelectPrestation={handleSelectPrestation}
+                onSelectEvent={handleSelectEvent}
+              />
 
-        <AimeFooter />
+              <TimelineWorkspacePanel
+                prestation={selectedPrestation}
+                event={selectedEvent}
+                onCreate={handlePreparerCachet}
+              />
+            </div>
+          </main>
+        )}
       </div>
 
       {prestations.length > 0 && <TimelineDiscoverChevron targetId="prestations" />}

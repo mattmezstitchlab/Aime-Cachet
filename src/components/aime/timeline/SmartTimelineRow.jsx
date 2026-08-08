@@ -10,7 +10,7 @@ import { logEvent } from "@/lib/historyLog";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 
-export default function SmartTimelineRow({ prestation, onChanged, hideDate = false }) {
+export default function SmartTimelineRow({ prestation, onChanged, hideDate = false, selected = false, onSelect }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const day = formatDayLabel(prestation.date);
@@ -104,10 +104,10 @@ export default function SmartTimelineRow({ prestation, onChanged, hideDate = fal
       </div>
 
       {/* Carte */}
-      <div className={`bg-white rounded-2xl ring-1 transition-all ${open ? "ring-zinc-300 shadow-sm" : "ring-zinc-100 hover:ring-zinc-200"}`}>
+      <div className={`bg-white rounded-2xl ring-1 transition-all ${selected ? "ring-zinc-400 shadow-sm" : open ? "ring-zinc-300 shadow-sm" : "ring-zinc-100 hover:ring-zinc-200"}`}>
         <button
-          onClick={() => setOpen((o) => !o)}
-          className="w-full text-left px-4 py-3.5"
+          onClick={() => { onSelect?.(prestation); setOpen((o) => !o); }}
+          className={`w-full text-left px-4 py-3.5 rounded-2xl transition-colors ${selected ? "bg-zinc-50" : ""}`}
           aria-expanded={open}
         >
           <div className="flex items-start justify-between gap-3">

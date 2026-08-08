@@ -7,7 +7,7 @@ import TimelineQRButton from "@/components/aime/timeline/TimelineQRButton";
  * Regroupe les fiches d'une même date sous un seul en-tête.
  * La date n'apparaît qu'une fois à gauche, les fiches s'empilent.
  */
-export default function TimelineDateGroup({ date, prestations, onChanged }) {
+export default function TimelineDateGroup({ date, prestations, onChanged, selectedPrestationId = null, onSelectPrestation }) {
   const day = formatDayLabel(date);
   const count = prestations.length;
 
@@ -33,6 +33,8 @@ export default function TimelineDateGroup({ date, prestations, onChanged }) {
             prestation={p}
             onChanged={onChanged}
             hideDate
+            selected={selectedPrestationId === p.id}
+            onSelect={onSelectPrestation}
           />
         ))}
       </ul>
