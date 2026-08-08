@@ -141,6 +141,7 @@ export default function AccountModePage() {
         { title: "Setup", text: "Le point d’entrée création pour cadrer proprement le mariage.", to: "/setup" },
       ],
       submitLabel: "Créer mon compte mariés",
+      spaceRoute: "/espace-maries",
     },
     invites: {
       universeId: "hestia",
@@ -205,6 +206,7 @@ export default function AccountModePage() {
         { title: "Homepage Prestataires", text: "Le portail mission une fois la collaboration active sur un mariage.", to: "/prestataires" },
       ],
       submitLabel: "Envoyer ma candidature",
+      spaceRoute: "/espace-prestataires",
     },
     planner: {
       universeId: "athena",
@@ -237,6 +239,7 @@ export default function AccountModePage() {
         { title: "Maison Athéna", text: "L’univers de l’anticipation, des alertes et de la vigilance utile.", to: "/univers/athena" },
       ],
       submitLabel: "Accéder au cockpit planner",
+      spaceRoute: "/espace-planner",
     },
   };
 

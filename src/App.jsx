@@ -22,6 +22,18 @@ import DesignSystem from "@/pages/DesignSystem";
 import UniversePage from "@/pages/UniversePage";
 import AccountModePage from "@/pages/AccountModePage";
 import AccountSpacePage from "@/pages/AccountSpacePage";
+import OnboardingPage from "@/pages/OnboardingPage";
+import LoginPage from "@/pages/LoginPage";
+import BudgetDetailPage from "@/pages/BudgetDetailPage";
+import SeatingPlanPage from "@/pages/SeatingPlanPage";
+import GuestRsvpFormPage from "@/pages/GuestRsvpFormPage";
+import ChecklistBoardPage from "@/pages/ChecklistBoardPage";
+import MessagingHubPage from "@/pages/MessagingHubPage";
+import GalleryPage from "@/pages/GalleryPage";
+import MenuBuilderPage from "@/pages/MenuBuilderPage";
+import GuestMiniSitePage from "@/pages/GuestMiniSitePage";
+import NotFoundPage from "@/pages/NotFoundPage";
+import GlobalSearchOverlay from "@/components/aime/GlobalSearchOverlay";
 import { isWeddingSetupComplete, readWeddingState } from "@/lib/aimeWeddingCore";
 
 function RequireWeddingSetup({ children }) {
@@ -75,12 +87,23 @@ function AppShell() {
 
   return (
     <>
-      <WeddingTopCapsule />
-      <div className={`${showDock ? "pb-28 md:pb-32" : ""} ${fullBleedTop ? "pt-0" : "pt-20 md:pt-24"}`}>
+      {!isStandaloneAccountSpace && <WeddingTopCapsule />}
+      {!isStandaloneAccountSpace && <GlobalSearchOverlay />}
+      <div className={`${showDock ? "pb-28 md:pb-32" : ""} ${fullBleedTop ? "pt-0" : isStandaloneAccountSpace ? "pt-0" : "pt-20 md:pt-24"}`}>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/design-system" element={<DesignSystem />} />
           <Route path="/univers/:universeId" element={<UniversePage />} />
+          <Route path="/univers/zeus/budget" element={<BudgetDetailPage />} />
+          <Route path="/univers/hestia/plan-de-table" element={<RequireWeddingSetup><SeatingPlanPage /></RequireWeddingSetup>} />
+          <Route path="/univers/hestia/rsvp" element={<GuestRsvpFormPage />} />
+          <Route path="/univers/athena/checklist" element={<RequireWeddingSetup><ChecklistBoardPage /></RequireWeddingSetup>} />
+          <Route path="/univers/hermes/messagerie" element={<RequireWeddingSetup><MessagingHubPage /></RequireWeddingSetup>} />
+          <Route path="/univers/apollon/galerie" element={<GalleryPage />} />
+          <Route path="/univers/demeter/menu" element={<RequireWeddingSetup><MenuBuilderPage /></RequireWeddingSetup>} />
+          <Route path="/invitation/:inviteCode" element={<GuestMiniSitePage />} />
+          <Route path="/onboarding" element={<OnboardingPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/compte/:modeId" element={<AccountModePage />} />
           <Route path="/espace-maries" element={<RequireWeddingSetup><AccountSpacePage modeId="maries" /></RequireWeddingSetup>} />
           <Route path="/espace-invites/compte" element={<AccountSpacePage modeId="invites" />} />

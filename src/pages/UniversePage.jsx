@@ -798,7 +798,7 @@ function buildUniversePageData(state, universe) {
           "Les allergies, végétariens et repas enfants sont des données d’expérience, pas seulement des lignes de coût.",
           "Le dîner doit préserver le rythme global du mariage autant que la qualité de service.",
         ],
-        cta: { to: "/budget", label: "Ouvrir le budget vivant" },
+        cta: { to: "/univers/demeter/menu", label: "Ouvrir le builder menu" },
       },
       focusItemsTitle: "Ce que Déméter tient maintenant",
       focusItems: [
