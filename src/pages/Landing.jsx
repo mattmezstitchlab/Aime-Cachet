@@ -8,7 +8,6 @@ import SideRail from "@/components/aime/SideRail";
 
 const HERO_BG = "https://media.base44.com/images/public/6a0dd8978ba6b186fc2a32c5/14b7e1600_image.png";
 const FEATURES_BG = "https://media.base44.com/images/public/6a0dd8978ba6b186fc2a32c5/cb0ccb64a_pexels-cottonbro-7170696.jpg";
-import FeedbackButton from "@/components/aime/FeedbackButton";
 import {
   SHOTS_ASSISTANT,
   SHOTS_TIMELINE,
@@ -93,10 +92,10 @@ export default function Landing() {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              to="/507"
+              to="/espace#pilotage507"
               className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/30 text-white font-medium px-5 py-3 rounded-full transition-colors"
             >
-              Voir le cockpit 507
+              Voir le pilotage 507
             </Link>
           </div>
         </div>
@@ -118,10 +117,10 @@ export default function Landing() {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              to="/507"
+              to="/espace#pilotage507"
               className="inline-flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 font-medium px-5 py-3 rounded-full transition-colors"
             >
-              Voir les fonctions
+              Voir le pilotage 507
             </Link>
           </>
         }
@@ -248,11 +247,11 @@ export default function Landing() {
               cta="Voir les fiches"
             />
             <ShortcutCard
-              to="/507"
+              to="/espace#pilotage507"
               icon={Gauge}
-              title="Cockpit 507"
-              text="Vue synthétique des heures, du reste à faire et des projections."
-              cta="Voir le cockpit"
+              title="Pilotage 507"
+              text="Vue synthétique des heures, du reste à faire et des projections dans Mon espace."
+              cta="Voir le pilotage"
             />
             <ShortcutCard
               to="/screens"
@@ -296,8 +295,6 @@ export default function Landing() {
         </div>
       </footer>
       </div>
-
-      <FeedbackButton />
     </div>
   );
 }

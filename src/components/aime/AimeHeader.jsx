@@ -49,9 +49,9 @@ export default function AimeHeader({ onPrepare, minimal = false, simulator = nul
             <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-aime-red" />
           </button>
           <button
-            onClick={() => navigate("/profil")}
-            aria-label="Mon profil"
-            title="Mon profil"
+            onClick={() => navigate("/espace")}
+            aria-label="Mon espace"
+            title="Mon espace"
             className="ml-1 w-9 h-9 rounded-full bg-zinc-900 text-white text-[12px] font-semibold flex items-center justify-center hover:ring-2 hover:ring-zinc-200 transition-all"
           >
             {initial}
@@ -83,8 +83,8 @@ export default function AimeHeader({ onPrepare, minimal = false, simulator = nul
             <Link to="/notifications" onClick={() => setMobileOpen(false)} className="inline-flex items-center justify-center gap-2 bg-zinc-50 text-zinc-900 text-sm font-medium px-5 py-3 rounded-full">
               <Bell className="w-4 h-4" /> Notifications
             </Link>
-            <Link to="/profil" onClick={() => setMobileOpen(false)} className="inline-flex items-center justify-center gap-2 bg-zinc-50 text-zinc-900 text-sm font-medium px-5 py-3 rounded-full">
-              Mon profil
+            <Link to="/espace" onClick={() => setMobileOpen(false)} className="inline-flex items-center justify-center gap-2 bg-zinc-50 text-zinc-900 text-sm font-medium px-5 py-3 rounded-full">
+              Mon espace
             </Link>
           </nav>
         </div>

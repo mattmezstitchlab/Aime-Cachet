@@ -7,16 +7,14 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import FicheView from '@/pages/FicheView';
 import MesPrestations from '@/pages/MesPrestations';
-import Dashboard507 from '@/pages/Dashboard507';
 import Verify from '@/pages/Verify';
 import Recherche from '@/pages/Recherche';
 import Notifications from '@/pages/Notifications';
-import Profil from '@/pages/Profil';
 import Aide from '@/pages/Aide';
-import Parametres from '@/pages/Parametres';
 import Landing from '@/pages/Landing';
 import ScreensBoard from '@/pages/ScreensBoard';
 import PrestationsHub from '@/pages/PrestationsHub';
+import Espace from '@/pages/Espace';
 import AssistantFloatingButton from '@/components/aime/assistant/AssistantFloatingButton';
 import { AssistantProvider } from '@/components/aime/assistant/AssistantProvider';
 import { applyUserPrefs } from '@/lib/applyPrefs';
@@ -27,6 +25,10 @@ function LegacyAppRedirect() {
   const location = useLocation();
   const search = location.search || "";
   return <Navigate to={`/prestations${search}`} replace />;
+}
+
+function LegacySectionRedirect({ hash = "" }) {
+  return <Navigate to={`/espace${hash}`} replace />;
 }
 
 const AuthenticatedApp = () => {
@@ -65,14 +67,15 @@ const AuthenticatedApp = () => {
       <Route path="/app" element={<LegacyAppRedirect />} />
       <Route path="/prestations" element={<PrestationsHub />} />
       <Route path="/fiches" element={<MesPrestations />} />
-      <Route path="/507" element={<Dashboard507 />} />
+      <Route path="/espace" element={<Espace />} />
+      <Route path="/507" element={<LegacySectionRedirect hash="#pilotage507" />} />
       <Route path="/fiche/:id" element={<FicheView />} />
       <Route path="/verify/:cachetCode" element={<Verify />} />
       <Route path="/recherche" element={<Recherche />} />
       <Route path="/notifications" element={<Notifications />} />
-      <Route path="/profil" element={<Profil />} />
+      <Route path="/profil" element={<LegacySectionRedirect hash="#identite" />} />
       <Route path="/aide" element={<Aide />} />
-      <Route path="/parametres" element={<Parametres />} />
+      <Route path="/parametres" element={<LegacySectionRedirect hash="#preferences" />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

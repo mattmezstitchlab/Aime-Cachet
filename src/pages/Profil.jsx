@@ -101,10 +101,10 @@ export default function Profil() {
             </div>
 
             <div className="mt-5 grid grid-cols-2 gap-2">
-              <Link to="/507" className="text-xs px-3 py-2 rounded-lg bg-zinc-50 hover:bg-zinc-100 text-zinc-700 inline-flex items-center justify-center gap-1.5">
-                <Gauge className="w-3 h-3" /> Cockpit 507
+              <Link to="/espace#pilotage507" className="text-xs px-3 py-2 rounded-lg bg-zinc-50 hover:bg-zinc-100 text-zinc-700 inline-flex items-center justify-center gap-1.5">
+                <Gauge className="w-3 h-3" /> Pilotage 507
               </Link>
-              <Link to="/prestations" className="text-xs px-3 py-2 rounded-lg bg-zinc-50 hover:bg-zinc-100 text-zinc-700 inline-flex items-center justify-center gap-1.5">
+              <Link to="/fiches" className="text-xs px-3 py-2 rounded-lg bg-zinc-50 hover:bg-zinc-100 text-zinc-700 inline-flex items-center justify-center gap-1.5">
                 <FileText className="w-3 h-3" /> Mes fiches
               </Link>
             </div>

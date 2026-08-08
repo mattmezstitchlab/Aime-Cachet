@@ -7,7 +7,7 @@ import SearchDialog from "@/components/aime/SearchDialog";
 /**
  * Toolbar flottante globale — affichée sur toutes les pages AIME.
  * - À gauche : flèche retour (vers `back` ou "/")
- * - À droite : loupe (overlay), cloche (→ /notifications), profil (→ /profil)
+ * - À droite : loupe (overlay), cloche (→ /notifications), espace (→ /espace)
  *
  * Pensée comme un calque fixed top, sans bande blanche, identique à celle
  * utilisée sur la timeline et le cockpit.
@@ -86,7 +86,7 @@ export default function GlobalToolbar({
           <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-aime-red" />
         </Link>
         <Link
-          to="/profil"
+          to="/espace"
           aria-label="Mon espace"
           title="Mon espace"
           className="ml-1 w-11 h-11 md:w-9 md:h-9 rounded-full bg-zinc-900 text-white text-[12px] font-semibold flex items-center justify-center shadow-sm hover:ring-2 hover:ring-white/40 transition-all"

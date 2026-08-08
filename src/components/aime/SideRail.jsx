@@ -152,7 +152,7 @@ export default function SideRail({ onCreate, onScrollTo, mode = "app" }) {
 
       <AppRailButton customIcon={<TimelineIcon />} label="Timeline" onClick={goTimeline} active={isTimelineHome} />
       <AppRailButton customIcon={<FichePlusIcon />} label="Nouvelle fiche" onClick={handleCreate} />
-      <AppRailButton icon={User} label="Mon espace" href="/profil" active={isSpaceArea} />
+      <AppRailButton icon={User} label="Mon espace" href="/espace" active={isSpaceArea} />
       <AppRailButton icon={Files} label="Mes fiches" href="/fiches" active={pathname === "/fiches" || isGridPrestations} />
 
       <div className="flex-1" />
