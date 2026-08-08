@@ -19,6 +19,33 @@ const MODE_OPTIONS = [
   { id: "planner", label: "Planner" },
 ];
 
+const MODE_CLUSTERS = {
+  couple: [
+    { id: "pilot", label: "Piloter", universes: ["zeus", "athena"] },
+    { id: "create", label: "Créer & inspirer", universes: ["aphrodite", "apollon", "poseidon"] },
+    { id: "organize", label: "Organiser", universes: ["artemis", "ares", "demeter", "dionysos"] },
+    { id: "communicate", label: "Communiquer", universes: ["hermes", "hestia", "hephaistos"] },
+  ],
+  guests: [
+    { id: "essential", label: "Essentiel", universes: ["zeus", "hestia", "aphrodite"] },
+    { id: "travel", label: "Venir & séjourner", universes: ["artemis", "ares", "demeter"] },
+    { id: "dayj", label: "Le Jour J", universes: ["poseidon", "dionysos", "apollon"] },
+    { id: "help", label: "Aide", universes: ["athena", "hermes", "hephaistos"] },
+  ],
+  vendors: [
+    { id: "portal", label: "Mon portail", universes: ["zeus", "hermes", "athena"] },
+    { id: "mission", label: "Ma mission", universes: ["aphrodite", "apollon", "poseidon", "dionysos"] },
+    { id: "ops", label: "Logistique", universes: ["ares", "artemis", "demeter"] },
+    { id: "admin", label: "Admin", universes: ["hephaistos", "hestia"] },
+  ],
+  planner: [
+    { id: "cockpit", label: "Cockpit", universes: ["zeus", "athena"] },
+    { id: "art", label: "Direction artistique", universes: ["aphrodite", "apollon", "poseidon"] },
+    { id: "ops", label: "Opérations", universes: ["ares", "artemis", "demeter", "dionysos"] },
+    { id: "manage", label: "Gestion", universes: ["hermes", "hephaistos", "hestia"] },
+  ],
+};
+
 const ACCESS_ITEMS = [
   { id: "couple", label: "Créer mon mariage", to: "/setup" },
   { id: "vendor", label: "Rejoindre le registre", to: "/prestataires" },
@@ -87,6 +114,23 @@ function UniverseRow({ item, mode, onSelect }) {
   );
 }
 
+function UniverseCluster({ cluster, mode, onSelect }) {
+  const rows = cluster.universes
+    .map((id) => UNIVERSE_ITEMS.find((item) => item.id === id))
+    .filter(Boolean);
+
+  return (
+    <div className="space-y-2">
+      <div className="px-2 pt-1 text-[11px] uppercase tracking-[0.16em] text-zinc-500">
+        {cluster.label}
+      </div>
+      {rows.map((item) => (
+        <UniverseRow key={item.id} item={item} mode={mode} onSelect={onSelect} />
+      ))}
+    </div>
+  );
+}
+
 export default function WeddingTopCapsule() {
   const location = useLocation();
   const [openUniverse, setOpenUniverse] = useState(false);
@@ -113,6 +157,7 @@ export default function WeddingTopCapsule() {
     ? currentUniverse.gradient
     : "linear-gradient(135deg, #8459ff 0%, #4fd0ff 24%, #47e3b8 42%, #f4b6c8 68%, #ff9b52 100%)";
   const universeLabel = currentUniverse ? currentUniverse.label : "Découvrir";
+  const activeClusters = MODE_CLUSTERS[menuMode] || [];
 
   return (
     <div className="fixed top-3 left-1/2 z-[60] -translate-x-1/2 w-[min(1440px,calc(100%-20px))] print:hidden">
@@ -177,7 +222,7 @@ export default function WeddingTopCapsule() {
               </button>
 
               {openUniverse && (
-                <div className="absolute left-0 top-full mt-3 w-[min(640px,calc(100vw-28px))] rounded-[24px] border border-black/8 bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.14)]">
+                <div className="absolute left-0 top-full mt-3 w-[min(720px,calc(100vw-28px))] rounded-[24px] border border-black/8 bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.14)]">
                   <div className="p-2 border-b border-black/8 mb-2">
                     <div className="flex flex-wrap gap-2">
                       {MODE_OPTIONS.map((mode) => (
@@ -192,7 +237,7 @@ export default function WeddingTopCapsule() {
                       ))}
                     </div>
                   </div>
-                  <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1">
+                  <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
                     <div className="rounded-[18px] bg-[var(--color-warm-white)] px-3 py-3">
                       <div className="flex flex-col gap-3 md:flex-row md:items-center">
                         <Link
@@ -208,8 +253,8 @@ export default function WeddingTopCapsule() {
                         </div>
                       </div>
                     </div>
-                    {UNIVERSE_ITEMS.map((item) => (
-                      <UniverseRow key={item.id} item={item} mode={menuMode} onSelect={() => setOpenUniverse(false)} />
+                    {activeClusters.map((cluster) => (
+                      <UniverseCluster key={`${menuMode}-${cluster.id}`} cluster={cluster} mode={menuMode} onSelect={() => setOpenUniverse(false)} />
                     ))}
                   </div>
                 </div>
