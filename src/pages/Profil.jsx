@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { User, FileText, ShieldCheck, ShieldAlert, Gauge, ChevronRight, Save } from "lucide-react";
+import { FileText, ShieldCheck, ShieldAlert, Gauge, Save } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import PageShell from "@/components/aime/PageShell";
 import { computeSimulator } from "@/lib/aimeData";

@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * Watermark "BROUILLON PRÉPARATOIRE — NON OPPOSABLE" diagonal, discret mais lisible.
  * Affiché tant que la prestation n'est pas au statut "valide".

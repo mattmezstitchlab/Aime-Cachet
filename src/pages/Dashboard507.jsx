@@ -64,7 +64,7 @@ export default function Dashboard507() {
   return (
     <div className="min-h-screen bg-[#FAFAFA] lg:pl-16 pb-32 md:pb-24 overflow-x-hidden">
       <SideRail />
-      <GlobalToolbar back="/" title="Cockpit 507" eyebrow="BÊTA" />
+      <GlobalToolbar back="/prestations" title="Cockpit 507" eyebrow="BÊTA" />
 
       <main className="max-w-[1400px] mx-auto px-4 sm:px-5 md:px-10 pt-20 md:pt-24 pb-12 space-y-5 md:space-y-6 overflow-x-hidden">
         {loading ? (

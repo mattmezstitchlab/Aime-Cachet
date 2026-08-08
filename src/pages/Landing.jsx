@@ -4,6 +4,7 @@ import { ArrowRight, Shield, Zap, FileCheck, LayoutGrid, Files, Gauge, Sparkles 
 import LandingAssistantDemo from "@/components/landing/LandingAssistantDemo";
 import MiniMachine from "@/components/landing/MiniMachine";
 import RuneyShowcase from "@/components/landing/RuneyShowcase";
+import SideRail from "@/components/aime/SideRail";
 
 const HERO_BG = "https://media.base44.com/images/public/6a0dd8978ba6b186fc2a32c5/14b7e1600_image.png";
 const FEATURES_BG = "https://media.base44.com/images/public/6a0dd8978ba6b186fc2a32c5/cb0ccb64a_pexels-cottonbro-7170696.jpg";
@@ -18,6 +19,9 @@ import {
 export default function Landing() {
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans antialiased overflow-x-hidden">
+      <SideRail mode="landing" />
+
+      <div className="lg:pl-24">
       {/* NAV — plus claire, logo agrandi */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-zinc-100">
         <div className="max-w-6xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
@@ -37,7 +41,7 @@ export default function Landing() {
               Tous les écrans
             </Link>
             <Link
-              to="/app"
+              to="/prestations"
               className="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-black text-white text-sm font-medium px-4 py-2 rounded-full transition-colors"
             >
               Entrer dans l'app
@@ -66,7 +70,7 @@ export default function Landing() {
 
         <div className="relative">
       {/* HERO — texte centré, astronaute visible en fond */}
-      <section className="max-w-3xl mx-auto px-5 md:px-8 pt-16 md:pt-28 pb-20 md:pb-28 text-center">
+      <section id="hero" className="scroll-mt-24 max-w-3xl mx-auto px-5 md:px-8 pt-16 md:pt-28 pb-20 md:pb-28 text-center">
         <div>
           <div className="inline-block text-[10px] tracking-[0.22em] text-aime-red font-semibold mb-4">
             POUR INTERMITTENTS DU SPECTACLE
@@ -82,7 +86,7 @@ export default function Landing() {
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
-              to="/app"
+              to="/prestations"
               className="inline-flex items-center gap-2 bg-aime-red hover:bg-aime-red/90 text-white font-medium px-5 py-3 rounded-full transition-colors"
             >
               Commencer gratuitement
@@ -99,6 +103,7 @@ export default function Landing() {
       </section>
 
       {/* VITRINE PRINCIPALE — style Runey, en haut */}
+      <div id="timeline" className="scroll-mt-24" />
       <RuneyShowcase
         eyebrow="FICHES · DEVIS · TAMPONS"
         title={<>Tout votre intermittence,<br />au même endroit.</>}
@@ -106,7 +111,7 @@ export default function Landing() {
         cta={
           <>
             <Link
-              to="/app"
+              to="/prestations"
               className="inline-flex items-center gap-2 bg-zinc-900 hover:bg-black text-white font-medium px-5 py-3 rounded-full transition-colors"
             >
               Commencer gratuitement
@@ -163,10 +168,12 @@ export default function Landing() {
       </section>
 
       {/* DÉMO ASSISTANT — clone interactif */}
-      <LandingAssistantDemo />
+      <section id="assistant" className="scroll-mt-24">
+        <LandingAssistantDemo />
+      </section>
 
       {/* FEATURES — sur fond visuel astronautes */}
-      <section className="relative overflow-hidden">
+      <section id="studio" className="relative overflow-hidden scroll-mt-24">
         {/* Fond visuel astronautes parallax */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -227,14 +234,14 @@ export default function Landing() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <ShortcutCard
-              to="/app"
+              to="/prestations"
               icon={Sparkles}
-              title="AIME Cachet"
-              text="Entrée principale pour créer, préparer et suivre les prestations."
+              title="Timeline"
+              text="Entrée principale pour voir, reprendre et suivre vos prestations au quotidien."
               cta="Ouvrir"
             />
             <ShortcutCard
-              to="/prestations"
+              to="/fiches"
               icon={Files}
               title="Mes fiches"
               text="Accès direct au rangement, aux statuts et aux documents en cours."
@@ -268,7 +275,7 @@ export default function Landing() {
             Gratuit pour démarrer. Aucune donnée transmise aux organismes.
           </p>
           <Link
-            to="/app"
+            to="/prestations"
             className="inline-flex items-center gap-2 bg-aime-red hover:bg-aime-red/90 text-white font-medium px-6 py-3 rounded-full transition-colors"
           >
             Ouvrir AIME
@@ -288,6 +295,7 @@ export default function Landing() {
           </div>
         </div>
       </footer>
+      </div>
 
       <FeedbackButton />
     </div>

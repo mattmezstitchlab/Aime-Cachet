@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Sparkles, Check, Loader2, ExternalLink, AlertCircle } from "lucide-react";
+import { Sparkles, Check, Loader2, AlertCircle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { generateCachetCode } from "@/lib/cachetCode";
 import FichePreviewCard from "@/components/aime/assistant/FichePreviewCard";
@@ -12,7 +11,6 @@ import FichePreviewCard from "@/components/aime/assistant/FichePreviewCard";
  * bascule en aperçu fiche (FichePreviewCard).
  */
 export default function ProposedRecordCard({ proposed }) {
-  const navigate = useNavigate();
   const [created, setCreated] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

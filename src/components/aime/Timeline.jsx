@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { Plus, ChevronDown } from "lucide-react";
 import SmartTimelineLog from "@/components/aime/timeline/SmartTimelineLog";
 import TimelineDayActions from "@/components/aime/timeline/TimelineDayActions";
-import SmartTimelineRow from "@/components/aime/timeline/SmartTimelineRow";
 import TimelineDateGroup from "@/components/aime/timeline/TimelineDateGroup";
 import TimelineWalletDropdown from "@/components/aime/timeline/TimelineWalletDropdown";
 import TimelineScaleToggle from "@/components/aime/timeline/TimelineScaleToggle";

@@ -1,5 +1,5 @@
 import React from "react";
-import { X, Maximize2, Minimize2 } from "lucide-react";
+import { X } from "lucide-react";
 import AttachMenuButton from "@/components/aime/machine/AttachMenuButton";
 
 // Marque "AIME® 507" rendue en pur texte — pas de dépendance image, lisible partout.
@@ -7,7 +7,7 @@ function BrandMark({ size = "md" }) {
   const big = size === "lg" ? "text-3xl" : size === "sm" ? "text-lg" : "text-2xl";
   const small = size === "sm" ? "text-[10px]" : "text-xs";
   return (
-    <div className="flex items-baseline gap-1.5 select-none" style={{ filter: "drop-shadow(0 0 8px rgba(255,0,0,0.18))" }}>
+    <div className="flex items-baseline gap-1.5 select-none">
       <span className={`${big} font-display font-black tracking-tight text-white leading-none`}>
         AIME<span className="text-aime-red">®</span>
       </span>
@@ -25,7 +25,7 @@ export default function MachineHeader({ variant = "full", model, onClose, onExpa
 
   return (
     <div
-      className={`relative shrink-0 border-b border-black/20 bg-zinc-900 shadow-[8px_8px_18px_rgba(10,13,15,0.45),-6px_-6px_14px_rgba(72,80,84,0.12)] ${
+      className={`relative shrink-0 border-b border-white/6 bg-[#101114] ${
         isCompact ? "px-4 py-3" : "px-5 md:px-7 py-4"
       }`}
     >
@@ -54,7 +54,7 @@ export default function MachineHeader({ variant = "full", model, onClose, onExpa
             isCompact ? "text-[9px]" : "text-[10px]"
           }`}
         >
-          Analyse intermittence
+          Agent conversationnel 507
         </div>
       </div>
 
@@ -71,7 +71,7 @@ export default function MachineHeader({ variant = "full", model, onClose, onExpa
           <button
             onClick={onClose}
             aria-label="Fermer"
-            className="w-8 h-8 rounded-full bg-[#252b2e] flex items-center justify-center text-zinc-400 hover:text-white shadow-[5px_5px_10px_rgba(10,13,15,0.55),-4px_-4px_8px_rgba(70,78,82,0.14)] hover:shadow-[inset_4px_4px_8px_rgba(10,13,15,0.55),inset_-3px_-3px_7px_rgba(70,78,82,0.12)] transition-all"
+            className="w-8 h-8 rounded-full border border-white/8 bg-white/[0.04] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>

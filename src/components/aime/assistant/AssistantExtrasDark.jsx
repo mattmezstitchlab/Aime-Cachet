@@ -1,5 +1,4 @@
 import React from "react";
-import AssistantActions from "@/components/aime/assistant/AssistantActions";
 import AssistantQuickReplies from "@/components/aime/assistant/AssistantQuickReplies";
 import AssistantRelated from "@/components/aime/assistant/AssistantRelated";
 import AssistantReminders from "@/components/aime/assistant/AssistantReminders";

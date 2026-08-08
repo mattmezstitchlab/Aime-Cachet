@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, AlertCircle, MapPin, Mail, Calendar, Landmark, FileText, Download, CheckCircle2, ExternalLink } from "lucide-react";
+import { ChevronDown, AlertCircle, MapPin, Mail, Calendar, Landmark, Download, CheckCircle2, ExternalLink } from "lucide-react";
 import { formatDayLabel, STATUS_META } from "@/lib/aimeData";
 import { iconForDocType, TONES } from "@/lib/timelineIcons";
 import TimelineQRButton from "@/components/aime/timeline/TimelineQRButton";

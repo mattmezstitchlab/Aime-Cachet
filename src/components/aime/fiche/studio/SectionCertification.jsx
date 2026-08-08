@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Shield, Copy, Check } from "lucide-react";
+import { Shield, Copy } from "lucide-react";
 import QRBadge from "@/components/aime/fiche/QRBadge";
 import { toast } from "sonner";
 

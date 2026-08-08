@@ -1,5 +1,5 @@
 import React from "react";
-import { X, Palette, IdCard, FileEdit, ShieldCheck, Wand2, ChevronRight } from "lucide-react";
+import { Palette, IdCard, FileEdit, ShieldCheck, Wand2, ChevronRight } from "lucide-react";
 import StudioSection from "./StudioSection";
 import SectionApparence from "./SectionApparence";
 import SectionIdentite from "./SectionIdentite";

@@ -87,8 +87,8 @@ export default function GlobalToolbar({
         </Link>
         <Link
           to="/profil"
-          aria-label="Mon profil"
-          title="Mon profil"
+          aria-label="Mon espace"
+          title="Mon espace"
           className="ml-1 w-11 h-11 md:w-9 md:h-9 rounded-full bg-zinc-900 text-white text-[12px] font-semibold flex items-center justify-center shadow-sm hover:ring-2 hover:ring-white/40 transition-all"
         >
           {initial}

@@ -1,11 +1,10 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import AimeCachet from '@/pages/AimeCachet';
 import FicheView from '@/pages/FicheView';
 import MesPrestations from '@/pages/MesPrestations';
 import Dashboard507 from '@/pages/Dashboard507';
@@ -17,9 +16,18 @@ import Aide from '@/pages/Aide';
 import Parametres from '@/pages/Parametres';
 import Landing from '@/pages/Landing';
 import ScreensBoard from '@/pages/ScreensBoard';
+import PrestationsHub from '@/pages/PrestationsHub';
+import AssistantFloatingButton from '@/components/aime/assistant/AssistantFloatingButton';
+import { AssistantProvider } from '@/components/aime/assistant/AssistantProvider';
 import { applyUserPrefs } from '@/lib/applyPrefs';
 import { useEffect } from 'react';
 // Add page imports here
+
+function LegacyAppRedirect() {
+  const location = useLocation();
+  const search = location.search || "";
+  return <Navigate to={`/prestations${search}`} replace />;
+}
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -54,8 +62,9 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/screens" element={<ScreensBoard />} />
-      <Route path="/app" element={<AimeCachet />} />
-      <Route path="/prestations" element={<MesPrestations />} />
+      <Route path="/app" element={<LegacyAppRedirect />} />
+      <Route path="/prestations" element={<PrestationsHub />} />
+      <Route path="/fiches" element={<MesPrestations />} />
       <Route path="/507" element={<Dashboard507 />} />
       <Route path="/fiche/:id" element={<FicheView />} />
       <Route path="/verify/:cachetCode" element={<Verify />} />
@@ -71,12 +80,14 @@ const AuthenticatedApp = () => {
 
 
 function App() {
-
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
-          <AuthenticatedApp />
+          <AssistantProvider>
+            <AuthenticatedApp />
+            <AssistantFloatingButton />
+          </AssistantProvider>
         </Router>
         <Toaster />
       </QueryClientProvider>

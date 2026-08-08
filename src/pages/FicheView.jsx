@@ -24,13 +24,11 @@ import CessionDroitsPaper from "@/components/aime/fiche/CessionDroitsPaper";
 import AvenantPaper from "@/components/aime/fiche/AvenantPaper";
 import ToolPalette from "@/components/aime/fiche/ToolPalette";
 import StampDialog from "@/components/aime/fiche/StampDialog";
-import DocPicker from "@/components/aime/fiche/DocPicker";
 import SignaturePad from "@/components/aime/fiche/SignaturePad";
 import StudioPanel from "@/components/aime/fiche/studio/StudioPanel";
 import FicheVerso from "@/components/aime/fiche/FicheVerso";
 import FicheTopBar from "@/components/aime/fiche/FicheTopBar";
 import SideRail from "@/components/aime/SideRail";
-import SealButton from "@/components/aime/fiche/SealButton";
 
 const PAPERS = {
   cachet: FichePaper,

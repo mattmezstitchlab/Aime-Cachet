@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, Search, Bell, ArrowRight } from "lucide-react";
+import { Menu, X, Search, Bell } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import SearchDialog from "@/components/aime/SearchDialog";
 

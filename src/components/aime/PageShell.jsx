@@ -12,7 +12,7 @@ export default function PageShell({ title, subtitle, children, eyebrow }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SideRail />
-      <GlobalToolbar back="/" />
+      <GlobalToolbar back="/prestations" />
       <div className="lg:pl-16">
         <main className="max-w-[1100px] mx-auto px-4 sm:px-5 md:px-10 pt-20 md:pt-24 pb-24 md:pb-12 overflow-x-hidden">
           {eyebrow && (

@@ -219,8 +219,7 @@ export default function AimeMachine({ size = "full", onClose, onExpand, initialQ
   // === LAYOUT COMPACT (panneau latéral) ============================
   if (isCompact) {
     return (
-      <div className="relative h-full max-h-[calc(100dvh_-_32px)] min-h-0 flex flex-col overflow-hidden bg-zinc-900 text-zinc-100 shadow-[inset_18px_18px_36px_rgba(13,16,18,0.65),inset_-14px_-14px_28px_rgba(60,68,72,0.18)]">
-        {!countdownDone && <MachineCountdown onDone={() => setCountdownDone(true)} />}
+      <div className="relative h-full min-h-0 flex flex-col overflow-hidden bg-[#0F1012] text-zinc-100">
         {overlayFicheId && (
           <MachineFicheOverlay ficheId={overlayFicheId} onBack={() => setOverlayFicheId(null)} />
         )}
