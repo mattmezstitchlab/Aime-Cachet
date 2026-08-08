@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Toaster } from "sonner";
 import AimeHeader from "@/components/aime/AimeHeader";
@@ -6,7 +6,7 @@ import Timeline from "@/components/aime/Timeline";
 import SideRail from "@/components/aime/SideRail";
 import TimelineDiscoverChevron from "@/components/aime/TimelineDiscoverChevron";
 import OnboardingEmptyState from "@/components/aime/OnboardingEmptyState";
-import TimelineWorkspacePanel from "@/components/aime/TimelineWorkspacePanel";
+import EspaceSidePanel from "@/components/aime/EspaceSidePanel";
 import { computeSimulator } from "@/lib/aimeData";
 import { logEvent } from "@/lib/historyLog";
 import { generateCachetCode } from "@/lib/cachetCode";
@@ -19,8 +19,8 @@ export default function AimeCachet() {
   const [events, setEvents] = useState([]);
   const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPrestation, setSelectedPrestation] = useState(null);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [espaceOpen, setEspaceOpen] = useState(false);
+  const [espaceSection, setEspaceSection] = useState("identite");
 
   const fetchAll = useCallback(async () => {
     const [pres, evts, wlts] = await Promise.all([
@@ -37,6 +37,40 @@ export default function AimeCachet() {
   useEffect(() => {
     fetchAll();
   }, [fetchAll]);
+
+  const updateTimelineQuery = useCallback((patch = {}, removeKeys = []) => {
+    const params = new URLSearchParams(location.search);
+    Object.entries(patch).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === "") params.delete(key);
+      else params.set(key, value);
+    });
+    removeKeys.forEach((key) => params.delete(key));
+    const search = params.toString();
+    navigate(`/prestations${search ? `?${search}` : ""}`, { replace: true });
+  }, [location.search, navigate]);
+
+  const openEspace = useCallback((section = "identite") => {
+    setEspaceOpen(true);
+    setEspaceSection(section);
+    updateTimelineQuery({ panel: "espace", section }, []);
+  }, [updateTimelineQuery]);
+
+  const closeEspace = useCallback(() => {
+    setEspaceOpen(false);
+    updateTimelineQuery({}, ["panel", "section"]);
+  }, [updateTimelineQuery]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const panel = params.get("panel");
+    const section = params.get("section") || "identite";
+    if (panel === "espace") {
+      setEspaceOpen(true);
+      setEspaceSection(section);
+    } else {
+      setEspaceOpen(false);
+    }
+  }, [location.search]);
 
   const handlePreparerCachet = useCallback(async () => {
     const cachetCode = generateCachetCode();
@@ -69,58 +103,46 @@ export default function AimeCachet() {
     }
   }, [location.search, handlePreparerCachet]);
 
-  useEffect(() => {
-    if (selectedPrestation || prestations.length === 0) return;
-    setSelectedPrestation(prestations[0]);
-  }, [prestations, selectedPrestation]);
-
   const simulator = useMemo(() => computeSimulator(prestations), [prestations]);
-
-  const handleSelectPrestation = useCallback((prestation) => {
-    setSelectedPrestation(prestation);
-    setSelectedEvent(null);
-  }, []);
-
-  const handleSelectEvent = useCallback((event) => {
-    setSelectedEvent(event);
-    setSelectedPrestation(null);
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#F5F5F2] text-zinc-900">
-      <SideRail onCreate={handlePreparerCachet} />
+      <SideRail onCreate={handlePreparerCachet} onOpenEspace={openEspace} />
 
       <div className="lg:pl-16">
-        <AimeHeader onPrepare={handlePreparerCachet} simulator={simulator} />
+        <AimeHeader onPrepare={handlePreparerCachet} onOpenEspace={() => openEspace("identite")} simulator={simulator} />
 
         {!loading && prestations.length === 0 ? (
           <section className="mx-auto max-w-4xl px-4 py-10 sm:px-5 md:px-8 md:py-16">
             <OnboardingEmptyState onCreate={handlePreparerCachet} />
           </section>
         ) : (
-          <main className="h-[calc(100dvh-4rem)] min-h-[780px] px-3 pb-3 md:px-4 md:pb-4">
-            <div className="grid h-full min-h-0 gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(420px,0.98fr)]">
-              <Timeline
-                prestations={prestations}
-                events={events}
-                wallets={wallets}
-                onAdd={handlePreparerCachet}
-                onRefresh={fetchAll}
-                selectedPrestationId={selectedPrestation?.id || null}
-                selectedEventId={selectedEvent?.id || null}
-                onSelectPrestation={handleSelectPrestation}
-                onSelectEvent={handleSelectEvent}
-              />
-
-              <TimelineWorkspacePanel
-                prestation={selectedPrestation}
-                event={selectedEvent}
-                onCreate={handlePreparerCachet}
-              />
-            </div>
+          <main className="px-3 pb-3 md:px-4 md:pb-4">
+            <Timeline
+              prestations={prestations}
+              events={events}
+              wallets={wallets}
+              onAdd={handlePreparerCachet}
+              onRefresh={fetchAll}
+            />
           </main>
         )}
       </div>
+
+      <EspaceSidePanel
+        open={espaceOpen}
+        onClose={closeEspace}
+        activeSection={espaceSection}
+        onSectionChange={(section) => {
+          const next = section || "identite";
+          setEspaceSection(next);
+          updateTimelineQuery({ panel: "espace", section: next }, []);
+        }}
+        prestations={prestations}
+        wallets={wallets}
+        onWalletCreated={(wallet) => setWallets((current) => [...current, wallet])}
+        onCreateFiche={handlePreparerCachet}
+      />
 
       {prestations.length > 0 && <TimelineDiscoverChevron targetId="prestations" />}
 

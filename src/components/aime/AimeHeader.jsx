@@ -4,7 +4,7 @@ import { Menu, X, Search, Bell } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import SearchDialog from "@/components/aime/SearchDialog";
 
-export default function AimeHeader({ onPrepare, minimal = false, simulator = null }) {
+export default function AimeHeader({ onPrepare, onOpenEspace, minimal = false, simulator = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState(null);
@@ -49,7 +49,7 @@ export default function AimeHeader({ onPrepare, minimal = false, simulator = nul
             <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-aime-red" />
           </button>
           <button
-            onClick={() => navigate("/espace")}
+            onClick={() => (onOpenEspace ? onOpenEspace() : navigate("/espace"))}
             aria-label="Mon espace"
             title="Mon espace"
             className="ml-1 w-9 h-9 rounded-full bg-zinc-900 text-white text-[12px] font-semibold flex items-center justify-center hover:ring-2 hover:ring-zinc-200 transition-all"
@@ -83,9 +83,12 @@ export default function AimeHeader({ onPrepare, minimal = false, simulator = nul
             <Link to="/notifications" onClick={() => setMobileOpen(false)} className="inline-flex items-center justify-center gap-2 bg-zinc-50 text-zinc-900 text-sm font-medium px-5 py-3 rounded-full">
               <Bell className="w-4 h-4" /> Notifications
             </Link>
-            <Link to="/espace" onClick={() => setMobileOpen(false)} className="inline-flex items-center justify-center gap-2 bg-zinc-50 text-zinc-900 text-sm font-medium px-5 py-3 rounded-full">
+            <button
+              onClick={() => { setMobileOpen(false); onOpenEspace ? onOpenEspace() : navigate("/espace"); }}
+              className="inline-flex items-center justify-center gap-2 bg-zinc-50 text-zinc-900 text-sm font-medium px-5 py-3 rounded-full"
+            >
               Mon espace
-            </Link>
+            </button>
           </nav>
         </div>
       )}

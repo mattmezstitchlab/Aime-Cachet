@@ -42,7 +42,7 @@ function AppRailButton({ icon: Icon, customIcon, label, onClick, active, href })
   return <button onClick={onClick} className={className} aria-label={label}>{content}</button>;
 }
 
-export default function SideRail({ onCreate }) {
+export default function SideRail({ onCreate, onOpenEspace }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { openAssistant } = useAssistant();
@@ -73,7 +73,7 @@ export default function SideRail({ onCreate }) {
 
       <AppRailButton customIcon={<TimelineIcon />} label="Timeline" onClick={() => navigate("/prestations")} active={isTimelineHome} />
       <AppRailButton customIcon={<FichePlusIcon />} label="Nouvelle fiche" onClick={handleCreate} />
-      <AppRailButton icon={User} label="Mon espace" href="/espace" active={isSpaceArea} />
+      <AppRailButton icon={User} label="Mon espace" onClick={() => (onOpenEspace ? onOpenEspace("identite") : navigate("/espace"))} active={isSpaceArea} />
 
       <div className="flex-1" />
 

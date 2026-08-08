@@ -9,7 +9,6 @@ import BottomActionBar from "@/components/aime/BottomActionBar";
 import { AssistantProvider } from "@/components/aime/assistant/AssistantProvider";
 import { applyUserPrefs } from "@/lib/applyPrefs";
 import AimeCachet from "@/pages/AimeCachet";
-import Espace from "@/pages/Espace";
 import FicheView from "@/pages/FicheView";
 import Verify from "@/pages/Verify";
 
@@ -48,20 +47,20 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Navigate to="/prestations" replace />} />
       <Route path="/app" element={<RedirectWithSearch to="/prestations" />} />
       <Route path="/prestations" element={<AimeCachet />} />
-      <Route path="/espace" element={<Espace />} />
+      <Route path="/espace" element={<Navigate to="/prestations?panel=espace&section=identite" replace />} />
       <Route path="/fiche/:id" element={<FicheView />} />
       <Route path="/verify/:cachetCode" element={<Verify />} />
 
-      <Route path="/fiches" element={<Navigate to="/espace#wallets" replace />} />
-      <Route path="/507" element={<Navigate to="/espace#pilotage507" replace />} />
-      <Route path="/profil" element={<Navigate to="/espace#identite" replace />} />
-      <Route path="/parametres" element={<Navigate to="/espace#preferences" replace />} />
+      <Route path="/fiches" element={<Navigate to="/prestations?panel=espace&section=wallets" replace />} />
+      <Route path="/507" element={<Navigate to="/prestations?panel=espace&section=pilotage507" replace />} />
+      <Route path="/profil" element={<Navigate to="/prestations?panel=espace&section=identite" replace />} />
+      <Route path="/parametres" element={<Navigate to="/prestations?panel=espace&section=preferences" replace />} />
 
       <Route path="/recherche" element={<Navigate to="/prestations" replace />} />
       <Route path="/notifications" element={<Navigate to="/prestations" replace />} />
-      <Route path="/aide" element={<Navigate to="/espace" replace />} />
-      <Route path="/screens" element={<Navigate to="/espace" replace />} />
-      <Route path="/cartographie" element={<Navigate to="/espace" replace />} />
+      <Route path="/aide" element={<Navigate to="/prestations?panel=espace&section=identite" replace />} />
+      <Route path="/screens" element={<Navigate to="/prestations" replace />} />
+      <Route path="/cartographie" element={<Navigate to="/prestations" replace />} />
       <Route path="/landing-archive" element={<Navigate to="/prestations" replace />} />
 
       <Route path="*" element={<Navigate to="/prestations" replace />} />
