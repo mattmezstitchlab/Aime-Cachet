@@ -29,6 +29,7 @@ export default function Espace() {
   const [prestations, setPrestations] = useState([]);
   const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [draft, setDraft] = useState(getUserPrefs());
 
   const [search, setSearch] = useState("");
@@ -37,15 +38,27 @@ export default function Espace() {
   const [walletDialogOpen, setWalletDialogOpen] = useState(false);
 
   const fetchData = async () => {
-    const [me, pres, walletRows] = await Promise.all([
-      base44.auth.me().catch(() => null),
+    setLoading(true);
+    setLoadError("");
+
+    const [userResult, prestationsResult, walletsResult] = await Promise.allSettled([
+      base44.auth.me(),
       base44.entities.Prestation.list("-updated_date", 500),
-      base44.entities.Wallet.list("order", 100).catch(() => []),
+      base44.entities.Wallet.list("order", 100),
     ]);
 
-    setUser(me);
-    setPrestations(pres || []);
-    setWallets(walletRows || []);
+    const nextUser = userResult.status === "fulfilled" ? userResult.value : null;
+    const nextPrestations = prestationsResult.status === "fulfilled" ? prestationsResult.value || [] : [];
+    const nextWallets = walletsResult.status === "fulfilled" ? walletsResult.value || [] : [];
+
+    setUser(nextUser);
+    setPrestations(nextPrestations);
+    setWallets(nextWallets);
+
+    if (prestationsResult.status === "rejected" || walletsResult.status === "rejected") {
+      setLoadError("Certaines données n'ont pas pu être chargées. L'espace reste accessible en mode partiel.");
+    }
+
     setLoading(false);
   };
 
@@ -157,6 +170,7 @@ export default function Espace() {
   };
 
   const initial = (user?.full_name || user?.email || "?").trim().charAt(0).toUpperCase();
+  const isEmptyWorkspace = prestations.length === 0;
 
   return (
     <PageShell
@@ -179,6 +193,11 @@ export default function Espace() {
         </div>
       ) : (
         <div className="space-y-10">
+          {loadError && (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+              {loadError}
+            </div>
+          )}
           <section id="identite" className="scroll-mt-28 space-y-6">
             <SectionHeader
               eyebrow="Identité"
@@ -356,7 +375,7 @@ export default function Espace() {
                   )}
 
                   {filteredPrestations.length === 0 ? (
-                    prestations.length === 0 ? (
+                    isEmptyWorkspace ? (
                       <div className="rounded-3xl border border-dashed border-zinc-200 bg-zinc-50 px-6 py-14 text-center">
                         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-zinc-400 ring-1 ring-zinc-200">
                           <Inbox className="h-6 w-6" />
@@ -372,6 +391,13 @@ export default function Espace() {
                         >
                           <Plus className="h-4 w-4" />
                           Créer ma première fiche
+                        </button>
+                        <button
+                          type="button"
+                          onClick={fetchData}
+                          className="mt-3 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+                        >
+                          Réessayer le chargement
                         </button>
                       </div>
                     ) : (
