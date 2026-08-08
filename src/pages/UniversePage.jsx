@@ -251,6 +251,14 @@ function buildUniversePageData(state, universe) {
   const allVendors = getVendorMarketplace(state, "all");
   const creativeVendors = allVendors.filter((vendor) => ["flowers-decor", "photo-video", "music", "beauty"].includes(vendor.category));
   const opsVendors = allVendors.filter((vendor) => ["venue", "catering", "transport"].includes(vendor.category));
+  const flowerVendor = allVendors.find((vendor) => vendor.category === "flowers-decor") || null;
+  const photoVendor = allVendors.find((vendor) => vendor.category === "photo-video") || null;
+  const beautyVendor = allVendors.find((vendor) => vendor.category === "beauty") || null;
+  const planSalleDoc = docsPlanner.find((doc) => doc.id === "plan_salle") || null;
+  const planBDoc = docsPlanner.find((doc) => doc.id === "plan_b_meteo") || null;
+  const programmeDoc = docsPlanner.find((doc) => doc.id === "programme_jourj") || null;
+  const ceremonieDoc = docsPlanner.find((doc) => doc.id === "ceremonie_cortege") || null;
+  const imageMoments = timelinePlanner.filter((item) => ["habillage-ceremonie", "ceremonie", "cocktail-photos", "ouverture-bal"].includes(item.id));
   const docsPending = docsPlanner.filter((doc) => !["prêt", "partagé", "complet"].includes(doc.status));
   const nextStep = timelinePlanner.find((item) => item.status !== "done");
   const criticalSignals = notificationsPlanner.filter((item) => item.level === "critical").length;
@@ -469,6 +477,191 @@ function buildUniversePageData(state, universe) {
         ...commonFooter,
         primary: { to: "/notifications?role=planner", label: "Ouvrir Athéna" },
         secondary: { to: "/jour-j?role=planner", label: "Aller sur Arès" },
+      },
+    };
+  }
+
+  if (universe.id === "aphrodite") {
+    return {
+      heroStats: [
+        { label: "Direction créative", value: notes.length, detail: "notes actives" },
+        { label: "Décor", value: flowerVendor?.status || "—", detail: flowerVendor?.name || "Prestataire à confirmer" },
+        { label: "Plan B visuel", value: planBDoc?.status || "—", detail: planBDoc?.version || "Document lié" },
+        { label: "Scéno", value: planSalleDoc?.version || "—", detail: planSalleDoc?.status || "à structurer" },
+      ],
+      heroCtas: [
+        { to: "/prestataires?category=flowers-decor", label: "Ouvrir Aphrodite" },
+        { to: "/documents?role=planner", label: "Voir les docs" },
+        { to: "/jour-j?role=planner", label: "Voir le terrain" },
+      ],
+      intro: {
+        title: "Aphrodite tient la cohérence visuelle du mariage.",
+        text: "Ce n’est pas une galerie d’inspirations flottantes. C’est la maison où la beauté devient exécutable : fleurs, matières, signalétique, implantation, lumière, plan B météo et cohérence entre désir créatif et réalité du lieu.",
+      },
+      statRail: [
+        { label: "Prestataire déco", value: flowerVendor ? formatMoney(flowerVendor.priceFrom) : "—", detail: flowerVendor?.paymentStatus || "À confirmer" },
+        { label: "Checklist scéno", value: planSalleDoc?.checklist?.length || 0, detail: planSalleDoc?.title || "Plan de salle" },
+        { label: "Plan B", value: planBDoc?.status || "—", detail: "Bascule esthétique et flux" },
+        { label: "Beauté", value: beautyVendor?.status || "—", detail: beautyVendor?.name || "Option maquillage" },
+      ],
+      focus: {
+        eyebrow: "Métier principal",
+        title: "Ce qu’Aphrodite rend concret",
+        description: "Aphrodite transforme une intention esthétique en système tenable. La question n’est pas seulement ce qui est beau, mais ce qui reste beau une fois confronté au lieu, à la météo, aux timings, aux flux invités et aux équipes terrain.",
+        bullets: [
+          "La scénographie doit survivre au réel, pas seulement à un moodboard.",
+          "Le plan B météo fait partie de la direction artistique, pas d’un simple protocole de secours.",
+          "Le beau doit pointer vers Artémis, Arès et Héphaïstos dès qu’il devient implantable, imprimable ou exécutable.",
+        ],
+        cta: { to: "/prestataires?category=flowers-decor", label: "Ouvrir les prestataires déco" },
+      },
+      focusItemsTitle: "Ce qu’Aphrodite tient maintenant",
+      focusItems: [
+        {
+          title: flowerVendor?.name || "Décor à confirmer",
+          detail: flowerVendor
+            ? `${flowerVendor.summary} ${flowerVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(flowerVendor.nextTouchpointAt)}.` : ""}`
+            : "La couche décor n’est pas encore sécurisée.",
+          tone: flowerVendor?.status === "à confirmer" ? "warning" : "calm",
+          to: "/prestataires?category=flowers-decor",
+          meta: flowerVendor?.paymentStatus,
+        },
+        {
+          title: planSalleDoc?.title || "Plan de salle",
+          detail: planSalleDoc ? `${compactText(planSalleDoc.summary, 120)} ${planSalleDoc.note ? compactText(planSalleDoc.note, 64) : ""}` : "Le plan d’implantation n’est pas encore stabilisé.",
+          tone: planSalleDoc?.status === "brouillon" ? "warning" : "neutral",
+          to: "/documents?role=planner",
+          meta: planSalleDoc?.version,
+        },
+        {
+          title: planBDoc?.title || "Plan B météo",
+          detail: planBDoc ? `${compactText(planBDoc.summary, 118)} ${compactText(planBDoc.note, 60)}` : "Le plan B visuel n’est pas encore défini.",
+          tone: planBDoc?.status === "prêt" ? "calm" : "warning",
+          to: "/documents?role=planner",
+          meta: planBDoc?.version,
+        },
+        {
+          title: notes[0]?.title || "Direction stable",
+          detail: notes[0] ? compactText(notes[0].text, 126) : "Les notes créatives visibles apparaîtront ici.",
+          tone: notes[0] ? "calm" : "neutral",
+        },
+      ],
+      tools: {
+        eyebrow: "Outils liés",
+        title: "Les prolongements naturels d’Aphrodite",
+        items: [
+          { eyebrow: "Artémis", title: "Lieu & implantation", detail: "Le décor prend sens une fois confronté aux espaces, aux accès et au repli météo.", to: "/univers/artemis" },
+          { eyebrow: "Héphaïstos", title: "Supports & signalétique", detail: "Menus, panneaux, plans et éléments imprimés prolongent la direction visuelle.", to: "/exports?view=planner" },
+          { eyebrow: "Apollon", title: "Image & lumière", detail: "L’esthétique ne vaut pleinement que si elle sert aussi la mémoire visuelle du mariage.", to: "/univers/apollon" },
+          { eyebrow: "Arès", title: "Exécution terrain", detail: "Quand l’intention doit devenir montage, placement, transitions et maintien du beau sous pression.", to: "/jour-j?role=planner" },
+        ],
+      },
+      integrations: {
+        eyebrow: "Intégrations",
+        title: "Résumés connectés",
+        items: [
+          { title: "Artémis", detail: `${meta.venue || "Lieu"} · plan B ${state.orchestration?.planBWeatherReady ? "prêt" : "à construire"} · ${meta.city || "Ville"}`, tone: state.orchestration?.planBWeatherReady ? "calm" : "warning", to: "/univers/artemis" },
+          { title: "Héphaïstos", detail: `${docsPending.length} documents encore mouvants, dont ${planSalleDoc?.title || "le plan de salle"}.`, tone: docsPending.length > 0 ? "warning" : "calm", to: "/documents?role=planner" },
+          { title: "Apollon", detail: photoVendor ? `${photoVendor.name} · ${photoVendor.paymentStatus} · fenêtre image à protéger` : "La couche image sera visible ici.", tone: photoVendor ? "neutral" : "neutral", to: "/univers/apollon" },
+          { title: "Zeus", detail: `${criticalSignals} critique${criticalSignals > 1 ? "s" : ""} et ${warningSignals} signal${warningSignals > 1 ? "aux" : ""} peuvent encore impacter la cohérence visuelle.`, tone: criticalSignals > 0 ? "warning" : "neutral", to: "/point-zero" },
+        ],
+      },
+      footer: {
+        ...commonFooter,
+        primary: { to: "/prestataires?category=flowers-decor", label: "Prestataires déco" },
+        secondary: { to: "/documents?role=planner", label: "Voir les documents liés" },
+      },
+    };
+  }
+
+  if (universe.id === "apollon") {
+    return {
+      heroStats: [
+        { label: "Équipe image", value: photoVendor ? 1 : 0, detail: photoVendor?.name || "À confirmer" },
+        { label: "Moments clés", value: imageMoments.length, detail: "Fenêtres à protéger" },
+        { label: "Option drone", value: formatMoney(400), detail: photoVendor?.paymentStatus || "En attente" },
+        { label: "Invités captés", value: guestSummary.confirmed, detail: "confirmés" },
+      ],
+      heroCtas: [
+        { to: "/prestataires?category=photo-video", label: "Ouvrir Apollon" },
+        { to: "/jour-j?role=planner", label: "Voir la timeline" },
+        { to: "/espace-invites", label: "Portail invités" },
+      ],
+      intro: {
+        title: "Apollon protège ce qui restera du mariage.",
+        text: "Photo, vidéo et mémoire ne se jouent pas seulement au talent du prestataire. Elles dépendent d’un rythme tenu, de fenêtres lumière préservées, de discours cadrés, d’un dîner qui n’explose pas et d’une coordination fine avec la cérémonie, le cocktail et la soirée.",
+      },
+      statRail: [
+        { label: "Fenêtre photo", value: imageMoments[1]?.time || "18:00", detail: imageMoments[1]?.title || "Cérémonie / cocktail" },
+        { label: "Programme image", value: programmeDoc?.version || "—", detail: programmeDoc?.status || "à revoir" },
+        { label: "Cérémonie", value: ceremonieDoc?.status || "—", detail: ceremonieDoc?.version || "Document de fil" },
+        { label: "Paiement image", value: photoVendor ? photoVendor.paymentStatus : "—", detail: photoVendor?.responseTime || "" },
+      ],
+      focus: {
+        eyebrow: "Métier principal",
+        title: "Ce qu’Apollon rend possible",
+        description: "Apollon ne se limite pas à réserver une équipe photo / vidéo. Il organise les conditions nécessaires pour que les souvenirs soient justes : lumière, séquences, respiration, accès, captation des proches et protection des moments fragiles.",
+        bullets: [
+          "Un moment fort mal timé devient un souvenir perdu.",
+          "Le fil image dépend autant d’Arès et d’Athéna que du prestataire lui-même.",
+          "La mémoire visuelle doit dialoguer avec l’esthétique tenue par Aphrodite.",
+        ],
+        cta: { to: "/prestataires?category=photo-video", label: "Ouvrir l’équipe image" },
+      },
+      focusItemsTitle: "Ce qu’Apollon protège maintenant",
+      focusItems: [
+        {
+          title: photoVendor?.name || "Équipe image à confirmer",
+          detail: photoVendor ? `${photoVendor.summary} ${photoVendor.nextTouchpointAt ? `Prochain point ${formatShortDate(photoVendor.nextTouchpointAt)}.` : ""}` : "Le bloc photo / vidéo n’est pas encore sécurisé.",
+          tone: photoVendor?.paymentStatus?.includes("attente") ? "warning" : "calm",
+          to: "/prestataires?category=photo-video",
+          meta: photoVendor?.paymentStatus,
+        },
+        {
+          title: programmeDoc?.title || "Programme Jour J",
+          detail: programmeDoc ? `${compactText(programmeDoc.summary, 118)} ${compactText(programmeDoc.note, 60)}` : "Le programme image n’est pas encore stabilisé.",
+          tone: programmeDoc?.status === "en cours" ? "warning" : "neutral",
+          to: "/documents?role=planner",
+          meta: programmeDoc?.version,
+        },
+        {
+          title: ceremonieDoc?.title || "Cérémonie & cortège",
+          detail: ceremonieDoc ? `${compactText(ceremonieDoc.summary, 118)} ${compactText(ceremonieDoc.note, 60)}` : "Le fil de cérémonie n’est pas encore documenté.",
+          tone: ceremonieDoc?.status === "brouillon" ? "warning" : "neutral",
+          to: "/documents?role=planner",
+          meta: ceremonieDoc?.version,
+        },
+        {
+          title: imageMoments[0] ? `${imageMoments[0].time} · ${imageMoments[0].title}` : "Fenêtres image",
+          detail: imageMoments[0] ? compactText(imageMoments[0].note || imageMoments[0].detail, 126) : "Les séquences à protéger apparaîtront ici.",
+          tone: "calm",
+          to: "/jour-j?role=planner",
+        },
+      ],
+      tools: {
+        eyebrow: "Outils liés",
+        title: "Les prolongements naturels d’Apollon",
+        items: [
+          { eyebrow: "Arès", title: "Timeline & terrain", detail: "Quand une fenêtre image doit être protégée dans le vrai déroulé du mariage.", to: "/jour-j?role=planner" },
+          { eyebrow: "Aphrodite", title: "Ligne esthétique", detail: "L’image devient plus forte quand elle s’appuie sur une esthétique tenue et lisible.", to: "/univers/aphrodite" },
+          { eyebrow: "Hestia", title: "Invités & proches", detail: "Les personnes à capter, les familles et les générations vivent d’abord dans Hestia.", to: "/univers/hestia" },
+          { eyebrow: "Hermès", title: "Diffusion & galerie", detail: "Quand il faut partager des consignes, des accès ou plus tard la mémoire du mariage.", to: "/communication?role=planner" },
+        ],
+      },
+      integrations: {
+        eyebrow: "Intégrations",
+        title: "Résumés connectés",
+        items: [
+          { title: "Arès", detail: `${imageMoments.length} séquences image concernées dans le déroulé du jour.`, tone: imageMoments.length > 0 ? "calm" : "neutral", to: "/jour-j?role=planner" },
+          { title: "Athéna", detail: `${warningSignals} signal${warningSignals > 1 ? "aux" : ""} peuvent encore décaler lumière, discours ou captation.`, tone: warningSignals > 0 ? "warning" : "neutral", to: "/univers/athena" },
+          { title: "Aphrodite", detail: flowerVendor ? `${flowerVendor.name} · ${flowerVendor.status} · scénographie à tenir avec la captation.` : "Le décor et l’image dialogueront ici.", tone: flowerVendor?.status === "à confirmer" ? "warning" : "neutral", to: "/univers/aphrodite" },
+          { title: "Hestia", detail: `${guestSummary.confirmed} confirmés · ${households.length} foyers · ${(guestPortal.faq || []).length} FAQ publiques.`, tone: "neutral", to: "/espace-invites" },
+        ],
+      },
+      footer: {
+        ...commonFooter,
+        primary: { to: "/prestataires?category=photo-video", label: "Équipe image" },
+        secondary: { to: "/jour-j?role=planner", label: "Voir la timeline" },
       },
     };
   }
