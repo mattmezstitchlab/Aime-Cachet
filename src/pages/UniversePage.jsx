@@ -666,6 +666,166 @@ function buildUniversePageData(state, universe) {
     };
   }
 
+  if (universe.id === "hephaistos") {
+    const supportDocs = docsPlanner.filter((doc) => [
+      "feuille_service",
+      "programme_jourj",
+      "plan_salle",
+      "plan_b_meteo",
+      "plan_table",
+      "accueil_accessibilite",
+      "ceremonie_cortege",
+    ].includes(doc.id));
+    const supportChecklistCount = supportDocs.reduce((sum, doc) => sum + (doc.checklist?.length || 0), 0);
+
+    return {
+      heroStats: [
+        { label: "Supports vivants", value: supportDocs.length, detail: "documents clés" },
+        { label: "Checklists", value: supportChecklistCount, detail: "points de contrôle" },
+        { label: "Versions", value: supportDocs.filter((doc) => doc.version).length, detail: "actives" },
+        { label: "Docs mouvants", value: supportDocs.filter((doc) => !["prêt", "partagé", "complet"].includes(doc.status)).length, detail: "encore à stabiliser" },
+      ],
+      heroCtas: [
+        { to: "/exports?view=planner", label: "Ouvrir Héphaïstos" },
+        { to: "/documents?role=planner", label: "Voir les docs" },
+        { to: "/jour-j?role=planner", label: "Voir le terrain" },
+      ],
+      intro: {
+        title: "Héphaïstos forge les supports utiles du mariage.",
+        text: "Quand le mariage doit tenir sur une feuille, un PDF, une version, une checklist ou un support à partager, Héphaïstos intervient. Sa valeur n’est pas de produire plus de fichiers, mais de fabriquer les bons supports, au bon format, au bon moment, pour que l’exécution reste nette.",
+      },
+      statRail: [
+        { label: "Feuille de service", value: supportDocs.find((doc) => doc.id === "feuille_service")?.version || "—", detail: supportDocs.find((doc) => doc.id === "feuille_service")?.status || "—" },
+        { label: "Programme", value: programmeDoc?.version || "—", detail: programmeDoc?.status || "—" },
+        { label: "Plan salle", value: planSalleDoc?.version || "—", detail: planSalleDoc?.status || "—" },
+        { label: "Plan B", value: planBDoc?.version || "—", detail: planBDoc?.status || "—" },
+      ],
+      focus: {
+        eyebrow: "Métier principal",
+        title: "Ce qu’Héphaïstos rend tenable",
+        description: "Une coordination élégante dépend de supports vraiment utiles : feuille de service, programme, plan de salle, checklists d’accueil, document cérémonie, exports de rôles. Héphaïstos transforme la complexité du mariage en objets lisibles et distribuables, sans multiplier les versions fantômes.",
+        bullets: [
+          "Un support n’existe que s’il aide une personne réelle à agir sans friction.",
+          "Chaque version doit rester reliée à sa maison source et à sa date de validité.",
+          "L’objectif n’est pas de documenter plus, mais de documenter juste et au bon format.",
+        ],
+        cta: { to: "/exports?view=planner", label: "Ouvrir les exports planner" },
+      },
+      focusItemsTitle: "Ce qu’Héphaïstos forge maintenant",
+      focusItems: supportDocs.slice(0, 4).map((doc) => ({
+        title: doc.title,
+        detail: `${compactText(doc.summary, 118)}${doc.note ? ` ${compactText(doc.note, 48)}` : ""}`,
+        tone: ["prêt", "partagé", "complet"].includes(doc.status) ? "calm" : "warning",
+        to: "/documents?role=planner",
+        meta: `${doc.version || "v?"} · ${doc.status}`,
+      })),
+      tools: {
+        eyebrow: "Outils liés",
+        title: "Les prolongements naturels d’Héphaïstos",
+        items: [
+          { eyebrow: "Documents", title: "Bibliothèque vivante", detail: "Relire, stabiliser et partager les pièces réellement actives du mariage.", to: "/documents?role=planner" },
+          { eyebrow: "Arès", title: "Terrain & exécution", detail: "Quand un support doit devenir une consigne terrain ou une feuille de rôle utilisable en live.", to: "/univers/ares" },
+          { eyebrow: "Hermès", title: "Diffusion & partage", detail: "Quand une pièce doit partir au bon public sans casser la logique documentaire.", to: "/univers/hermes" },
+          { eyebrow: "Zeus", title: "Cockpit global", detail: "Quand une version documentaire devient un vrai levier d’arbitrage ou de synchronisation globale.", to: "/univers/zeus" },
+        ],
+      },
+      integrations: {
+        eyebrow: "Intégrations",
+        title: "Résumés connectés",
+        items: [
+          { title: "Arès", detail: `${timelinePlanner.filter((step) => step.status !== "done").length} séquences encore actives dépendent directement des bons supports.`, tone: "warning", to: "/jour-j?role=planner" },
+          { title: "Hermès", detail: communications[0] ? `${communications[0].title} s’appuie déjà sur une version documentaire partagée.` : "Les diffusions utiles s’appuieront sur les bonnes pièces ici.", tone: communications[0] ? "calm" : "neutral", to: "/communication?role=planner" },
+          { title: "Hestia", detail: `${supportDocs.find((doc) => doc.id === "plan_table")?.status || "—"} pour le plan de table, avec ${guestSummary.pending} RSVP encore en attente.`, tone: guestSummary.pending > 0 ? "warning" : "neutral", to: "/invites?role=planner" },
+          { title: "Athéna", detail: `${supportDocs.filter((doc) => !["prêt", "partagé", "complet"].includes(doc.status)).length} supports peuvent encore créer du bruit si non stabilisés.`, tone: "warning", to: "/univers/athena" },
+        ],
+      },
+      footer: {
+        ...commonFooter,
+        primary: { to: "/exports?view=planner", label: "Ouvrir Héphaïstos" },
+        secondary: { to: "/documents?role=planner", label: "Voir les documents vivants" },
+      },
+    };
+  }
+
+  if (universe.id === "ares") {
+    const terrainSteps = timelinePlanner;
+    const liveStep = terrainSteps.find((step) => step.status === "live") || null;
+    const terrainDocs = [
+      planSalleDoc,
+      programmeDoc,
+      planBDoc,
+      docsPlanner.find((doc) => doc.id === "feuille_service") || null,
+    ].filter(Boolean);
+
+    return {
+      heroStats: [
+        { label: "Séquences", value: terrainSteps.length, detail: "terrain piloté" },
+        { label: "Étape live", value: liveStep?.time || "—", detail: liveStep?.title || "Aucune" },
+        { label: "Docs terrain", value: terrainDocs.length, detail: "liés à l’exécution" },
+        { label: "Signaux terrain", value: notificationsPlanner.filter((item) => ["reminder", "document", "vendor"].includes(item.type)).length, detail: "utiles à l’exécution" },
+      ],
+      heroCtas: [
+        { to: "/jour-j?role=planner", label: "Ouvrir Arès" },
+        { to: "/documents?role=planner", label: "Voir les docs terrain" },
+        { to: "/prestataires", label: "Voir les équipes" },
+      ],
+      intro: {
+        title: "Arès tient le terrain sans panique.",
+        text: "Le rôle d’Arès n’est pas d’être agressif. Il est d’être exact. Montage, accès, implantation, cérémonie, accueil, dîner, bascule soirée : tout ce qui doit tenir sous pression et en temps réel vit ici, relié aux bonnes pièces et aux bonnes personnes.",
+      },
+      statRail: [
+        { label: "Prochaine étape", value: nextStep?.time || "—", detail: nextStep?.title || "Aucune" },
+        { label: "Plan B météo", value: planBDoc?.status || "—", detail: planBDoc?.version || "—" },
+        { label: "Feuille service", value: docsPlanner.find((doc) => doc.id === "feuille_service")?.version || "—", detail: docsPlanner.find((doc) => doc.id === "feuille_service")?.status || "—" },
+        { label: "Prestataires ops", value: opsVendors.length, detail: `${creativeVendors.length} créatifs liés aussi au terrain` },
+      ],
+      focus: {
+        eyebrow: "Métier principal",
+        title: "Ce qu’Arès exécute vraiment",
+        description: "Arès transforme la préparation en déroulé tenable. Il porte le tempo, les bascules, les incidents absorbables, la cohérence des équipes sur site, et la capacité à protéger l’expérience couple pendant que le terrain travaille sous contrainte réelle.",
+        bullets: [
+          "Le terrain doit rester lisible même quand plusieurs équipes avancent en parallèle.",
+          "Chaque séquence doit avoir une pièce de référence et une responsabilité claire.",
+          "Un incident vaut seulement s’il mène à une consigne, un plan B ou une réallocation simple.",
+        ],
+        cta: { to: "/jour-j?role=planner", label: "Ouvrir la timeline live" },
+      },
+      focusItemsTitle: "Ce qu’Arès tient maintenant",
+      focusItems: terrainSteps.slice(0, 4).map((step) => ({
+        title: `${step.time} · ${step.title}`,
+        detail: compactText(step.note || step.detail, 128),
+        tone: step.status === "live" ? "critical" : step.status === "upcoming" ? "warning" : "calm",
+        to: "/jour-j?role=planner",
+        meta: step.status,
+      })),
+      tools: {
+        eyebrow: "Outils liés",
+        title: "Les prolongements naturels d’Arès",
+        items: [
+          { eyebrow: "Héphaïstos", title: "Feuilles & plans", detail: "Le terrain n’avance proprement que si les bonnes feuilles existent et circulent bien.", to: "/univers/hephaistos" },
+          { eyebrow: "Athéna", title: "Alertes & anticipation", detail: "Les déraillements évités tôt donnent à Arès un terrain plus calme à tenir.", to: "/univers/athena" },
+          { eyebrow: "Artémis", title: "Lieu & accès", detail: "L’implantation, les circulations et le repli météo nourrissent directement l’exécution.", to: "/univers/artemis" },
+          { eyebrow: "Déméter", title: "Service & dîner", detail: "Le terrain absorbe aussi les repas spéciaux, les tables et le rythme du service.", to: "/univers/demeter" },
+        ],
+      },
+      integrations: {
+        eyebrow: "Intégrations",
+        title: "Résumés connectés",
+        items: [
+          { title: "Héphaïstos", detail: `${terrainDocs.length} supports terrain de référence, dont ${terrainDocs[0]?.title || "la feuille de service"}.`, tone: terrainDocs.length > 0 ? "calm" : "neutral", to: "/documents?role=planner" },
+          { title: "Athéna", detail: `${notificationsPlanner.filter((item) => item.level !== "info").length} signaux peuvent encore modifier le fil du jour.`, tone: notificationsPlanner.length > 0 ? "warning" : "neutral", to: "/notifications?role=planner" },
+          { title: "Hestia", detail: `${guestSummary.pending} RSVP attente · ${guestSummary.pmr} PMR · ${guestSummary.allergies + guestSummary.vegetarian} repas spéciaux influencent le terrain.`, tone: "warning", to: "/invites?role=planner" },
+          { title: "Rythme global", detail: state.rippleLog?.[0] ? `${state.rippleLog[0].title} · ${compactText(state.rippleLog[0].summary, 92)}` : "Aucune onde active visible.", tone: "neutral", to: "/point-zero" },
+        ],
+      },
+      footer: {
+        ...commonFooter,
+        primary: { to: "/jour-j?role=planner", label: "Ouvrir Arès" },
+        secondary: { to: "/documents?role=planner", label: "Voir les supports terrain" },
+      },
+    };
+  }
+
   if (universe.id === "hermes") {
     return {
       heroStats: [
