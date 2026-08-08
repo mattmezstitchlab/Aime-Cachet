@@ -1,0 +1,61 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "description": "R\u00f4le utilisateur dans l'app",
+      "enum": [
+        "admin",
+        "user"
+      ]
+    },
+    "aime_profile_completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "L'utilisateur a compl\u00e9t\u00e9 son profil intermittent (onboarding machine)"
+    },
+    "aime_annexe": {
+      "type": "string",
+      "enum": [
+        "8",
+        "10"
+      ],
+      "description": "Annexe principale (8 = technicien, 10 = artiste)"
+    },
+    "aime_metier": {
+      "type": "string",
+      "description": "M\u00e9tier principal (ex: com\u00e9dien, musicien, r\u00e9gisseur lumi\u00e8re)"
+    },
+    "aime_secteur": {
+      "type": "string",
+      "enum": [
+        "spectacle_vivant",
+        "audiovisuel",
+        "autre"
+      ],
+      "description": "Secteur dominant"
+    },
+    "aime_adresse": {
+      "type": "string",
+      "description": "Adresse postale utilis\u00e9e sur les fiches pr\u00e9paratoires"
+    },
+    "aime_ville": {
+      "type": "string"
+    },
+    "aime_telephone": {
+      "type": "string"
+    },
+    "aime_num_secu_artiste": {
+      "type": "string",
+      "description": "Num\u00e9ro Audiens / P\u00f4le emploi spectacle (optionnel)"
+    },
+    "aime_siret_perso": {
+      "type": "string",
+      "description": "SIRET personnel si auto-entrepreneur (optionnel)"
+    }
+  },
+  "required": [
+    "role"
+  ]
+}
