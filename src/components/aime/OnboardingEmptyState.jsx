@@ -6,7 +6,7 @@ import { Plus, FileText, ShieldCheck, Eye } from "lucide-react";
  * 3 étapes pédagogiques : Créer → Sceller → Vérifier.
  * Vocabulaire strictement préparatoire — aucune mention "officiel", "certifié", "validé".
  */
-export default function OnboardingEmptyState({ onCreate }) {
+export default function OnboardingEmptyState({ onCreate, onCreateDemo, demoBusy = false }) {
   const steps = [
     {
       n: "1",
@@ -60,13 +60,25 @@ export default function OnboardingEmptyState({ onCreate }) {
 
       {/* CTA */}
       <div className="mt-10 flex flex-col items-center gap-3">
-        <button
-          onClick={onCreate}
-          className="bg-zinc-900 hover:bg-aime-red text-white text-sm font-medium px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Créer ma première fiche
-        </button>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <button
+            onClick={onCreate}
+            className="bg-zinc-900 hover:bg-aime-red text-white text-sm font-medium px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Créer ma première fiche
+          </button>
+          {onCreateDemo && (
+            <button
+              onClick={onCreateDemo}
+              disabled={demoBusy}
+              className="bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 text-sm font-medium px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors shadow-sm disabled:opacity-60 disabled:cursor-wait"
+            >
+              <Eye className="w-4 h-4" />
+              {demoBusy ? "Création de la démo…" : "Charger une timeline démo 50%"}
+            </button>
+          )}
+        </div>
         <p className="text-[10px] text-zinc-400 max-w-md text-center leading-relaxed">
           Toutes les fiches sont des documents préparatoires privés sans valeur officielle.
           AIME prépare. L'utilisateur vérifie. L'organisme officiel valide.

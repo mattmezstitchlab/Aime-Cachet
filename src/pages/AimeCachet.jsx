@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 import AimeHeader from "@/components/aime/AimeHeader";
 import Timeline from "@/components/aime/Timeline";
 import SideRail from "@/components/aime/SideRail";
@@ -19,6 +19,7 @@ export default function AimeCachet() {
   const [events, setEvents] = useState([]);
   const [wallets, setWallets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [demoBusy, setDemoBusy] = useState(false);
   const [espaceOpen, setEspaceOpen] = useState(false);
   const [espaceSection, setEspaceSection] = useState("identite");
 
@@ -105,6 +106,78 @@ export default function AimeCachet() {
 
   const simulator = useMemo(() => computeSimulator(prestations), [prestations]);
 
+  const handleCreateDemoTimeline = useCallback(async () => {
+    if (demoBusy) return;
+    setDemoBusy(true);
+    try {
+      const walletRows = await Promise.all([
+        base44.entities.Wallet.create({ name: "Festivals 2026", icon: "Ticket", color: "#ef4444", order: wallets.length }),
+        base44.entities.Wallet.create({ name: "Studios & captations", icon: "Mic2", color: "#6366f1", order: wallets.length + 1 }),
+      ]).catch(() => []);
+
+      const newWallets = Array.isArray(walletRows) ? walletRows : [];
+      if (newWallets.length) {
+        setWallets((current) => [...current, ...newWallets]);
+      }
+
+      const employers = [
+        ["Festival d'Avignon", "Avignon", "spectacle_vivant"],
+        ["Théâtre du Nord", "Lille", "spectacle_vivant"],
+        ["Studio Saint-Ouen", "Saint-Ouen", "audiovisuel"],
+        ["La Condition Publique", "Roubaix", "spectacle_vivant"],
+        ["Captation Canal", "Paris", "audiovisuel"],
+        ["Scène Nationale", "Dunkerque", "spectacle_vivant"],
+      ];
+
+      const today = new Date();
+      const payloads = Array.from({ length: 21 }).map((_, index) => {
+        const d = new Date(today);
+        d.setDate(d.getDate() - index * 16);
+        const [employer, locationLabel, sector] = employers[index % employers.length];
+        const status = index < 12 ? "valide" : index < 17 ? "transmis" : "pret_a_verifier";
+        const wallet = newWallets[index % newWallets.length] || null;
+        return {
+          date: d.toISOString().slice(0, 10),
+          employer,
+          location: locationLabel,
+          nature: sector === "audiovisuel" ? "captation" : "concert",
+          status,
+          type: index % 4 === 0 ? "Technicien" : "Artiste",
+          sector,
+          employer_kind: sector === "spectacle_vivant" ? "occasionnel" : "professionnel",
+          duration_hours: 12,
+          amount: 280 + index * 12,
+          missing_documents: status === "pret_a_verifier" ? 1 : 0,
+          cachet_code: generateCachetCode(d),
+          doc_type: "cachet",
+          wallet_id: wallet?.id || null,
+        };
+      });
+
+      const created = [];
+      for (const payload of payloads) {
+        const prestation = await base44.entities.Prestation.create(payload);
+        created.push(prestation);
+      }
+
+      await logEvent({
+        kind: "memo_generated",
+        text: "Timeline démo créée — intermittent à environ 50% des 507h",
+        accent: "red",
+      });
+
+      toast.success("Timeline démo créée", { description: "21 prestations réparties sur un an, autour de 252h." });
+      await fetchAll();
+      if (created[0]?.id) {
+        navigate("/prestations", { replace: true });
+      }
+    } catch (error) {
+      toast.error("Impossible de créer la démo", { description: error?.message || "Réessayez." });
+    } finally {
+      setDemoBusy(false);
+    }
+  }, [demoBusy, fetchAll, navigate, wallets.length]);
+
   return (
     <div className="min-h-screen bg-[#F5F5F2] text-zinc-900">
       <SideRail onCreate={handlePreparerCachet} onOpenEspace={openEspace} />
@@ -114,7 +187,7 @@ export default function AimeCachet() {
 
         {!loading && prestations.length === 0 ? (
           <section className="mx-auto max-w-4xl px-4 py-10 sm:px-5 md:px-8 md:py-16">
-            <OnboardingEmptyState onCreate={handlePreparerCachet} />
+            <OnboardingEmptyState onCreate={handlePreparerCachet} onCreateDemo={handleCreateDemoTimeline} demoBusy={demoBusy} />
           </section>
         ) : (
           <main className="px-3 pb-3 md:px-4 md:pb-4">
